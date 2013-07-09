@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7F3D4BE5-0C7A-46E2-B0AF-8213C31E5C40}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NetMeter</RootNamespace>
+    <AssemblyName>NetMeter</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>Lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Control\Controller.cs" />
+    <Compile Include="Engine\Event\LoopIterationEvent.cs" />
+    <Compile Include="Engine\Event\LoopIterationListener.cs" />
+    <Compile Include="Engine\NetMeterEngine.cs" />
+    <Compile Include="Engine\NetMeterEngineException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Engine\StandardNMeterEngine.cs" />
+    <Compile Include="Samplers\Entry.cs" />
+    <Compile Include="Samplers\Sampler.cs" />
+    <Compile Include="Samplers\SampleResult.cs" />
+    <Compile Include="TestElements\AbstractTestElement.cs" />
+    <Compile Include="TestElements\Property\NetMeterProperty.cs" />
+    <Compile Include="TestElements\Property\PropertyIterator.cs" />
+    <Compile Include="TestElements\TestElement.cs" />
+    <Compile Include="TestElements\TestElementTraverser.cs" />
+    <Compile Include="TestElements\TestIterationListener.cs" />
+    <Compile Include="Threads\AbstractThreadGroup.cs" />
+    <Compile Include="Threads\ListenerNotifier.cs" />
+    <Compile Include="Threads\NetMeterContext.cs" />
+    <Compile Include="Threads\NetMeterContextManager.cs" />
+    <Compile Include="Threads\NetMeterThread.cs" />
+    <Compile Include="Threads\NetMeterThreadGroup.cs" />
+    <Compile Include="Threads\NetMeterThreadMonitor.cs" />
+    <Compile Include="Threads\NetMeterVariables.cs" />
+    <Compile Include="Threads\TestCompiler.cs" />
+    <Compile Include="Threads\ThreadCounts.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Lib\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Valkyrie\Valkyrie.csproj">
+      <Project>{fbd8d0cb-3d05-4ff4-a133-fff023dd3478}</Project>
+      <Name>Valkyrie</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
