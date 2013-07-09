@@ -86,7 +86,7 @@ namespace NetMeter.Threads
             testTree = test;
             compiler = new TestCompiler(testTree);
             controller = (Controller) testTree.getArray()[0];
-            SearchByClass<TestIterationListener> threadListenerSearcher = new SearchByClass<TestIterationListener>(TestIterationListener.class);
+            SearchByType<TestIterationListener> threadListenerSearcher = new SearchByType<TestIterationListener>(TestIterationListener);
             test.traverse(threadListenerSearcher);
             testIterationStartListeners = threadListenerSearcher.getSearchResults();
             notifier = note;

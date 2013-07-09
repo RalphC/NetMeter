@@ -9,12 +9,12 @@ namespace Valkyrie.Collections
 {
     public class ListedHashTree : HashTree, ISerializable, ICloneable
     {
-        
         private sealed List<Object> order;
 
-        public ListedHashTree() 
+        public Int32 Count { get { return Data.Count; } }
+
+        public ListedHashTree() : base()
         {
-            //super();
             order = new List<Object>();
         }
 
@@ -55,34 +55,34 @@ namespace Valkyrie.Collections
             {
                 order.Add(key);
             }
-            super.set(key, value);
+            base.Set(key, value);
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public void set(Object key, HashTree t) {
-            if (!data.containsKey(key)) {
-                order.add(key);
+        public override void Set(Object key, HashTree t) 
+        {
+            if (!Data.ContainsKey(key)) 
+            {
+                order.Add(key);
             }
-            super.set(key, t);
+            base.Set(key, t);
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public void set(Object key, Object[] values) {
-            if (!data.containsKey(key)) {
-                order.add(key);
+        public override void Set(Object key, Object[] values) 
+        {
+            if (!Data.ContainsKey(key)) 
+            {
+                order.Add(key);
             }
-            super.set(key, values);
+            base.Set(key, values);
         }
 
         public override void Set(Object key, List<Object> values) 
         {
-            if (!data.containsKey(key)) 
+            if (!Data.ContainsKey(key)) 
             {
-                order.add(key);
+                order.Add(key);
             }
-            super.set(key, values);
+            base.Set(key, values);
         }
 
         public override void replace(Object currentKey, Object newKey) 
@@ -103,8 +103,9 @@ namespace Valkyrie.Collections
                     break;
                 }
             }
-            if (entry == -1) {
-                throw new JMeterError("Impossible state, data key not present in order: "+currentKey.GetType());
+            if (entry == -1)
+            {
+                // throw new JMeterError("Impossible state, data key not present in order: "+currentKey.GetType());
             }
             order.Set(entry, newKey);
         }
@@ -127,41 +128,39 @@ namespace Valkyrie.Collections
 
         public override HashTree Put(Object key) 
         {
-            if (!data.containsKey(key)) {
+            if (!Data.ContainsKey(key)) 
+            {
                 HashTree newTree = createNewTree();
-                data.put(key, newTree);
-                order.add(key);
+                Data.Add(key, newTree);
+                order.Add(key);
                 return newTree;
             }
             return getTree(key);
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public Collection<Object> list() {
+        public override List<Object> list() 
+        {
             return order;
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public HashTree remove(Object key) {
-            order.remove(key);
-            return data.remove(key);
+        public override Boolean Remove(Object key) 
+        {
+            order.Remove(key);
+            return Data.Remove(key);
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public Object[] getArray() {
-            return order.toArray();
+        public override Object[] getArray() 
+        {
+            return order.ToArray();
         }
 
         /** {@inheritDoc} */
         // Make sure the hashCode depends on the order as well
-        @Override
-        public int hashCode() {
-            int hc = 17;
-            hc = hc * 37 + (order == null ? 0 : order.hashCode());
-            hc = hc * 37 + super.hashCode();
+        public override Int32 GetHashCode() 
+        {
+            Int32 hc = 17;
+            hc = hc * 37 + (order == null ? 0 : order.GetHashCode());
+            hc = hc * 37 + base.GetHashCode();
             return hc;
         }
 
@@ -172,7 +171,7 @@ namespace Valkyrie.Collections
                 return false;
             }
             ListedHashTree lht = (ListedHashTree) obj;
-            return (super.equals(lht) && order.Equals(lht.order));
+            return (base.Equals(lht) && order.Equals(lht.order));
         }
 
         /** {@inheritDoc} */
@@ -181,24 +180,20 @@ namespace Valkyrie.Collections
             return data.keySet();
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public int size() {
-            return data.size();
-        }
-
-        private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        private void readObject(ObjectInputStream ois) 
+        {
             ois.defaultReadObject();
         }
 
-        private void writeObject(ObjectOutputStream oos) throws IOException {
+        private void writeObject(ObjectOutputStream oos) 
+        {
             oos.defaultWriteObject();
         }
 
         public override void Clear() 
         {
-            super.clear();
-            order.clear();
+            base.Clear();
+            order.Clear();
         }
     }
 }
