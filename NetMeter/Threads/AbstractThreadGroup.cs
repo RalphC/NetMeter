@@ -85,7 +85,8 @@ namespace NetMeter.Threads
 
         public override Boolean addTestElementOnce(TestElement child)
         {
-            if (children.putIfAbsent(child, DUMMY) == null) {
+            if (children.putIfAbsent(child, DUMMY) == null)
+            {
                 addTestElement(child);
                 return true;
             }
@@ -166,7 +167,8 @@ namespace NetMeter.Threads
          *
          * @return the number of threads.
          */
-        public int getNumThreads() {
+        public int getNumThreads() 
+        {
             return this.getPropertyAsInt(AbstractThreadGroup.NUM_THREADS);
         }
 
@@ -185,7 +187,8 @@ namespace NetMeter.Threads
          *
          * @return true if thread should stop
          */
-        public Boolean getOnErrorStopThread() {
+        public Boolean getOnErrorStopThread() 
+        {
             return getPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTHREAD);
         }
 
@@ -194,7 +197,8 @@ namespace NetMeter.Threads
          *
          * @return true if test (all threads) should stop
          */
-        public Boolean getOnErrorStopTest() {
+        public Boolean getOnErrorStopTest() 
+        {
             return getPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTEST);
         }
 
@@ -203,7 +207,8 @@ namespace NetMeter.Threads
          *
          * @return true if test (all threads) should stop immediately
          */
-        public Boolean getOnErrorStopTestNow() {
+        public Boolean getOnErrorStopTestNow()
+        {
             return getPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTEST_NOW);
         }
 

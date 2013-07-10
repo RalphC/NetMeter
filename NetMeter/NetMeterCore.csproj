@@ -50,6 +50,7 @@
     <Compile Include="Engine\Event\LoopIterationListener.cs" />
     <Compile Include="Engine\NetMeterEngine.cs" />
     <Compile Include="Engine\NetMeterEngineException.cs" />
+    <Compile Include="NetMeterServer.cs" />
     <Compile Include="Processor\PostProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\StandardNMeterEngine.cs" />
