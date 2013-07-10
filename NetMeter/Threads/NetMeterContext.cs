@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using NetMeter.Engine;
+using NetMeter.Samplers;
 
 namespace NetMeter.Threads
 {
@@ -50,7 +51,7 @@ namespace NetMeter.Threads
             threadNum = 0;
             thread = null;
             isReinitSubControllers = false;
-            samplerContext.clear();
+            samplerContext.Clear();
         }
 
         /**
@@ -68,19 +69,23 @@ namespace NetMeter.Threads
             this.variables = vars;
         }
 
-        public SampleResult getPreviousResult() {
+        public SampleResult getPreviousResult() 
+        {
             return previousResult;
         }
 
-        public void setPreviousResult(SampleResult result) {
+        public void setPreviousResult(SampleResult result) 
+        {
             this.previousResult = result;
         }
 
-        public Sampler getCurrentSampler() {
+        public Sampler getCurrentSampler() 
+        {
             return currentSampler;
         }
 
-        public void setCurrentSampler(Sampler sampler) {
+        public void setCurrentSampler(Sampler sampler)
+        {
             this.previousSampler = currentSampler;
             this.currentSampler = sampler;
         }
@@ -90,7 +95,8 @@ namespace NetMeter.Threads
          *
          * @return Sampler
          */
-        public Sampler getPreviousSampler() {
+        public Sampler getPreviousSampler() 
+        {
             return previousSampler;
         }
 
@@ -99,7 +105,8 @@ namespace NetMeter.Threads
          *
          * @return int
          */
-        public int getThreadNum() {
+        public int getThreadNum() 
+        {
             return threadNum;
         }
 
@@ -109,7 +116,8 @@ namespace NetMeter.Threads
          * @param threadNum
          *            the threadNum to set
          */
-        public void setThreadNum(int threadNum) {
+        public void setThreadNum(int threadNum)
+        {
             this.threadNum = threadNum;
         }
 

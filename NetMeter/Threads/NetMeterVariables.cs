@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetMeter.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,19 +29,19 @@ namespace NetMeter.Threads
 
         private void preloadVariables()
         {
-            for (int i = 0; i < PRE_LOAD.Length; i++)
+            foreach (String prop in PRE_LOAD)
             {
-                String property = PRE_LOAD[i];
-                String value = JMeterUtils.getProperty(property);
+                String value = NetMeterUtils.getProperty(prop);
                 if (value != null)
                 {
-                    variables.Add(property,value);
+                    variables.Add(prop, value);
                 }
             }
         }
 
-        public String getThreadName() {
-            return Thread.currentThread().getName();
+        public String getThreadName() 
+        {
+            return Thread.CurrentThread.Name;
         }
 
         public int getIteration() {
@@ -92,10 +93,13 @@ namespace NetMeter.Threads
 
         public void putAll(Dictionary<String, Object> vars)
         {
-            variables.putAll(vars);
+            foreach (var item in vars)
+            {
+                variables.Add(item.Key, item.Value);
+            }
         }
 
-        public void putAll(JMeterVariables vars) 
+        public void putAll(NetMeterVariables vars) 
         {
             putAll(vars.variables);
         }
@@ -108,7 +112,12 @@ namespace NetMeter.Threads
          */
         public String get(String key) 
         {
-            return (String) variables.get(key);
+            Object value = null;
+            if (variables.TryGetValue(key, out value))
+            {
+                return (String)value;
+            }
+            return null;
         }
 
         /**
@@ -119,23 +128,28 @@ namespace NetMeter.Threads
          */
         public Object getObject(String key) 
         {
-            return variables.get(key);
+            Object obj = null;
+            if (variables.TryGetValue(key, out obj))
+            {
+                return obj;
+            }
+            return null;
         }
 
-        /**
-         * Gets a read-only Iterator over the variables.
-         * 
-         * @return the iterator
-         */
-        public Iterator<Entry<String, Object>> getIterator()
-        {
-            return Collections.unmodifiableMap(variables).entrySet().iterator() ;
-        }
+        ///**
+        // * Gets a read-only Iterator over the variables.
+        // * 
+        // * @return the iterator
+        // */
+        //public Iterator<Entry<String, Object>> getIterator()
+        //{
+        //    return Collections.unmodifiableMap(variables).entrySet().iterator() ;
+        //}
 
-        // Used by DebugSampler
-        public Set<Entry<String, Object>> entrySet()
-        {
-            return Collections.unmodifiableMap(variables).entrySet();
-        }
+        //// Used by DebugSampler
+        //public Set<Entry<String, Object>> entrySet()
+        //{
+        //    return Collections.unmodifiableMap(variables).entrySet();
+        //}
     }
 }

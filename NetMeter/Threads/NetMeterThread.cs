@@ -10,6 +10,7 @@ using NetMeter.TestElements;
 using NetMeter.Control;
 using NetMeter.Samplers;
 using Valkyrie.Collections;
+using NetMeter.Assertions;
 
 namespace NetMeter.Threads
 {
@@ -86,7 +87,7 @@ namespace NetMeter.Threads
             testTree = test;
             compiler = new TestCompiler(testTree);
             controller = (Controller) testTree.getArray()[0];
-            SearchByType<TestIterationListener> threadListenerSearcher = new SearchByType<TestIterationListener>(TestIterationListener);
+            SearchByType<TestIterationListener> threadListenerSearcher = new SearchByType<TestIterationListener>();
             test.traverse(threadListenerSearcher);
             testIterationStartListeners = threadListenerSearcher.getSearchResults();
             notifier = note;
@@ -168,7 +169,7 @@ namespace NetMeter.Threads
         private void startScheduler() 
         {
             Int64 delay = (startTime - (Int64)DateTime.Now.TimeOfDay.TotalMilliseconds);
-            delayBy(delay, "startScheduler");
+            // delayBy(delay, "startScheduler");
         }
 
         public void setThreadName(String threadName) 
@@ -188,12 +189,13 @@ namespace NetMeter.Threads
         {
             // threadContext is not thread-safe, so keep within thread
             NetMeterContext threadContext = NetMeterContextManager.getContext();
-            LoopIterationListener iterationListener=null;
+            LoopIterationListener iterationListener = null;
 
             try 
             {
                 iterationListener = initRun(threadContext);
-                while (running) {
+                while (running)
+                {
                     Sampler sam = (Sampler)controller.next();
                     while (running && sam != null) 
                     {
@@ -335,56 +337,6 @@ namespace NetMeter.Threads
             SampleResult transactionResult = null;
             try 
             {
-                // Check if we are running a transaction
-                TransactionSampler transactionSampler = null;
-                if(current is TransactionSampler) 
-                {
-                    transactionSampler = (TransactionSampler) current;
-                }
-                // Find the package for the transaction
-                SamplePackage transactionPack = null;
-                if(transactionSampler != null) 
-                {
-                    transactionPack = compiler.configureTransactionSampler(transactionSampler);
-
-                    // Check if the transaction is done
-                    if(transactionSampler.isTransactionDone())
-                    {
-                        // Get the transaction sample result
-                        transactionResult = transactionSampler.getTransactionResult();
-                        transactionResult.setThreadName(threadName);
-                        transactionResult.setGroupThreads(threadGroup.getNumberOfThreads());
-                        transactionResult.setAllThreads(NetMeterContextManager.getNumberOfThreads());
-
-                        // Check assertions for the transaction sample
-                        checkAssertions(transactionPack.getAssertions(), transactionResult, threadContext);
-                        // Notify listeners with the transaction sample result
-                        if (!(parent is TransactionSampler))
-                        {
-                            notifyListeners(transactionPack.getSampleListeners(), transactionResult);
-                        }
-                        compiler.done(transactionPack);
-                        // Transaction is done, we do not have a sampler to sample
-                        current = null;
-                    }
-                    else 
-                    {
-                        Sampler prev = current;
-                        // It is the sub sampler of the transaction that will be sampled
-                        current = transactionSampler.getSubSampler();
-                        if (current is TransactionSampler)
-                        {
-                            SampleResult res = process_sampler(current, prev, threadContext);// recursive call
-                            threadContext.setCurrentSampler(prev);
-                            current=null;
-                            if (res!=null)
-                            {
-                                transactionSampler.addSubSamplerResult(res);
-                            }
-                        }
-                    }
-                }
-
                 // Check if we have a sampler to sample
                 if(current != null)
                 {
@@ -396,7 +348,7 @@ namespace NetMeter.Threads
                     // Hack: save the package for any transaction controllers
                     threadVars.putObject(PACKAGE_OBJECT, pack);
 
-                    delay(pack.getTimers());
+                    //delay(pack.getTimers());
                     Sampler sampler = pack.getSampler();
                     sampler.setThreadContext(threadContext);
                     // TODO should this set the thread names for all the subsamples?
@@ -423,11 +375,6 @@ namespace NetMeter.Threads
                         List<SampleListener> sampleListeners = getSampleListeners(pack, transactionPack, transactionSampler);
                         notifyListeners(sampleListeners, result);
                         compiler.done(pack);
-                        // Add the result as subsample of transaction if we are in a transaction
-                        if(transactionSampler != null) 
-                        {
-                            transactionSampler.addSubSamplerResult(result);
-                        }
 
                         // Check if thread or test should be stopped
                         if (result.isStopThread() || (!result.isSuccessful() && onErrorStopThread)) 
@@ -685,15 +632,18 @@ namespace NetMeter.Threads
             }
         }
 
-        private void stopTestNow() {
+        private void stopTestNow()
+        {
             running = false;
             // log.info("Stop Test Now detected by thread: " + threadName);
-            if (engine != null) {
+            if (engine != null) 
+            {
                 engine.stopTest();
             }
         }
 
-        private void stopThread() {
+        private void stopThread() 
+        {
             running = false;
             // log.info("Stop Thread detected by thread: " + threadName);
         }
@@ -702,7 +652,7 @@ namespace NetMeter.Threads
         {
             foreach (Assertion assertion in assertions) 
             {
-                TestBeanHelper.prepare((TestElement) assertion);
+                //TestBeanHelper.prepare((TestElement) assertion);
                 if (assertion is AbstractScopedAssertion)
                 {
                     AbstractScopedAssertion scopedAssertion = (AbstractScopedAssertion) assertion;

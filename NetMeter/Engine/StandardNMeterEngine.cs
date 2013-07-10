@@ -56,9 +56,8 @@ namespace NetMeter.Engine
             return wasStopped;
         }
 
-        public StandardNetMeterEngine() 
+        public StandardNetMeterEngine() : this(null)
         {
-            StandardNetMeterEngine(null);
         }
 
         public StandardNetMeterEngine(String host) 

@@ -94,20 +94,12 @@ namespace Valkyrie.Collections
             // there may be multiple entries which compare equals (Bug 50898)
             // This will be slightly slower than the built-in method,
             // but replace() is not used frequently.
-            int entry = -1;
-            for (int i=0; i < order.Count; i++) 
-            {
-                Object ent = order.(i);
-                if (ent == currentKey) {
-                    entry = i;
-                    break;
-                }
-            }
+            Int32 entry = order.BinarySearch(currentKey);
             if (entry == -1)
             {
                 // throw new JMeterError("Impossible state, data key not present in order: "+currentKey.GetType());
             }
-            order.Set(entry, newKey);
+            order[entry] = newKey;
         }
 
         public override HashTree createNewTree() 
@@ -174,21 +166,20 @@ namespace Valkyrie.Collections
             return (base.Equals(lht) && order.Equals(lht.order));
         }
 
-        /** {@inheritDoc} */
-        @Override
-        public Set<Object> keySet() {
-            return data.keySet();
+        public override List<Object> keySet() 
+        {
+            return Data.Keys.ToList();
         }
 
-        private void readObject(ObjectInputStream ois) 
-        {
-            ois.defaultReadObject();
-        }
+        //private void readObject(ObjectInputStream ois) 
+        //{
+        //    ois.defaultReadObject();
+        //}
 
-        private void writeObject(ObjectOutputStream oos) 
-        {
-            oos.defaultWriteObject();
-        }
+        //private void writeObject(ObjectOutputStream oos) 
+        //{
+        //    oos.defaultWriteObject();
+        //}
 
         public override void Clear() 
         {

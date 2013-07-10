@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assertions\Assertion.cs" />
+    <Compile Include="Assertions\AssertionResult.cs" />
     <Compile Include="Control\Controller.cs" />
     <Compile Include="Engine\Event\LoopIterationEvent.cs" />
     <Compile Include="Engine\Event\LoopIterationListener.cs" />
@@ -50,6 +52,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\StandardNMeterEngine.cs" />
     <Compile Include="Samplers\Entry.cs" />
+    <Compile Include="Samplers\SampleEvent.cs" />
+    <Compile Include="Samplers\SampleListener.cs" />
     <Compile Include="Samplers\Sampler.cs" />
     <Compile Include="Samplers\SampleResult.cs" />
     <Compile Include="TestElements\AbstractTestElement.cs" />
@@ -66,8 +70,10 @@
     <Compile Include="Threads\NetMeterThreadGroup.cs" />
     <Compile Include="Threads\NetMeterThreadMonitor.cs" />
     <Compile Include="Threads\NetMeterVariables.cs" />
+    <Compile Include="Threads\SamplePackage.cs" />
     <Compile Include="Threads\TestCompiler.cs" />
     <Compile Include="Threads\ThreadCounts.cs" />
+    <Compile Include="Util\NetMeterUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Lib\" />
