@@ -165,8 +165,10 @@ namespace NetMeter.Threads
          * Reset flag indicating listeners should not be notified since reinit of sub 
          * controllers is being done. See bug 50032 
          */
-        public void unsetIsReinitializingSubControllers() {
-            if (isReinitSubControllers) {
+        public void unsetIsReinitializingSubControllers() 
+        {
+            if (isReinitSubControllers) 
+            {
                 isReinitSubControllers = false;
             }
         }
@@ -176,8 +178,10 @@ namespace NetMeter.Threads
          * controllers is being done. See bug 50032 
          * @return true if it is the first one to set
          */
-        public bool setIsReinitializingSubControllers() {
-            if (!isReinitSubControllers) {
+        public bool setIsReinitializingSubControllers() 
+        {
+            if (!isReinitSubControllers) 
+            {
                 isReinitSubControllers = true;
                 return true;
             }
@@ -187,7 +191,8 @@ namespace NetMeter.Threads
         /**
          * @return true if within reinit of Sub Controllers
          */
-        public bool isReinitializingSubControllers() {
+        public bool isReinitializingSubControllers() 
+        {
             return isReinitSubControllers;
         }
 
@@ -195,7 +200,8 @@ namespace NetMeter.Threads
          * if set to true a restart of the loop will occurs
          * @param restartNextLoop
          */
-        public void setRestartNextLoop(bool restartNextLoop) {
+        public void setRestartNextLoop(Boolean restartNextLoop)
+        {
             this.restartNextLoop = restartNextLoop;
         }
 
@@ -203,26 +209,30 @@ namespace NetMeter.Threads
          * a restart of the loop was required ?
          * @return the restartNextLoop
          */
-        public bool isRestartNextLoop() {
+        public bool isRestartNextLoop()
+        {
             return restartNextLoop;
         }
 
         /**
          * Clean cached data after sample
          */
-        public void cleanAfterSample() {
-            if(previousResult != null) {
+        public void cleanAfterSample() 
+        {
+            if(previousResult != null) 
+            {
                 previousResult.cleanAfterSample();
             }
-            samplerContext.clear();
+            samplerContext.Clear();
         }
 
         /**
          * Sampler context is cleaned up as soon as Post-Processor have ended
          * @return Context to use within PostProcessors to cache data
          */
-        public ConcurrentDictionary<String, Object> getSamplerContext() {
+        public ConcurrentDictionary<String, Object> getSamplerContext() 
+        {
             return samplerContext;
         }
-        }
+    }
 }

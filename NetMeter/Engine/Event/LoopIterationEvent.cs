@@ -11,9 +11,9 @@ namespace NetMeter.Engine.Event
     {
         private sealed Int32 iteration;
 
-        private sealed TestElements source;
+        private sealed TestElement source;
 
-        public LoopIterationEvent(TestElements source, Int32 iter)
+        public LoopIterationEvent(TestElement source, Int32 iter)
         {
             this.iteration = iter;
             this.source = source;
@@ -34,7 +34,7 @@ namespace NetMeter.Engine.Event
          *
          * @return TestElement
          */
-        public TestElements getSource()
+        public TestElement getSource()
         {
             return source;
         }

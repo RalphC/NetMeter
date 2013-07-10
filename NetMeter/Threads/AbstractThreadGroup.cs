@@ -12,7 +12,7 @@ using Valkyrie.Collections;
 
 namespace NetMeter.Threads
 {
-    public abstract class AbstractThreadGroup : AbstractTestElement, ISerializable, 
+    public abstract class AbstractThreadGroup : AbstractTestElement,Controller, NetMeterThreadMonitor, ISerializable 
     {
         /** Action to be taken when a Sampler error occurs */
         public static String ON_SAMPLE_ERROR = "ThreadGroup.on_sample_error"; // int
@@ -140,7 +140,7 @@ namespace NetMeter.Threads
         /**
          * Increment the number of active threads
          */
-        void incrNumberOfThreads() 
+        public void incrNumberOfThreads() 
         {
             Interlocked.Increment(ref numberOfThreads);
         }
@@ -148,7 +148,7 @@ namespace NetMeter.Threads
         /**
          * Decrement the number of active threads
          */
-        void decrNumberOfThreads() 
+        public void decrNumberOfThreads() 
         {
             Interlocked.Decrement(ref numberOfThreads);
         }
@@ -156,9 +156,9 @@ namespace NetMeter.Threads
         /**
          * Get the number of active threads
          */
-        public Int64 getNumberOfThreads()
+        public Int32 getNumberOfThreads()
         {
-            return Interlocked.Read(ref numberOfThreads);
+            return (Int32)Interlocked.Read(ref numberOfThreads);
         }
     
         /**

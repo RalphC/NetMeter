@@ -9,9 +9,7 @@ namespace Valkyrie.Collections
 {
     public class ListedHashTree : HashTree, ISerializable, ICloneable
     {
-        private sealed List<Object> order;
-
-        public Int32 Count { get { return Data.Count; } }
+        private List<Object> order;
 
         public ListedHashTree() : base()
         {
@@ -42,14 +40,14 @@ namespace Valkyrie.Collections
             }
         }
 
-        public override Object Clone() 
+        public new Object Clone() 
         {
             ListedHashTree newTree = new ListedHashTree();
             cloneTree(newTree);
             return newTree;
         }
 
-        public override void Set(Object key, Object value) 
+        public new void Set(Object key, Object value) 
         {
             if (!Data.ContainsKey(key)) 
             {
@@ -58,7 +56,7 @@ namespace Valkyrie.Collections
             base.Set(key, value);
         }
 
-        public override void Set(Object key, HashTree t) 
+        public new void Set(Object key, HashTree t) 
         {
             if (!Data.ContainsKey(key)) 
             {
@@ -67,7 +65,7 @@ namespace Valkyrie.Collections
             base.Set(key, t);
         }
 
-        public override void Set(Object key, Object[] values) 
+        public new void Set(Object key, Object[] values) 
         {
             if (!Data.ContainsKey(key)) 
             {
@@ -76,7 +74,7 @@ namespace Valkyrie.Collections
             base.Set(key, values);
         }
 
-        public override void Set(Object key, List<Object> values) 
+        public new void Set(Object key, List<Object> values) 
         {
             if (!Data.ContainsKey(key)) 
             {
@@ -85,7 +83,7 @@ namespace Valkyrie.Collections
             base.Set(key, values);
         }
 
-        public override void replace(Object currentKey, Object newKey) 
+        public new void replace(Object currentKey, Object newKey) 
         {
             HashTree tree = getTree(currentKey);
             Data.Remove(currentKey);
@@ -102,23 +100,23 @@ namespace Valkyrie.Collections
             order[entry] = newKey;
         }
 
-        public override HashTree createNewTree() 
+        public new HashTree createNewTree() 
         {
             return new ListedHashTree();
         }
 
-        public override HashTree createNewTree(Object key)
+        public new HashTree createNewTree(Object key)
         {
             return new ListedHashTree(key);
         }
 
-        public override HashTree createNewTree(List<Object> values)
+        public new HashTree createNewTree(List<Object> values)
         {
             return new ListedHashTree(values);
         }
 
 
-        public override HashTree Put(Object key) 
+        public new HashTree Put(Object key) 
         {
             if (!Data.ContainsKey(key)) 
             {
@@ -130,18 +128,18 @@ namespace Valkyrie.Collections
             return getTree(key);
         }
 
-        public override List<Object> list() 
+        public new List<Object> list() 
         {
             return order;
         }
 
-        public override Boolean Remove(Object key) 
+        public new Boolean Remove(Object key) 
         {
             order.Remove(key);
             return Data.Remove(key);
         }
 
-        public override Object[] getArray() 
+        public new Object[] getArray() 
         {
             return order.ToArray();
         }
@@ -166,7 +164,7 @@ namespace Valkyrie.Collections
             return (base.Equals(lht) && order.Equals(lht.order));
         }
 
-        public override List<Object> keySet() 
+        public List<Object> keySet() 
         {
             return Data.Keys.ToList();
         }
@@ -181,7 +179,7 @@ namespace Valkyrie.Collections
         //    oos.defaultWriteObject();
         //}
 
-        public override void Clear() 
+        public new void Clear() 
         {
             base.Clear();
             order.Clear();

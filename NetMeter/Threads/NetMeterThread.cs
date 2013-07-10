@@ -11,6 +11,7 @@ using NetMeter.Control;
 using NetMeter.Samplers;
 using Valkyrie.Collections;
 using NetMeter.Assertions;
+using NetMeter.Processor;
 
 namespace NetMeter.Threads
 {
@@ -181,9 +182,9 @@ namespace NetMeter.Threads
          * See below for reason for this change. Just in case this causes problems,
          * allow the change to be backed out
          */
-//        private static sealed Boolean startEarlier = JMeterUtils.getPropDefault("jmeterthread.startearlier", true); // $NON-NLS-1$
+        private static sealed Boolean startEarlier = true; // $NON-NLS-1$
 
-//        private static sealed Boolean reversePostProcessors = JMeterUtils.getPropDefault("jmeterthread.reversePostProcessors",false); // $NON-NLS-1$
+        private static sealed Boolean reversePostProcessors = false; // $NON-NLS-1$
 
         public void run() 
         {
@@ -255,10 +256,10 @@ namespace NetMeter.Threads
             //{
             //    log.info("Stop Thread seen: " + e.toString());
             //} 
-            //catch (Exception e) 
-            //{
+            catch (Exception ex)
+            {
             //    log.error("Test failed!", e);
-            //} 
+            } 
             //catch (ThreadDeath e) 
             //{
             //    throw e; // Must not ignore this one
@@ -481,13 +482,6 @@ namespace NetMeter.Threads
             threadContext.setThreadGroup(threadGroup);
             threadContext.setEngine(engine);
             testTree.traverse(compiler);
-            // listeners = controller.getListeners();
-            if (scheduler) 
-            {
-                // set the scheduler to start
-                startScheduler();
-            }
-            rampUpDelay(); // TODO - how to handle thread stopped here
             // log.info("Thread started: " + Thread.currentThread().getName());
             /*
              * Setting SamplingStarted before the contollers are initialised allows
@@ -513,11 +507,6 @@ namespace NetMeter.Threads
         {
             NetMeterContextManager.incrNumberOfThreads();
             threadGroup.incrNumberOfThreads();
-            GuiPackage gp =GuiPackage.getInstance();
-            if (gp != null) 
-            {// check there is a GUI
-                gp.getMainFrame().updateCounts();
-            }
             ThreadListenerTraverser startup = new ThreadListenerTraverser(true);
             testTree.traverse(startup); // call ThreadListener.threadStarted()
         }
@@ -528,11 +517,6 @@ namespace NetMeter.Threads
             testTree.traverse(shut); // call ThreadListener.threadFinished()
             NetMeterContextManager.decrNumberOfThreads();
             threadGroup.decrNumberOfThreads();
-            GuiPackage gp = GuiPackage.getInstance();
-            if (gp != null)
-            {// check there is a GUI
-                gp.getMainFrame().updateCounts();
-            }
             if (iterationListener != null)
             { // probably not possible, but check anyway
                 controller.removeIterationListener(iterationListener);
@@ -541,11 +525,11 @@ namespace NetMeter.Threads
 
         // N.B. This is only called at the start and end of a thread, so there is not
         // necessary to cache the search results, thus saving memory
-        private static class ThreadListenerTraverser : HashTreeTraverser 
+        private class ThreadListenerTraverser : HashTreeTraverser 
         {
             private sealed Boolean isStart;
 
-            private ThreadListenerTraverser(Boolean start) 
+            public ThreadListenerTraverser(Boolean start) 
             {
                 isStart = start;
             }
@@ -688,7 +672,7 @@ namespace NetMeter.Threads
                     processAssertion(parent, assertion);
                 }
             }
-            threadContext.getVariables().put(LAST_SAMPLE_OK, Boolean.toString(parent.isSuccessful()));
+            threadContext.getVariables().Add(LAST_SAMPLE_OK, Boolean.toString(parent.isSuccessful()));
         }
 
         private void processAssertion(SampleResult result, Assertion assertion) 
@@ -711,7 +695,7 @@ namespace NetMeter.Threads
             //} 
             catch (Exception ex) 
             {
-                log.error("Exception processing Assertion ",ex);
+                //log.error("Exception processing Assertion ",ex);
                 assertionResult = new AssertionResult("Assertion failed! See log file.");
                 assertionResult.setError(true);
                 assertionResult.setFailureMessage(ex.Message);
@@ -776,7 +760,7 @@ namespace NetMeter.Threads
         //    }
         //}
 
-        void notifyTestListeners() 
+        public void notifyTestListeners() 
         {
             threadVars.incIteration();
             foreach (TestIterationListener listener in testIterationStartListeners) 
@@ -795,22 +779,24 @@ namespace NetMeter.Threads
 
         private void notifyListeners(List<SampleListener> listeners, SampleResult result) 
         {
-//            SampleEvent event = new SampleEvent(result, threadGroup.getName(), threadVars);
-//            notifier.notifyListeners(event, listeners);
+            SampleEvent sampleEvent = new SampleEvent(result, threadGroup.getName(), threadVars);
+            notifier.notifyListeners(sampleEvent, listeners);
         }
 
         /**
          * Set rampup delay for JMeterThread Thread
          * @param delay Rampup delay for JMeterThread
          */
-        public void setInitialDelay(int delay) {
+        public void setInitialDelay(int delay)
+        {
             initialDelay = delay;
         }
 
         /**
          * Initial delay if ramp-up period is active for this threadGroup.
          */
-        private void rampUpDelay() {
+        private void rampUpDelay() 
+        {
             delayBy(initialDelay, "RampUp");
         }
 

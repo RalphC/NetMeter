@@ -7,9 +7,9 @@ namespace Valkyrie.Collections
 {
     public class SearchByType<T> : HashTreeTraverser
     {
-        private sealed List<T> objectOfType = new List<T>();
+        private List<T> objectOfType = new List<T>();
 
-        private sealed Dictionary<Object, ListedHashTree> subTree = new Dictionary<Object, ListedHashTree>();
+        private Dictionary<Object, ListedHashTree> subTree = new Dictionary<Object, ListedHashTree>();
 
         //private sealed T searchType;
 
@@ -50,7 +50,7 @@ namespace Valkyrie.Collections
             return tree;
         }
 
-        public override void addNode(Object node, HashTree subTree) 
+        public void addNode(Object node, HashTree subTree) 
         {
             if (node.GetType() is T)
             {
@@ -61,11 +61,11 @@ namespace Valkyrie.Collections
             }
         }
 
-        public override void subtractNode() 
+        public void subtractNode()
         {
         }
 
-        public override void processPath()
+        public void processPath()
         {
         }
     }

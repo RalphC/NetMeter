@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace NetMeter.Threads
 {
-    class NetMeterContextManager
+    public class NetMeterContextManager
     {
         private static ThreadLocal<NetMeterContext> threadContext = new ThreadLocal<NetMeterContext>();
 
@@ -20,7 +20,6 @@ namespace NetMeter.Threads
 
         private NetMeterContextManager()
         {
-
         }
 
         public static NetMeterContext getContext()

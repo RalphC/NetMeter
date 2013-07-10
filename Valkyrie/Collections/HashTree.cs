@@ -22,7 +22,7 @@ namespace Valkyrie.Collections
      * tree, or to extract information from the tree.
      *
      */
-    class HashTree : Dictionary<Object, HashTree>, ISerializable, ICloneable
+    public class HashTree : Dictionary<Object, HashTree>, ISerializable, ICloneable
     {
         // Used for the RuntimeException to short-circuit the traversal
         private static String FOUND = "found"; // $NON-NLS-1$
@@ -30,7 +30,7 @@ namespace Valkyrie.Collections
         // N.B. The keys can be either JMeterTreeNode or TestElement
         protected Dictionary<Object, HashTree> Data;
 
-        public Int32 Count { get { return Data.Count; } }
+        public new Int32 Count { get { return Data.Count; } }
 
 #region "Constructor"
 
@@ -49,7 +49,7 @@ namespace Valkyrie.Collections
         {
         }
 
-        private HashTree(Dictionary<Object, HashTree> _map, Object key)
+        public HashTree(Dictionary<Object, HashTree> _map, Object key)
         {
             if (_map != null)
             {
@@ -87,36 +87,36 @@ namespace Valkyrie.Collections
 
 #region "Override Function"
 
-        public override void Add(Object key, HashTree value)
+        public new void Add(Object key, HashTree value)
         {
             HashTree previous = null;
             Data.TryGetValue(key, out previous);
             Put(key, value);
         }
 
-        public override Boolean ContainsKey(Object obj)
+        public new Boolean ContainsKey(Object obj)
         {
             return Data.ContainsKey(obj);
         }
 
-        public override Boolean ContainsValue(HashTree tree)
+        public new Boolean ContainsValue(HashTree tree)
         {
             return Data.ContainsValue(tree);
         }
 
-        public override void Clear()
+        public new void Clear()
         {
             Data.Clear();
         }
 
-        public override Object Clone()
+        public Object Clone()
         {
             HashTree newTree = new HashTree();
             cloneTree(newTree);
             return newTree;
         }
 
-        public override Boolean Remove(Object key)
+        public new Boolean Remove(Object key)
         {
             return Data.Remove(key);
         }
@@ -139,7 +139,7 @@ namespace Valkyrie.Collections
             return false;
         }
 
-        public override String toString()
+        public override String ToString()
         {
             ConvertToString converter = new ConvertToString();
             try
@@ -150,7 +150,7 @@ namespace Valkyrie.Collections
             { // Just in case
                 converter.reportError(ex);
             }
-            return converter.toString();
+            return converter.ToString();
         }
 
 #endregion
@@ -944,7 +944,7 @@ namespace Valkyrie.Collections
                 return result;
             }
 
-            public override void addNode(Object node, HashTree subTree)
+            public void addNode(Object node, HashTree subTree)
             {
                 result = subTree.getTree(target);
                 if (result != null) 
@@ -954,12 +954,12 @@ namespace Valkyrie.Collections
                 }
             }
 
-            public override void processPath() 
+            public void processPath() 
             {
                 // Not used
             }
 
-            public override void subtractNode() 
+            public void subtractNode() 
             {
                 // Not used
             }
@@ -971,30 +971,30 @@ namespace Valkyrie.Collections
 
         private class ConvertToString : HashTreeTraverser
         {
-            private sealed StringBuilder strBuiler = new StringBuilder();
+            private StringBuilder strBuiler = new StringBuilder();
 
-            private sealed StringBuilder spaces = new StringBuilder();
+            private StringBuilder spaces = new StringBuilder();
 
             private Int32 depth = 0;
 
-            public override void addNode(Object key, HashTree subTree)
+            public void addNode(Object key, HashTree subTree)
             {
                 depth++;
                 strBuiler.Append("\n").Append(getSpaces()).Append(key);
                 strBuiler.Append(" {");
             }
 
-            public override void subtractNode()
+            public void subtractNode()
             {
                 strBuiler.Append("\n" + getSpaces() + "}");
                 depth--;
             }
 
-            public override void processPath()
+            public void processPath()
             {
             }
 
-            public override String toString()
+            public override String ToString()
             {
                 strBuiler.Append("\n}");
                 return strBuiler.ToString();

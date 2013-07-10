@@ -2,6 +2,9 @@
 
 namespace NetMeter.Engine.Event
 {
+    /**
+     * Allows a class to receive loop iteration start events.
+     */
     public interface LoopIterationListener
     {
         /**
