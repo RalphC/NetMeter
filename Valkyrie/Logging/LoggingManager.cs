@@ -1,15 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using log4net;
-using log4net.Util;
+using System.Diagnostics;
 
 namespace Valkyrie.Logging
 {
     public sealed class LoggingManager
     {
-
+        /**
+         * Get the Logger for a class - no argument needed because the calling class
+         * name is derived automatically from the call stack.
+         *
+         * @return Logger
+         */
+        public static ILog getLoggerForClass()
+        {
+            StackTrace stack = new StackTrace();
+            String callerName = stack.GetFrame(1).GetMethod().Name;
+            return LogManager.GetLogger(callerName);
+        }
     }
 }

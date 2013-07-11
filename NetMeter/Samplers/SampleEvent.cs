@@ -7,12 +7,15 @@ using System.Runtime.Serialization;
 using System.Net;
 using NetMeter.Threads;
 using System.Net.Sockets;
+using log4net;
+using Valkyrie.Logging;
+using NetMeter.Util;
 
 namespace NetMeter.Samplers
 {
     public class SampleEvent : ISerializable
     {
-        //private static final Logger log = LoggingManager.getLoggerForClass();
+        private static sealed ILog log = LoggingManager.getLoggerForClass();
 
         private static sealed Int64 serialVersionUID = 232L;
 
@@ -90,7 +93,7 @@ namespace NetMeter.Samplers
             } 
             catch (SocketException e) 
             {
-                //log.error("Cannot obtain local host name "+e);
+                log.Error("Cannot obtain local host name "+e);
             }
             HOSTNAME = hn;
 
@@ -100,7 +103,7 @@ namespace NetMeter.Samplers
 
             if (varCount > 0)
             {
-                //log.info(varCount + " sample_variables have been declared: "+vars);
+                log.Info(varCount + " sample_variables have been declared: "+vars);
             }
             this.result = result;
             this.threadGroup = threadGroup;

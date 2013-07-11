@@ -4,11 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NetMeter.Threads;
+using Valkyrie.Logging;
+using log4net;
 
 namespace NetMeter.Engine
 {
     public class StandardNetMeterEngine : NetMeterEngine
     {
+        private static sealed ILog log = LoggingManager.getLoggerForClass();
+
         private volatile static StandardNetMeterEngine engine;
 
         private String host;

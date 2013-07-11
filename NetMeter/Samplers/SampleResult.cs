@@ -6,11 +6,16 @@ using System.Threading;
 using System.Runtime.Serialization;
 using NetMeter.Util;
 using NetMeter.Assertions;
+using Valkyrie.Logging;
+using log4net;
+using System.Runtime.CompilerServices;
+using System.Net;
 
 namespace NetMeter.Samplers
 {
     public class SampleResult : ISerializable
     {
+        static sealed ILog log = LoggingManager.getLoggerForClass();
         /**
          * The default encoding to be used if not overridden.
          * The value is ISO-8859-1.
@@ -25,7 +30,7 @@ namespace NetMeter.Samplers
         static sealed String DEFAULT_ENCODING = NetMeterUtils.getPropDefault("sampleresult.default.encoding", DEFAULT_HTTP_ENCODING);
 
         /* The default used by {@link #setResponseData(String, String)} */
-        private static sealed String DEFAULT_CHARSET = Charset.defaultCharset().name();
+        private static sealed String DEFAULT_CHARSET = "UTF-8";
 
         /**
          * Data type value indicating that the response data is text.
@@ -122,7 +127,7 @@ namespace NetMeter.Samplers
         /** In Non GUI mode and when best config is used, size never exceeds 1, 
          * but as a compromise set it to 3 
          */
-        private sealed Set<String> files = new HashSet<String>(3);
+        private sealed HashSet<String> files = new HashSet<String>();
 
         private String dataEncoding;// (is this really the character set?) e.g.
                                     // ISO-8895-1, UTF-8
@@ -428,7 +433,8 @@ namespace NetMeter.Samplers
          * @param filename
          * @return true if the result was previously marked
          */
-        public synchronized Boolean markFile(String filename)
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public Boolean markFile(String filename)
         {
             return !files.Add(filename);
         }
@@ -437,7 +443,7 @@ namespace NetMeter.Samplers
             return responseCode;
         }
 
-        private static sealed String OK_CODE = Integer.toString(HttpURLConnection.HTTP_OK);
+        private static sealed String OK_CODE = HttpStatusCode.OK.ToString();
         private static sealed String OK_MSG = "OK"; // $NON-NLS-1$
 
         /**
@@ -558,7 +564,7 @@ namespace NetMeter.Samplers
             {
                 return EMPTY_AR;
             }
-            return assertionResults.toArray(new AssertionResult[assertionResults.size()]);
+            return assertionResults.ToArray();
         }
 
         /**
@@ -577,7 +583,7 @@ namespace NetMeter.Samplers
             subResult.setThreadName(tn); // TODO is this really necessary?
 
             // Extend the time to the end of the added sample
-            setEndTime(Math.max(getEndTime(), subResult.getEndTime() + nanoTimeOffset - subResult.nanoTimeOffset)); // Bug 51855
+            setEndTime(Math.Max(getEndTime(), subResult.getEndTime() + nanoTimeOffset - subResult.nanoTimeOffset)); // Bug 51855
             // Include the byte count for the added sample
             setBytes(getBytes() + subResult.getBytes());
             setHeadersSize(getHeadersSize() + subResult.getHeadersSize());
@@ -623,7 +629,7 @@ namespace NetMeter.Samplers
             if (subResults == null) {
                 return EMPTY_SR;
             }
-            return subResults.toArray(new SampleResult[subResults.size()]);
+            return subResults.ToArray();
         }
 
         /**
@@ -650,18 +656,17 @@ namespace NetMeter.Samplers
          *
          * @deprecated - only intended for use from BeanShell code
          */
-        @Deprecated
         public void setResponseData(String response)
         {
             responseDataAsString = null;
             try 
             {
-                responseData = response.getBytes(getDataEncodingWithDefault());
+                responseData = Encoding.UTF8.GetBytes(response);
             } 
-            catch (UnsupportedEncodingException e) 
+            catch (FormatException e) 
             {
-                //log.warn("Could not convert string, using default encoding. "+e.getLocalizedMessage());
-                responseData = response.getBytes(); // N.B. default charset is used deliberately here
+                log.Warn("Could not convert string, using default encoding. ");
+                responseData = Encoding.UTF8.GetBytes(response); // N.B. default charset is used deliberately here
             }
         }
 
@@ -677,13 +682,13 @@ namespace NetMeter.Samplers
             responseDataAsString = null;
             String encodeUsing = encoding != null? encoding : DEFAULT_CHARSET;
             try {
-                responseData = response.getBytes(encodeUsing);
+                responseData = Encoding.UTF8.GetBytes(response);
                 setDataEncoding(encodeUsing);
             } 
-            catch (UnsupportedEncodingException e)
+            catch (FormatException e)
             {
-                //log.warn("Could not convert string using '" + encodeUsing + "', using default encoding: " + DEFAULT_CHARSET, e);
-                responseData = response.getBytes(); // N.B. default charset is used deliberately here
+                log.Warn("Could not convert string using '" + encodeUsing + "', using default encoding: " + DEFAULT_CHARSET, e);
+                responseData = Encoding.UTF8.GetBytes(response); // N.B. default charset is used deliberately here
                 setDataEncoding(DEFAULT_CHARSET);
             }
         }
@@ -714,14 +719,14 @@ namespace NetMeter.Samplers
             {
                 if(responseDataAsString == null)
                 {
-                    responseDataAsString= new String(responseData,getDataEncodingWithDefault());
+                    responseDataAsString= Encoding.UTF8.GetString(responseData);
                 }
                 return responseDataAsString;
             }
-            catch (UnsupportedEncodingException e)
+            catch (FormatException e)
             {
-                log.warn("Using platform default as "+getDataEncodingWithDefault()+" caused "+e);
-                return new String(responseData); // N.B. default charset is used deliberately here
+                log.Warn("Using platform default as UTF-8 caused " + e);
+                return Encoding.UTF8.GetString(responseData); // N.B. default charset is used deliberately here
             }
         }
 
@@ -774,18 +779,21 @@ namespace NetMeter.Samplers
                 // N.B. The meta tag:
                 // <META http-equiv="content-type" content="text/html; charset=foobar">
                 // is now processed by HTTPSampleResult#getDataEncodingWithDefault
-                final String CS_PFX = "charset="; // $NON-NLS-1$
-                int cset = ct.toLowerCase(java.util.Locale.ENGLISH).indexOf(CS_PFX);
-                if (cset >= 0) {
-                    String charSet = ct.substring(cset + CS_PFX.length());
+                String CS_PFX = "charset="; // $NON-NLS-1$
+                int cset = ct.ToLower().IndexOf(CS_PFX);
+                if (cset >= 0)
+                {
+                    String charSet = ct.Substring(cset + CS_PFX.Length);
                     // handle: ContentType: text/plain; charset=ISO-8859-1; format=flowed
-                    int semiColon = charSet.indexOf(';');
-                    if (semiColon >= 0) {
-                        charSet=charSet.substring(0, semiColon);
+                    int semiColon = charSet.IndexOf(';');
+                    if (semiColon >= 0) 
+                    {
+                        charSet=charSet.Substring(0, semiColon);
                     }
                     // Check for quoted string
-                    if (charSet.startsWith("\"")){ // $NON-NLS-1$
-                        setDataEncoding(charSet.substring(1, charSet.length()-1)); // remove quotes
+                    if (charSet.StartsWith("\""))
+                    { // $NON-NLS-1$
+                        setDataEncoding(charSet.Substring(1, charSet.Length - 1)); // remove quotes
                     } else {
                         setDataEncoding(charSet);
                     }
@@ -988,7 +996,7 @@ namespace NetMeter.Samplers
          */
         public String getMediaType()
         {
-            return JOrphanUtils.trim(contentType," ;").toLowerCase(java.util.Locale.ENGLISH);
+            return contentType.Split(';')[1].ToLower();
         }
 
         /**
@@ -1288,15 +1296,16 @@ namespace NetMeter.Samplers
             this.timeStamp = timeStamp;
         }
 
-        private URL location;
+        private Uri location;
 
-        public void setURL(URL location)
+        public void setURL(Uri location)
         {
             this.location = location;
         }
 
-        public URL getURL() 
+        public Uri getURL() 
         {
+            
             return location;
         }
 
@@ -1307,7 +1316,7 @@ namespace NetMeter.Samplers
          */
         public String getUrlAsString() 
         {
-            return location == null ? "" : location.toExternalForm();
+            return location == null ? "" : location.OriginalString;
         }
 
         /**
@@ -1434,11 +1443,11 @@ namespace NetMeter.Samplers
                 try 
                 {
                     Thread.Sleep(wait);
-                    long clock = System.currentTimeMillis();
-                    long nano = SampleResult.sampleNsClockInMs();
+                    Int64 clock = DateTime.Now.TimeOfDay.Ticks;
+                    Int64 nano = SampleResult.sampleNsClockInMs();
                     nanoOffset = clock - nano;
                 }
-                catch (InterruptedException ignore) 
+                catch (Exception ignore) 
                 {
                     // ignored
                 }

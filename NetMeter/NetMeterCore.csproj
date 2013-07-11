@@ -53,7 +53,7 @@
     <Compile Include="NetMeterServer.cs" />
     <Compile Include="Processor\PostProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Engine\StandardNMeterEngine.cs" />
+    <Compile Include="Engine\StandardNetMeterEngine.cs" />
     <Compile Include="Samplers\Entry.cs" />
     <Compile Include="Samplers\SampleEvent.cs" />
     <Compile Include="Samplers\SampleListener.cs" />

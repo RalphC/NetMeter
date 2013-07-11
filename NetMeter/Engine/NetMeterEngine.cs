@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Resources;
 
 namespace NetMeter.Engine
 {
@@ -13,7 +6,7 @@ namespace NetMeter.Engine
     {
         void configure();
         void runTest();
-        void stopTest(bool now);
+        void stopTest(Boolean now);
         void reset();
         void setProperties();
         void exit();
