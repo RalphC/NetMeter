@@ -46,6 +46,7 @@
     <Compile Include="Assertions\AssertionResult.cs" />
     <Compile Include="Config\ConfigElement.cs" />
     <Compile Include="Control\Controller.cs" />
+    <Compile Include="Control\TransactionSampler.cs" />
     <Compile Include="Engine\Event\LoopIterationEvent.cs" />
     <Compile Include="Engine\Event\LoopIterationListener.cs" />
     <Compile Include="Engine\NetMeterEngine.cs" />
@@ -65,6 +66,8 @@
     <Compile Include="TestElements\TestElement.cs" />
     <Compile Include="TestElements\TestElementTraverser.cs" />
     <Compile Include="TestElements\TestIterationListener.cs" />
+    <Compile Include="TestElements\TestPlan.cs" />
+    <Compile Include="TestElements\TestStateListener.cs" />
     <Compile Include="Threads\AbstractThreadGroup.cs" />
     <Compile Include="Threads\ListenerNotifier.cs" />
     <Compile Include="Threads\NetMeterContext.cs" />

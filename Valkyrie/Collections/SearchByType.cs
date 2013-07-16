@@ -9,7 +9,7 @@ namespace Valkyrie.Collections
     {
         private List<T> objectOfType = new List<T>();
 
-        private Dictionary<Object, ListedHashTree> subTree = new Dictionary<Object, ListedHashTree>();
+        private Dictionary<Object, OrderedHashTree> subTree = new Dictionary<Object, OrderedHashTree>();
 
         //private sealed T searchType;
 
@@ -30,7 +30,7 @@ namespace Valkyrie.Collections
          *
          * @return Collection All found nodes of the requested type
          */
-        public List<T> getSearchResults()
+        public List<T> GetSearchResults()
         { // TODO specify collection type without breaking callers
             return objectOfType;
         }
@@ -43,29 +43,29 @@ namespace Valkyrie.Collections
          *            the node for which the sub tree is requested
          * @return HashTree
          */
-        public HashTree getSubTree(Object root) 
+        public HashTree GetSubTree(Object root) 
         {
-            ListedHashTree tree = null;
+            OrderedHashTree tree = null;
             subTree.TryGetValue(root, out tree);
             return tree;
         }
 
-        public void addNode(Object node, HashTree subTree) 
+        public void AddNode(Object node, HashTree subTree) 
         {
             if (node.GetType() is T)
             {
                 objectOfType.Add((T)node);
-                ListedHashTree tree = new ListedHashTree(node);
+                OrderedHashTree tree = new OrderedHashTree(node);
                 tree.Set(node, subTree);
                 subTree.Add(node, tree);
             }
         }
 
-        public void subtractNode()
+        public void SubtractNode()
         {
         }
 
-        public void processPath()
+        public void ProcessPath()
         {
         }
     }

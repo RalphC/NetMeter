@@ -30,7 +30,7 @@ namespace Valkyrie.Collections
         // N.B. The keys can be either JMeterTreeNode or TestElement
         protected Dictionary<Object, HashTree> Data;
 
-        public new Int32 Count { get { return Data.Count; } }
+        public new Int32 Count { Get { return Data.Count; } }
 
 #region "Constructor"
 
@@ -112,7 +112,7 @@ namespace Valkyrie.Collections
         public Object Clone()
         {
             HashTree newTree = new HashTree();
-            cloneTree(newTree);
+            CloneTree(newTree);
             return newTree;
         }
 
@@ -144,11 +144,11 @@ namespace Valkyrie.Collections
             ConvertToString converter = new ConvertToString();
             try
             {
-                traverse(converter);
+                Traverse(converter);
             }
             catch (Exception ex)
             { // Just in case
-                converter.reportError(ex);
+                converter.ReportError(ex);
             }
             return converter.ToString();
         }
@@ -168,7 +168,7 @@ namespace Valkyrie.Collections
          */
         public void Set(Object key, Object value)
         {
-            Data.Add(key, createNewTree(value));
+            Data.Add(key, CreateNewTree(value));
         }
 
         /**
@@ -198,7 +198,7 @@ namespace Valkyrie.Collections
          */
         public void Set(Object key, Object[] values)
         {
-            Data.Add(key, createNewTree(values.ToList()));
+            Data.Add(key, CreateNewTree(values.ToList()));
         }
 
         /**
@@ -215,7 +215,7 @@ namespace Valkyrie.Collections
          */
         public void Set(Object key, List<Object> values)
         {
-            Data.Add(key, createNewTree(values));
+            Data.Add(key, CreateNewTree(values));
         }
 
         /**
@@ -278,7 +278,7 @@ namespace Valkyrie.Collections
          */
         public void Set(List<Object> treePath, Object[] values)
         {
-            HashTree tree = addTreePath(treePath);
+            HashTree tree = AddTreePath(treePath);
             tree.Set(values.ToList());
         }
 
@@ -311,7 +311,7 @@ namespace Valkyrie.Collections
          */
         public void Set(List<Object> treePath, List<Object> values)
         {
-            HashTree tree = addTreePath(treePath);
+            HashTree tree = AddTreePath(treePath);
             tree.Set(values);
         }
 
@@ -330,7 +330,7 @@ namespace Valkyrie.Collections
         public void Put(Object key, HashTree subTree)
         {
             Put(key);
-            getTree(key).Put(subTree);
+            GetTree(key).Put(subTree);
         }
 
         public void Put(HashTree newTree)
@@ -340,7 +340,7 @@ namespace Valkyrie.Collections
                 if (key != null)
                 {
                     Put(key);
-                    getTree(key).Put(newTree.getTree(key));
+                    GetTree(key).Put(newTree.GetTree(key));
                 }
             }
         }
@@ -355,11 +355,11 @@ namespace Valkyrie.Collections
         {
             if (!Data.ContainsKey(key))
             {
-                HashTree newTree = createNewTree();
+                HashTree newTree = CreateNewTree();
                 Data.Add(key, newTree);
                 return newTree;
             }
-            return getTree(key);
+            return GetTree(key);
         }
 
         /**
@@ -402,7 +402,7 @@ namespace Valkyrie.Collections
         public HashTree Put(Object key, Object value)
         {
             Put(key);
-            return getTree(key).Put(value);
+            return GetTree(key).Put(value);
         }
 
         /**
@@ -418,7 +418,7 @@ namespace Valkyrie.Collections
         public void Put(Object key, Object[] values)
         {
             Put(key);
-            getTree(key).Put(values);
+            GetTree(key).Put(values);
         }
 
         /**
@@ -434,7 +434,7 @@ namespace Valkyrie.Collections
         public void Put(Object key, List<Object> values)
         {
             Put(key);
-            getTree(key).Put(values);
+            GetTree(key).Put(values);
         }
 
         /**
@@ -496,8 +496,8 @@ namespace Valkyrie.Collections
          */
         public void Put(List<Object> treePath, Object[] values)
         {
-            HashTree tree = addTreePath(treePath);
-            tree.Put(values.ToList());
+            HashTree tree = AddTreePath(treePath);
+            tree.Put(values);
         }
 
         /**
@@ -514,7 +514,7 @@ namespace Valkyrie.Collections
          */
         public HashTree Put(List<Object> treePath, Object value)
         {
-            HashTree tree = addTreePath(treePath);
+            HashTree tree = AddTreePath(treePath);
             return tree.Put(value);
         }
 
@@ -532,7 +532,7 @@ namespace Valkyrie.Collections
          */
         public void Put(List<Object> treePath, List<Object> values)
         {
-            HashTree tree = addTreePath(treePath);
+            HashTree tree = AddTreePath(treePath);
             tree.Put(values);
         }
 
@@ -547,7 +547,7 @@ namespace Valkyrie.Collections
          *
          * @return array of all keys in this HashTree.
          */
-        public Object[] getArray() 
+        public Object[] GetArray() 
         {
             return Data.Keys.ToArray();
         }
@@ -562,12 +562,12 @@ namespace Valkyrie.Collections
          *            key used to find HashTree to get list of
          * @return array of all keys in found HashTree
          */
-        public Object[] getArray(Object key) 
+        public Object[] GetArray(Object key) 
         {
-            HashTree t = getTree(key);
+            HashTree t = GetTree(key);
             if (t != null)
             {
-                return t.getArray();
+                return t.GetArray();
             }
             return null;
         }
@@ -583,13 +583,13 @@ namespace Valkyrie.Collections
          *            array of keys used to recurse into HashTree structure
          * @return array of all keys found in end HashTree
          */
-        public Object[] getArray(Object[] treePath) 
+        public Object[] GetArray(Object[] treePath) 
         {
             if (treePath != null) 
             {
-                return getArray(treePath.ToList());
+                return GetArray(treePath.ToList());
             }
-            return getArray();
+            return GetArray();
         }
 
         /**
@@ -603,10 +603,10 @@ namespace Valkyrie.Collections
          *            list of keys used to recurse into HashTree structure
          * @return array of all keys found in end HashTree
          */
-        public Object[] getArray(List<Object> treePath) 
+        public Object[] GetArray(List<Object> treePath) 
         {
-            HashTree tree = getTreePath(treePath);
-            return (tree != null) ? tree.getArray() : null;
+            HashTree tree = GetTreePath(treePath);
+            return (tree != null) ? tree.GetArray() : null;
         }
 
 #endregion
@@ -636,24 +636,25 @@ namespace Valkyrie.Collections
             }
             else
             {
+                throw new InvalidCastException();
             }
         }
 
-        protected void cloneTree(HashTree newTree)
+        protected void CloneTree(HashTree newTree)
         {
             foreach (Object key in list())
             {
-                newTree.Set(key, (HashTree)getTree(key).Clone());
+                newTree.Set(key, (HashTree)GetTree(key).Clone());
             }
         }
 
-        protected HashTree addTreePath(List<Object> treePath)
+        protected HashTree AddTreePath(List<Object> treePath)
         {
             HashTree tree = this;
             foreach (Object path in treePath)
             {
                 tree.Put(path);
-                tree = tree.getTree(path);
+                tree = tree.GetTree(path);
             }
             return tree;
         }
@@ -668,7 +669,7 @@ namespace Valkyrie.Collections
          *
          * @return HashTree
          */
-        protected HashTree createNewTree()
+        protected HashTree CreateNewTree()
         {
             return new HashTree();
         }
@@ -683,7 +684,7 @@ namespace Valkyrie.Collections
          *
          * @return HashTree
          */
-        protected HashTree createNewTree(Object key)
+        protected HashTree CreateNewTree(Object key)
         {
             return new HashTree(key);
         }
@@ -698,7 +699,7 @@ namespace Valkyrie.Collections
          *
          * @return HashTree
          */
-        protected HashTree createNewTree(List<Object> values)
+        protected HashTree CreateNewTree(List<Object> values)
         {
             return new HashTree(values);
         }
@@ -709,7 +710,7 @@ namespace Valkyrie.Collections
          * @param key
          *            Key used to find appropriate HashTree()
          */
-        public HashTree getTree(Object key)
+        public HashTree GetTree(Object key)
         {
             HashTree tree = null;
             if (Data.TryGetValue(key, out tree))
@@ -727,11 +728,11 @@ namespace Valkyrie.Collections
          *            array of keys.
          * @return HashTree at the end of the recursion.
          */
-        public HashTree getTree(Object[] treePath)
+        public HashTree GetTree(Object[] treePath)
         {
             if (treePath != null)
             {
-                return getTree(treePath.ToList());
+                return GetTree(treePath.ToList());
             }
             return this;
         }
@@ -744,12 +745,12 @@ namespace Valkyrie.Collections
          *            Collection of keys
          * @return HashTree at the end of the recursion
          */
-        public HashTree getTree(List<Object> treePath) 
+        public HashTree GetTree(List<Object> treePath) 
         {
-            return getTreePath(treePath);
+            return GetTreePath(treePath);
         }
 
-        protected HashTree getTreePath(List<Object> treePath)
+        protected HashTree GetTreePath(List<Object> treePath)
         {
             HashTree tree = this;
             foreach (var path in treePath)
@@ -760,7 +761,7 @@ namespace Valkyrie.Collections
                 }
                 else
                 {
-                    tree = tree.getTree(path);
+                    tree = tree.GetTree(path);
                 }
             }
             return tree;
@@ -833,7 +834,7 @@ namespace Valkyrie.Collections
          */
         public List<Object> list(List<Object> treePath)
         {
-            HashTree tree = getTreePath(treePath);
+            HashTree tree = GetTreePath(treePath);
             if (tree != null)
             {
                 return tree.list();
@@ -846,9 +847,9 @@ namespace Valkyrie.Collections
          * Finds the given current key, and replaces it with the given new key. Any
          * tree structure found under the original key is moved to the new key.
          */
-        public void replace(Object currentKey, Object newKey)
+        public void Replace(Object currentKey, Object newKey)
         {
-            HashTree tree = getTree(currentKey);
+            HashTree tree = GetTree(currentKey);
             Data.Remove(currentKey);
             Data.Add(newKey, tree);
         }
@@ -863,9 +864,9 @@ namespace Valkyrie.Collections
          *            Key to search for
          * @return HashTree mapped to key, if found, otherwise <code>null</code>
          */
-        public HashTree search(Object key)
+        public HashTree Search(Object key)
         {// TODO does not appear to be used
-            HashTree result = getTree(key);
+            HashTree result = GetTree(key);
             if (result != null)
             {
                 return result;
@@ -873,7 +874,7 @@ namespace Valkyrie.Collections
             TreeSearcher searcher = new TreeSearcher(key);
             try
             {
-                traverse(searcher);
+                Traverse(searcher);
             }
             catch (Exception ex)
             {
@@ -883,7 +884,7 @@ namespace Valkyrie.Collections
                 }
                 // do nothing - means object is found
             }
-            return searcher.getResult();
+            return searcher.GetResult();
         }
 
         /**
@@ -893,12 +894,12 @@ namespace Valkyrie.Collections
          *
          * @see HashTreeTraverser
          */
-        public void traverse(HashTreeTraverser visitor)
+        public void Traverse(HashTreeTraverser visitor)
         {
             foreach (Object obj in list())
             {
-                visitor.addNode(obj, getTree(obj));
-                getTree(obj).traverseInto(visitor);
+                visitor.AddNode(obj, GetTree(obj));
+                GetTree(obj).TraverseInto(visitor);
             }
         }
 
@@ -906,22 +907,22 @@ namespace Valkyrie.Collections
          * The recursive method that accomplishes the tree-traversal and performs
          * the callbacks to the HashTreeTraverser.
          */
-        private void traverseInto(HashTreeTraverser visitor)
+        private void TraverseInto(HashTreeTraverser visitor)
         {
             if (list().Count == 0)
             {
-                visitor.processPath();
+                visitor.ProcessPath();
             }
             else
             {
                 foreach (Object item in list())
                 {
-                    HashTree treeItem = getTree(item);
-                    visitor.addNode(item, treeItem);
-                    treeItem.traverseInto(visitor);
+                    HashTree treeItem = GetTree(item);
+                    visitor.AddNode(item, treeItem);
+                    treeItem.TraverseInto(visitor);
                 }
             }
-            visitor.subtractNode();
+            visitor.SubtractNode();
         }
 
 
@@ -939,14 +940,14 @@ namespace Valkyrie.Collections
                 target = t;
             }
 
-            public HashTree getResult() 
+            public HashTree GetResult() 
             {
                 return result;
             }
 
-            public void addNode(Object node, HashTree subTree)
+            public void AddNode(Object node, HashTree subTree)
             {
-                result = subTree.getTree(target);
+                result = subTree.GetTree(target);
                 if (result != null) 
                 {
                     // short circuit traversal when found
@@ -954,12 +955,12 @@ namespace Valkyrie.Collections
                 }
             }
 
-            public void processPath() 
+            public void ProcessPath() 
             {
                 // Not used
             }
 
-            public void subtractNode() 
+            public void SubtractNode() 
             {
                 // Not used
             }
@@ -977,20 +978,20 @@ namespace Valkyrie.Collections
 
             private Int32 depth = 0;
 
-            public void addNode(Object key, HashTree subTree)
+            public void AddNode(Object key, HashTree subTree)
             {
                 depth++;
-                strBuiler.Append("\n").Append(getSpaces()).Append(key);
+                strBuiler.Append("\n").Append(GetSpaces()).Append(key);
                 strBuiler.Append(" {");
             }
 
-            public void subtractNode()
+            public void SubtractNode()
             {
-                strBuiler.Append("\n" + getSpaces() + "}");
+                strBuiler.Append("\n" + GetSpaces() + "}");
                 depth--;
             }
 
-            public void processPath()
+            public void ProcessPath()
             {
             }
 
@@ -1000,12 +1001,12 @@ namespace Valkyrie.Collections
                 return strBuiler.ToString();
             }
 
-            public void reportError(Exception ex)
+            public void ReportError(Exception ex)
             {
                 strBuiler.Append("Error: ").Append(ex.Message);
             }
 
-            private String getSpaces()
+            private String GetSpaces()
             {
                 if (spaces.Length < depth * 2)
                 {

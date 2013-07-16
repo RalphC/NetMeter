@@ -14,14 +14,14 @@ namespace Valkyrie.Collections
          * @param subTree
          *            the HashTree under the node encountered
          */
-        void addNode(Object node, HashTree subTree);
+        void AddNode(Object node, HashTree subTree);
 
         /**
          * Indicates traversal has moved up a step, and the visitor should remove
          * the top node from its stack structure. This is a callback method, and
          * should not be called except by a HashTree during traversal.
          */
-        void subtractNode();
+        void SubtractNode();
 
         /**
          * Process path is called when a leaf is reached. If a visitor wishes to
@@ -30,6 +30,6 @@ namespace Valkyrie.Collections
          * every {@link #subtractNode()} call. This is a callback method, and should
          * not be called except by a HashTree during traversal.
          */
-        void processPath();
+        void ProcessPath();
     }
 }

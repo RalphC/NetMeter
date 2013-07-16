@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Collections\HashTree.cs" />
     <Compile Include="Collections\HashTreeTraverser.cs" />
-    <Compile Include="Collections\ListedHashTree.cs" />
+    <Compile Include="Collections\OrderedHashTree.cs" />
     <Compile Include="Collections\SearchByType.cs" />
     <Compile Include="Logging\LoggingManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

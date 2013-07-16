@@ -12,6 +12,6 @@ namespace NetMeter.Engine.Event
          * 
          * @param iterEvent the event
          */
-        void iterationStart(LoopIterationEvent iterEvent);
+        void IterationStart(LoopIterationEvent iterEvent);
     }
 }

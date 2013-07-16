@@ -19,7 +19,7 @@ namespace NetMeter.Threads
 
         private StandardNetMeterEngine engine;
 
-        private NetMeterThread thread;
+        private NetMeterThread nThread;
 
         private AbstractThreadGroup threadGroup;
 
@@ -27,7 +27,7 @@ namespace NetMeter.Threads
 
         private bool isReinitSubControllers = false;
 
-        private bool restartNextLoop = false;
+        public bool restartNextLoop { get; set; }
 
         private ConcurrentDictionary<String, Object> samplerContext = new ConcurrentDictionary<String, Object>();
 
@@ -49,9 +49,10 @@ namespace NetMeter.Threads
             previousSampler = null;
             samplingStarted = false;
             threadNum = 0;
-            thread = null;
+            nThread = null;
             isReinitSubControllers = false;
             samplerContext.Clear();
+            restartNextLoop = false;
         }
 
         /**
@@ -59,12 +60,12 @@ namespace NetMeter.Threads
          * 
          * @return a pointer to the JMeter variables.
          */
-        public NetMeterVariables getVariables()
+        public NetMeterVariables GetVariables()
         {
             return variables;
         }
 
-        public void setVariables(NetMeterVariables vars)
+        public void SetVariables(NetMeterVariables vars)
         {
             this.variables = vars;
         }
@@ -74,17 +75,17 @@ namespace NetMeter.Threads
             return previousResult;
         }
 
-        public void setPreviousResult(SampleResult result) 
+        public void SetPreviousResult(SampleResult result) 
         {
             this.previousResult = result;
         }
 
-        public Sampler getCurrentSampler() 
+        public Sampler GetCurrentSampler() 
         {
             return currentSampler;
         }
 
-        public void setCurrentSampler(Sampler sampler)
+        public void SetCurrentSampler(Sampler sampler)
         {
             this.previousSampler = currentSampler;
             this.currentSampler = sampler;
@@ -116,19 +117,19 @@ namespace NetMeter.Threads
          * @param threadNum
          *            the threadNum to set
          */
-        public void setThreadNum(int threadNum)
+        public void SetThreadNum(int threadNum)
         {
             this.threadNum = threadNum;
         }
 
         public NetMeterThread getThread()
         {
-            return this.thread;
+            return this.nThread;
         }
 
-        public void setThread(NetMeterThread thread)
+        public void SetThread(NetMeterThread nThread)
         {
-            this.thread = thread;
+            this.nThread = nThread;
         }
 
         public AbstractThreadGroup getThreadGroup()
@@ -136,17 +137,17 @@ namespace NetMeter.Threads
             return this.threadGroup;
         }
 
-        public void setThreadGroup(AbstractThreadGroup threadgrp)
+        public void SetThreadGroup(AbstractThreadGroup threadgrp)
         {
             this.threadGroup = threadgrp;
         }
 
-        public StandardNetMeterEngine getEngine()
+        public StandardNetMeterEngine GetEngine()
         {
             return engine;
         }
 
-        public void setEngine(StandardNetMeterEngine engine)
+        public void SetEngine(StandardNetMeterEngine engine)
         {
             this.engine = engine;
         }
@@ -197,31 +198,13 @@ namespace NetMeter.Threads
         }
 
         /**
-         * if set to true a restart of the loop will occurs
-         * @param restartNextLoop
-         */
-        public void setRestartNextLoop(Boolean restartNextLoop)
-        {
-            this.restartNextLoop = restartNextLoop;
-        }
-
-        /**
-         * a restart of the loop was required ?
-         * @return the restartNextLoop
-         */
-        public bool isRestartNextLoop()
-        {
-            return restartNextLoop;
-        }
-
-        /**
          * Clean cached data after sample
          */
-        public void cleanAfterSample() 
+        public void CleanAfterSample() 
         {
             if(previousResult != null) 
             {
-                previousResult.cleanAfterSample();
+                previousResult.CleanAfterSample();
             }
             samplerContext.Clear();
         }
@@ -230,7 +213,7 @@ namespace NetMeter.Threads
          * Sampler context is cleaned up as soon as Post-Processor have ended
          * @return Context to use within PostProcessors to cache data
          */
-        public ConcurrentDictionary<String, Object> getSamplerContext() 
+        public ConcurrentDictionary<String, Object> GetSamplerContext() 
         {
             return samplerContext;
         }

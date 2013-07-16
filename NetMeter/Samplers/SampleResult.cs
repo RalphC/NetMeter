@@ -15,7 +15,7 @@ namespace NetMeter.Samplers
 {
     public class SampleResult : ISerializable
     {
-        static sealed ILog log = LoggingManager.getLoggerForClass();
+        static sealed ILog log = LoggingManager.GetLoggerForClass();
         /**
          * The default encoding to be used if not overridden.
          * The value is ISO-8859-1.
@@ -61,23 +61,23 @@ namespace NetMeter.Samplers
     
         private static sealed Boolean GETBYTES_NETWORK_SIZE = GETBYTES_HEADERS_SIZE && GETBYTES_BODY_REALSIZE ? true : false;
 
-        private SampleSaveConfiguration saveConfig;
+        //private SampleSaveConfiguration saveConfig;
 
         private SampleResult parent = null;
 
-        /**
-         * @param propertiesToSave
-         *            The propertiesToSave to set.
-         */
-        public void setSaveConfig(SampleSaveConfiguration propertiesToSave)
-        {
-            this.saveConfig = propertiesToSave;
-        }
+        ///**
+        // * @param propertiesToSave
+        // *            The propertiesToSave to set.
+        // */
+        //public void setSaveConfig(SampleSaveConfiguration propertiesToSave)
+        //{
+        //    this.saveConfig = propertiesToSave;
+        //}
 
-        public SampleSaveConfiguration getSaveConfig() 
-        {
-            return saveConfig;
-        }
+        //public SampleSaveConfiguration getSaveConfig() 
+        //{
+        //    return saveConfig;
+        //}
 
         private byte[] responseData = EMPTY_BA;
 
@@ -120,7 +120,7 @@ namespace NetMeter.Samplers
 
         private String dataType=""; // Don't return null if not set
 
-        private Boolean success;
+        public Boolean Success { get; set; }
 
         //@GuardedBy("this"")
         /** files that this sample has been saved in */
@@ -145,7 +145,7 @@ namespace NetMeter.Samplers
         private Boolean stopThread = false;
 
         /** Should test terminate? */
-        private Boolean stopTest = false;
+        public Boolean stopTest = false;
 
         /** Should test terminate abruptly? */
         private Boolean stopTestNow = false;
@@ -291,7 +291,7 @@ namespace NetMeter.Samplers
             stopThread = res.stopThread;
             startNextThreadLoop = res.startNextThreadLoop;
             subResults = res.subResults; // TODO ??
-            success = res.success;//OK
+            Success = res.Success;//OK
             threadName = res.threadName;//OK
             time = res.time;
             timeStamp = res.timeStamp;
@@ -491,7 +491,7 @@ namespace NetMeter.Samplers
         {
             setResponseCodeOK();
             setResponseMessageOK();
-            setSuccessful(true);
+            Success = true;
         }
 
         public String getThreadName()
@@ -499,7 +499,7 @@ namespace NetMeter.Samplers
             return threadName;
         }
 
-        public void setThreadName(String threadName) 
+        public void SetThreadName(String threadName) 
         {
             this.threadName = threadName;
         }
@@ -578,9 +578,9 @@ namespace NetMeter.Samplers
             if (0 == tn.Length) 
             {
                 tn = Thread.CurrentThread.Name;//TODO do this more efficiently
-                this.setThreadName(tn);
+                this.SetThreadName(tn);
             }
-            subResult.setThreadName(tn); // TODO is this really necessary?
+            subResult.SetThreadName(tn); // TODO is this really necessary?
 
             // Extend the time to the end of the added sample
             setEndTime(Math.Max(getEndTime(), subResult.getEndTime() + nanoTimeOffset - subResult.nanoTimeOffset)); // Bug 51855
@@ -746,14 +746,9 @@ namespace NetMeter.Samplers
          * @return elapsed time in milliseonds
          *
          */
-        public long getTime()
+        public long GetTime()
         {
             return time;
-        }
-
-        public Boolean isSuccessful()
-        {
-            return success;
         }
 
         public void setDataType(String dataType) 
@@ -814,9 +809,10 @@ namespace NetMeter.Samplers
             };
 
         // List of types that are known to be ascii, although they may appear to be binary
-        private static sealed String[] NON_BINARY_TYPES = {
+        private static sealed String[] NON_BINARY_TYPES = 
+        {
             "video/f4m",       //$NON-NLS-1$ (Flash Media Manifest)
-            };
+        };
 
         /*
          * Determine if content-type is known to be binary, i.e. not displayable as text.
@@ -841,17 +837,6 @@ namespace NetMeter.Samplers
                 }
             }
             return false;
-        }
-
-        /**
-         * Sets the successful attribute of the SampleResult object.
-         *
-         * @param success
-         *            the new successful value
-         */
-        public void setSuccessful(Boolean success)
-        {
-            this.success = success;
         }
 
         /**
@@ -1191,7 +1176,7 @@ namespace NetMeter.Samplers
          */
         public int getErrorCount()
         {
-            return success ? 0 : 1;
+            return Success ? 0 : 1;
         }
 
         public void setErrorCount(Int32 i)
@@ -1351,7 +1336,7 @@ namespace NetMeter.Samplers
             return groupThreads;
         }
 
-        public void setGroupThreads(Int32 n) 
+        public void SetGroupThreads(Int32 n) 
         {
             this.groupThreads = n;
         }
@@ -1361,7 +1346,7 @@ namespace NetMeter.Samplers
             return allThreads;
         }
 
-        public void setAllThreads(Int32 n) 
+        public void SetAllThreads(Int32 n) 
         {
             this.allThreads = n;
         }
@@ -1474,7 +1459,7 @@ namespace NetMeter.Samplers
         /**
          * Clean up cached data
          */
-        public void cleanAfterSample() 
+        public void CleanAfterSample() 
         {
             this.responseDataAsString = null;
         }

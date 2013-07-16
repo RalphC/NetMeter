@@ -15,7 +15,7 @@ namespace NetMeter.Samplers
 {
     public class SampleEvent : ISerializable
     {
-        private static sealed ILog log = LoggingManager.getLoggerForClass();
+        private static sealed ILog log = LoggingManager.GetLoggerForClass();
 
         private static sealed Int64 serialVersionUID = 232L;
 

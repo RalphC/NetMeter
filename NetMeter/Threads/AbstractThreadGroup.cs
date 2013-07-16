@@ -9,10 +9,11 @@ using NetMeter.Control;
 using NetMeter.Engine.Event;
 using NetMeter.TestElements.Property;
 using Valkyrie.Collections;
+using NetMeter.Samplers;
 
 namespace NetMeter.Threads
 {
-    public abstract class AbstractThreadGroup : AbstractTestElement,Controller, NetMeterThreadMonitor, ISerializable 
+    public abstract class AbstractThreadGroup : AbstractTestElement, Controller, NetMeterThreadMonitor, ISerializable 
     {
         /** Action to be taken when a Sampler error occurs */
         public static String ON_SAMPLE_ERROR = "ThreadGroup.on_sample_error"; // int
@@ -42,12 +43,12 @@ namespace NetMeter.Threads
 
         public override Boolean isDone() 
         {
-            return getSamplerController().isDone();
+            return GetSamplerController().isDone();
         }
 
-        public override Sampler next()
+        public override Sampler Next()
         {
-            return getSamplerController().next();
+            return GetSamplerController().next();
         }
 
         /**
@@ -55,7 +56,7 @@ namespace NetMeter.Threads
          *
          * @return the sampler controller.
          */
-        public Controller getSamplerController()
+        public Controller GetSamplerController()
         {
             return (Controller) getProperty(MAIN_CONTROLLER).getObjectValue();
         }
@@ -66,9 +67,9 @@ namespace NetMeter.Threads
          * @param c
          *            the sampler controller.
          */
-        public void setSamplerController(LoopController c) 
+        public void SetSamplerController(LoopController c) 
         {
-            c.setContinueForever(false);
+            c.SetContinueForever(false);
             setProperty(new TestElementProperty(MAIN_CONTROLLER, c));
         }
 
@@ -78,36 +79,36 @@ namespace NetMeter.Threads
          * @param child
          *            the test element to add.
          */
-        public override void addTestElement(TestElement child) 
+        public override void AddTestElement(TestElement child) 
         {
-            getSamplerController().addTestElement(child);
+            GetSamplerController().AddTestElement(child);
         }
 
-        public override Boolean addTestElementOnce(TestElement child)
-        {
-            if (children.putIfAbsent(child, DUMMY) == null)
-            {
-                addTestElement(child);
-                return true;
-            }
-            return false;
-        }
+        //public override Boolean AddTestElementOnce(TestElement child)
+        //{
+        //    if (children.putIfAbsent(child, DUMMY) == null)
+        //    {
+        //        AddTestElement(child);
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
-        public override void addIterationListener(LoopIterationListener lis) 
+        public override void AddIterationListener(LoopIterationListener lis) 
         {
-            getSamplerController().addIterationListener(lis);
+            GetSamplerController().AddIterationListener(lis);
         }
     
-        public override void removeIterationListener(LoopIterationListener iterationListener) 
+        public override void RemoveIterationListener(LoopIterationListener iterationListener) 
         {
-            getSamplerController().removeIterationListener(iterationListener);
+            GetSamplerController().RemoveIterationListener(iterationListener);
         }
 
-        public override void initialize() 
+        public override void Initialize() 
         {
-            Controller c = getSamplerController();
+            Controller c = GetSamplerController();
             NetMeterProperty property = c.getProperty(TestElement.NAME);
-            property.setObjectValue(getName()); // Copy our name into that of the controller
+            property.setObjectValue(GetName()); // Copy our name into that of the controller
             property.setRunningVersion(property.isRunningVersion());// otherwise name reverts
             c.initialize();
         }
@@ -115,15 +116,15 @@ namespace NetMeter.Threads
         /**
          * Start next iteration after an error
          */
-        public void startNextLoop() 
+        public void StartNextLoop() 
         {
-           ((LoopController) getSamplerController()).startNextLoop();
+           ((LoopController) GetSamplerController()).startNextLoop();
         }
     
         /**
          * NOOP
          */
-        public override void triggerEndOfLoop()
+        public override void TriggerEndOfLoop()
         {// NOOP
         }
 
@@ -133,15 +134,15 @@ namespace NetMeter.Threads
          * @param numThreads
          *            the number of threads.
          */
-        public void setNumThreads(int numThreads) 
+        public void SetNumThreads(int numThreads) 
         {
-            setProperty(new IntegerProperty(NUM_THREADS, numThreads));
+            SetProperty(new IntegerProperty(NUM_THREADS, numThreads));
         }
 
         /**
          * Increment the number of active threads
          */
-        public void incrNumberOfThreads() 
+        public void IncrNumberOfThreads() 
         {
             Interlocked.Increment(ref numberOfThreads);
         }
@@ -149,7 +150,7 @@ namespace NetMeter.Threads
         /**
          * Decrement the number of active threads
          */
-        public void decrNumberOfThreads() 
+        public void DecrNumberOfThreads() 
         {
             Interlocked.Decrement(ref numberOfThreads);
         }
@@ -157,7 +158,7 @@ namespace NetMeter.Threads
         /**
          * Get the number of active threads
          */
-        public Int32 getNumberOfThreads()
+        public Int32 GetNumberOfThreads()
         {
             return (Int32)Interlocked.Read(ref numberOfThreads);
         }
@@ -167,9 +168,9 @@ namespace NetMeter.Threads
          *
          * @return the number of threads.
          */
-        public int getNumThreads() 
+        public int GetNumThreads() 
         {
-            return this.getPropertyAsInt(AbstractThreadGroup.NUM_THREADS);
+            return this.GetPropertyAsInt(AbstractThreadGroup.NUM_THREADS);
         }
 
         /**
@@ -177,9 +178,9 @@ namespace NetMeter.Threads
          *
          * @return true if thread should start next loop
          */
-        public Boolean getOnErrorStartNextLoop() 
+        public Boolean GetOnErrorStartNextLoop() 
         {
-            return getPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_START_NEXT_LOOP);
+            return GetPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_START_NEXT_LOOP);
         }
 
         /**
@@ -187,9 +188,9 @@ namespace NetMeter.Threads
          *
          * @return true if thread should stop
          */
-        public Boolean getOnErrorStopThread() 
+        public Boolean GetOnErrorStopThread() 
         {
-            return getPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTHREAD);
+            return GetPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTHREAD);
         }
 
         /**
@@ -197,9 +198,9 @@ namespace NetMeter.Threads
          *
          * @return true if test (all threads) should stop
          */
-        public Boolean getOnErrorStopTest() 
+        public Boolean GetOnErrorStopTest() 
         {
-            return getPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTEST);
+            return GetPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTEST);
         }
 
         /**
@@ -207,24 +208,24 @@ namespace NetMeter.Threads
          *
          * @return true if test (all threads) should stop immediately
          */
-        public Boolean getOnErrorStopTestNow()
+        public Boolean GetOnErrorStopTestNow()
         {
-            return getPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTEST_NOW);
+            return GetPropertyAsString(AbstractThreadGroup.ON_SAMPLE_ERROR).Equals(ON_SAMPLE_ERROR_STOPTEST_NOW);
         }
 
-        public abstract Boolean stopThread(String threadName, Boolean now);
+        public abstract Boolean StopThread(String threadName, Boolean now);
 
-        public abstract int numberOfActiveThreads();
+        public abstract int NumberOfActiveThreads();
 
-        public abstract void start(int groupCount, ListenerNotifier notifier, ListedHashTree threadGroupTree, StandardNetMeterEngine engine);
+        public abstract void Start(int groupCount, ListenerNotifier notifier, OrderedHashTree threadGroupTree, StandardNetMeterEngine engine);
 
-        public abstract Boolean verifyThreadsStopped();
+        public abstract Boolean VerifyThreadsStopped();
 
-        public abstract void waitThreadsStopped();
+        public abstract void WaitThreadsStopped();
 
-        public abstract void tellThreadsToStop();
+        public abstract void TellThreadsToStop();
 
-        public abstract void stop();
+        public abstract void Stop();
 
 
     }

@@ -14,7 +14,7 @@ namespace NetMeter
 {
     public class NetMeterServer
     {
-        private static sealed ILog log = LoggingManager.getLoggerForClass();
+        private static sealed ILog log = LoggingManager.GetLoggerForClass();
 
         private NetMeterServer parent;
 

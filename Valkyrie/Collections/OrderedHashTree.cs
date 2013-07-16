@@ -7,43 +7,43 @@ using System.Runtime.Serialization;
 
 namespace Valkyrie.Collections
 {
-    public class ListedHashTree : HashTree, ISerializable, ICloneable
+    public class OrderedHashTree : HashTree, ISerializable, ICloneable
     {
         private List<Object> order;
 
-        public ListedHashTree() : base()
+        public OrderedHashTree() : base()
         {
             order = new List<Object>();
         }
 
-        public ListedHashTree(Object key) : this()
+        public OrderedHashTree(Object key) : this()
         {
-            Data.Add(key, new ListedHashTree());
+            Data.Add(key, new OrderedHashTree());
             order.Add(key);
         }
 
-        public ListedHashTree(List<Object> keys) : this()
+        public OrderedHashTree(List<Object> keys) : this()
         {
             foreach (Object key in keys)
             {
-                Data.Add(key, new ListedHashTree());
+                Data.Add(key, new OrderedHashTree());
                 order.Add(key);
             }
         }
 
-        public ListedHashTree(Object[] keys) : this()
+        public OrderedHashTree(Object[] keys) : this()
         {
             foreach (Object key in keys)
             {
-                Data.Add(key, new ListedHashTree());
+                Data.Add(key, new OrderedHashTree());
                 order.Add(key);
             }
         }
 
         public new Object Clone() 
         {
-            ListedHashTree newTree = new ListedHashTree();
-            cloneTree(newTree);
+            OrderedHashTree newTree = new OrderedHashTree();
+            CloneTree(newTree);
             return newTree;
         }
 
@@ -83,9 +83,9 @@ namespace Valkyrie.Collections
             base.Set(key, values);
         }
 
-        public new void replace(Object currentKey, Object newKey) 
+        public new void Replace(Object currentKey, Object newKey) 
         {
-            HashTree tree = getTree(currentKey);
+            HashTree tree = GetTree(currentKey);
             Data.Remove(currentKey);
             Data.Add(newKey, tree);
             // find order.indexOf(currentKey) using == rather than equals()
@@ -100,19 +100,19 @@ namespace Valkyrie.Collections
             order[entry] = newKey;
         }
 
-        public new HashTree createNewTree() 
+        public new HashTree CreateNewTree() 
         {
-            return new ListedHashTree();
+            return new OrderedHashTree();
         }
 
-        public new HashTree createNewTree(Object key)
+        public new HashTree CreateNewTree(Object key)
         {
-            return new ListedHashTree(key);
+            return new OrderedHashTree(key);
         }
 
-        public new HashTree createNewTree(List<Object> values)
+        public new HashTree CreateNewTree(List<Object> values)
         {
-            return new ListedHashTree(values);
+            return new OrderedHashTree(values);
         }
 
 
@@ -120,12 +120,12 @@ namespace Valkyrie.Collections
         {
             if (!Data.ContainsKey(key)) 
             {
-                HashTree newTree = createNewTree();
+                HashTree newTree = CreateNewTree();
                 Data.Add(key, newTree);
                 order.Add(key);
                 return newTree;
             }
-            return getTree(key);
+            return GetTree(key);
         }
 
         public new List<Object> list() 
@@ -139,7 +139,7 @@ namespace Valkyrie.Collections
             return Data.Remove(key);
         }
 
-        public new Object[] getArray() 
+        public new Object[] GetArray() 
         {
             return order.ToArray();
         }
@@ -156,28 +156,18 @@ namespace Valkyrie.Collections
 
         public override Boolean Equals(Object obj) 
         {
-            if (!(obj is ListedHashTree)) 
+            if (!(obj is OrderedHashTree)) 
             {
                 return false;
             }
-            ListedHashTree lht = (ListedHashTree) obj;
+            OrderedHashTree lht = (OrderedHashTree) obj;
             return (base.Equals(lht) && order.Equals(lht.order));
         }
 
-        public List<Object> keySet() 
+        public List<Object> KeyList() 
         {
             return Data.Keys.ToList();
         }
-
-        //private void readObject(ObjectInputStream ois) 
-        //{
-        //    ois.defaultReadObject();
-        //}
-
-        //private void writeObject(ObjectOutputStream oos) 
-        //{
-        //    oos.defaultWriteObject();
-        //}
 
         public new void Clear() 
         {

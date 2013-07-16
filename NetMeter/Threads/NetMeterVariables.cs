@@ -24,10 +24,10 @@ namespace NetMeter.Threads
 
         public NetMeterVariables() 
         {
-            preloadVariables();
+            PreloadVariables();
         }
 
-        private void preloadVariables()
+        private void PreloadVariables()
         {
             foreach (String prop in PRE_LOAD)
             {
@@ -39,23 +39,23 @@ namespace NetMeter.Threads
             }
         }
 
-        public String getThreadName() 
+        public String GetThreadName() 
         {
             return Thread.CurrentThread.Name;
         }
 
-        public int getIteration() {
+        public int GetIteration() {
             return iteration;
         }
 
-        public void incIteration() {
+        public void IncIteration() {
             iteration++;
         }
 
         // Does not appear to be used
-        public void initialize() {
+        public void Initialize() {
             variables.Clear();
-            preloadVariables();
+            PreloadVariables();
         }
 
         /**
@@ -86,12 +86,12 @@ namespace NetMeter.Threads
          * @param key the variable name
          * @param value the variable value
          */
-        public void putObject(String key, Object value)
+        public void PutObject(String key, Object value)
         {
             variables.Add(key, value);
         }
 
-        public void putAll(Dictionary<String, Object> vars)
+        public void PutAll(Dictionary<String, Object> vars)
         {
             foreach (var item in vars)
             {
@@ -99,9 +99,9 @@ namespace NetMeter.Threads
             }
         }
 
-        public void putAll(NetMeterVariables vars) 
+        public void PutAll(NetMeterVariables vars) 
         {
-            putAll(vars.variables);
+            PutAll(vars.variables);
         }
 
         /**
@@ -110,7 +110,7 @@ namespace NetMeter.Threads
          * @param key the name of the variable
          * @return the value of the variable, or {@code null} if it does not exist
          */
-        public String get(String key) 
+        public String Get(String key) 
         {
             Object value = null;
             if (variables.TryGetValue(key, out value))
@@ -126,7 +126,7 @@ namespace NetMeter.Threads
          * @param key the name of the variable
          * @return the value of the variable, or {@code null} if it does not exist
          */
-        public Object getObject(String key) 
+        public Object GetObject(String key) 
         {
             Object obj = null;
             if (variables.TryGetValue(key, out obj))
@@ -135,21 +135,5 @@ namespace NetMeter.Threads
             }
             return null;
         }
-
-        ///**
-        // * Gets a read-only Iterator over the variables.
-        // * 
-        // * @return the iterator
-        // */
-        //public Iterator<Entry<String, Object>> getIterator()
-        //{
-        //    return Collections.unmodifiableMap(variables).entrySet().iterator() ;
-        //}
-
-        //// Used by DebugSampler
-        //public Set<Entry<String, Object>> entrySet()
-        //{
-        //    return Collections.unmodifiableMap(variables).entrySet();
-        //}
     }
 }

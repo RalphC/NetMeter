@@ -45,7 +45,7 @@ namespace NetMeter.Threads
          * Saves current time in a field and in the JMeter property "TESTSTART.MS"
          */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void startTest()
+        public static void StartTest()
         {
             if (0==testStart)
             {
@@ -58,7 +58,7 @@ namespace NetMeter.Threads
          * Increment number of active threads.
          */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void incrNumberOfThreads() 
+        public static void IncrNumberOfThreads() 
         {
             numberOfActiveThreads++;
             numberOfThreadsStarted++;
@@ -68,7 +68,7 @@ namespace NetMeter.Threads
          * Decrement number of active threads.
          */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void decrNumberOfThreads() 
+        public static void DecrNumberOfThreads() 
         {
             numberOfActiveThreads--;
             numberOfThreadsFinished++;

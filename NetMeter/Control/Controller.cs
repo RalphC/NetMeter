@@ -40,7 +40,7 @@ namespace NetMeter.Control
          * Unregister IterationListener
          * @param iterationListener {@link LoopIterationListener}
          */
-        void removeIterationListener(LoopIterationListener iterationListener);
+        void RemoveIterationListener(LoopIterationListener iterationListener);
 
         /**
          * Trigger end of loop condition on controller (used by Start Next Loop feature)

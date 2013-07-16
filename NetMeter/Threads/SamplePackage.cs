@@ -5,6 +5,7 @@ using NetMeter.TestElements;
 using NetMeter.Samplers;
 using NetMeter.Assertions;
 using NetMeter.Control;
+using NetMeter.Processor;
 
 namespace NetMeter.Threads
 {
@@ -51,10 +52,8 @@ namespace NetMeter.Threads
         {
             this.configs = configs;
             this.sampleListeners = listeners;
-            //this.timers = timers;
             this.assertions = assertions;
             this.postProcessors = postProcessors;
-            //this.preProcessors = preProcessors;
             this.controllers = controllers;
         }
 
@@ -65,58 +64,54 @@ namespace NetMeter.Threads
             * @param running boolean
             * @see TestElement#setRunningVersion(boolean)
             */
-        public void setRunningVersion(Boolean running) 
+        public void SetRunningVersion(Boolean running) 
         {
-            setRunningVersion<ConfigTestElement>(configs, running);
-            setRunningVersion<SampleListener>(sampleListeners, running);
-            setRunningVersion<Assertion>(assertions, running);
-            //setRunningVersion<Timer>(timers, running);
-            setRunningVersion<PostProcessor>(postProcessors, running);
-            //setRunningVersion(preProcessors, running);
-            setRunningVersion<Controller>(controllers, running);
-            sampler.setRunningVersion(running);
+            SetRunningVersion<ConfigTestElement>(configs, running);
+            SetRunningVersion<SampleListener>(sampleListeners, running);
+            SetRunningVersion<Assertion>(assertions, running);
+            SetRunningVersion<PostProcessor>(postProcessors, running);
+            SetRunningVersion<Controller>(controllers, running);
+            sampler.SetRunningVersion(running);
         }
 
         /**
         * Recover each member of SamplePackage to the state before the call of setRunningVersion(true)
         * @see TestElement#recoverRunningVersion()
         */
-        public void recoverRunningVersion()
+        public void RecoverRunningVersion()
         {
-            recoverRunningVersion<ConfigTestElement>(configs);
-            recoverRunningVersion<SampleListener>(sampleListeners);
-            recoverRunningVersion<Assertion>(assertions);
-            //recoverRunningVersion(timers);
-            recoverRunningVersion<PostProcessor>(postProcessors);
-            //recoverRunningVersion(preProcessors);
-            recoverRunningVersion<Controller>(controllers);
-            sampler.recoverRunningVersion();
+            RecoverRunningVersion<ConfigTestElement>(configs);
+            RecoverRunningVersion<SampleListener>(sampleListeners);
+            RecoverRunningVersion<Assertion>(assertions);
+            RecoverRunningVersion<PostProcessor>(postProcessors);
+            RecoverRunningVersion<Controller>(controllers);
+            sampler.RecoverRunningVersion();
         }
 
-        private void setRunningVersion<T>(List<T> list, Boolean running) 
+        private void SetRunningVersion<T>(List<T> list, Boolean running) 
         {
             // all implementations extend TestElement
             List<TestElement> telist = list.ConvertAll(new Converter<T, TestElement>( (T obj) => (TestElement)obj ));
             foreach (TestElement te in telist) 
             {
-                te.setRunningVersion(running);
+                te.SetRunningVersion(running);
             }
         }
 
-        private void recoverRunningVersion<T>(List<T> list) 
+        private void RecoverRunningVersion<T>(List<T> list) 
         {
             // All implementations extend TestElement
             List<TestElement> telist = list.ConvertAll(new Converter<T, TestElement>((T obj) => (TestElement)obj));
             foreach (TestElement te in telist) 
             {
-                te.recoverRunningVersion();
+                te.RecoverRunningVersion();
             }
         }
 
         /**
             * @return List<SampleListener>
             */
-        public List<SampleListener> getSampleListeners() 
+        public List<SampleListener> GetSampleListeners() 
         {
             return sampleListeners;
         }
@@ -125,52 +120,25 @@ namespace NetMeter.Threads
             * Add Sample Listener
             * @param listener {@link SampleListener}
             */
-        public void addSampleListener(SampleListener listener) 
+        public void AddSampleListener(SampleListener listener) 
         {
             sampleListeners.Add(listener);
         }
-
-        ///**
-        //    * @return List<Timer>
-        //    */
-        //public List<Timer> getTimers() 
-        //{
-        //    return timers;
-        //}
-
     
         /**
             * Add Post processor
             * @param ex {@link PostProcessor}
             */
-        public void addPostProcessor(PostProcessor ex) 
+        public void AddPostProcessor(PostProcessor ex) 
         {
             postProcessors.Add(ex);
         }
 
         /**
-            * Add Pre processor
-            * @param pre {@link PreProcessor}
-            */
-        //public void addPreProcessor(PreProcessor pre)
-        //{
-        //    preProcessors.Add(pre);
-        //}
-
-        ///**
-        //    * Add Timer
-        //    * @param timer {@link Timer}
-        //    */
-        //public void addTimer(Timer timer) 
-        //{
-        //    timers.Add(timer);
-        //}
-
-        /**
             * Add Assertion
             * @param asser {@link Assertion}
             */
-        public void addAssertion(Assertion asser)
+        public void AddAssertion(Assertion asser)
         {
             assertions.Add(asser);
         }
@@ -178,7 +146,7 @@ namespace NetMeter.Threads
         /**
             * @return List<Assertion>
             */
-        public List<Assertion> getAssertions() 
+        public List<Assertion> GetAssertions() 
         {
             return assertions;
         }
@@ -186,7 +154,7 @@ namespace NetMeter.Threads
         /**
             * @return List<PostProcessor>
             */
-        public List<PostProcessor> getPostProcessors() 
+        public List<PostProcessor> GetPostProcessors() 
         {
             return postProcessors;
         }
@@ -194,7 +162,7 @@ namespace NetMeter.Threads
         /**
             * @return {@link Sampler}
             */
-        public Sampler getSampler() 
+        public Sampler GetSampler() 
         {
             return sampler;
         }
@@ -202,26 +170,17 @@ namespace NetMeter.Threads
         /**
             * @param s {@link Sampler}
             */
-        public void setSampler(Sampler s) 
+        public void SetSampler(Sampler s) 
         {
             sampler = s;
         }
-
-        /**
-            * Returns the preProcessors.
-            * @return List<PreProcessor>
-            */
-        //public List<PreProcessor> getPreProcessors() 
-        //{
-        //    return preProcessors;
-        //}
 
         /**
             * Returns the configs.
             *
             * @return List
             */
-        public List<ConfigTestElement> getConfigs()
+        public List<ConfigTestElement> GetConfigs()
         {
             return configs;
         }

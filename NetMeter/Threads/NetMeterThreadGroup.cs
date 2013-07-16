@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Valkyrie.Collections;
 
 namespace NetMeter.Threads
 {
@@ -50,25 +51,26 @@ namespace NetMeter.Threads
          *
          * @param Scheduler true is scheduler is to be used
          */
-        public void setScheduler(bool Scheduler) {
+        public void SetScheduler(bool Scheduler) 
+        {
             setProperty(new BooleanProperty(SCHEDULER, Scheduler));
         }
 
         // List of active threads
         private ConcurrentDictionary<NetMeterThread, Thread> allThreads = new ConcurrentDictionary<NetMeterThread, Thread>();
 
-        public void start(int groupCount, ListenerNotifier notifier, ListedHashTree threadGroupTree, StandardNetMeterEngine engine)
+        public void start(int groupCount, ListenerNotifier notifier, OrderedHashTree threadGroupTree, StandardNetMeterEngine engine)
         {
-            int threadNumber = getThreadsNumber();
+            int threadNumber = GetThreadsNumber();
             // TODO : log
 
             Int32 now = System.DateTime.Now.Millisecond;
             NetMeterContext context = NetMeterContextManager.getContext();
             for (int i = 0; running && i < threadNumber; i++)
             {
-                NetMeterThread nmThread = createThread(groupCount, notifier, threadGroupTree, engine, i, context);
+                NetMeterThread nmThread = CreateThread(groupCount, notifier, threadGroupTree, engine, i, context);
                 Thread newThread = new Thread(nmThread.run);
-                registerStartedThread(nmThread, newThread);
+                RegisterStartedThread(nmThread, newThread);
                 newThread.Start();
             }
 
@@ -81,26 +83,26 @@ namespace NetMeter.Threads
          * @param jMeterThread {@link JMeterThread}
          * @param newThread Thread
          */
-        private void registerStartedThread(NetMeterThread nmThread, Thread newThread)
+        private void RegisterStartedThread(NetMeterThread nmThread, Thread newThread)
         {
             allThreads.TryAdd(nmThread, newThread);
         }
 
-        private NetMeterThread createThread(int groupCount, ListenerNotifier notifier, ListedHashTree threadGroupTree,
+        private NetMeterThread CreateThread(int groupCount, ListenerNotifier notifier, OrderedHashTree threadGroupTree,
                 StandardNetMeterEngine engine, int i, NetMeterContext context) 
         {
-            String groupName = getName();
-            NetMeterThread nmThread = new NetMeterThread(cloneTree(threadGroupTree), this, notifier);
-            nmThread.setThreadNum(i);
-            nmThread.setThreadGroup(this);
-            nmThread.setInitialContext(context);
+            String groupName = GetName();
+            NetMeterThread nmThread = new NetMeterThread(CloneTree(threadGroupTree), this, notifier);
+            nmThread.SetThreadNum(i);
+            nmThread.SetThreadGroup(this);
+            nmThread.SetInitialContext(context);
             String threadName = groupName + " " + (groupCount) + "-" + (i + 1);
-            nmThread.setThreadName(threadName);
-            nmThread.setEngine(engine);
-            nmThread.setOnErrorStopTest(getOnErrorStopTest());
-            nmThread.setOnErrorStopTestNow(getOnErrorStopTestNow());
-            nmThread.setOnErrorStopThread(getOnErrorStopThread());
-            nmThread.setOnErrorStartNextLoop(getOnErrorStartNextLoop());
+            nmThread.SetThreadName(threadName);
+            nmThread.SetEngine(engine);
+            nmThread.SetOnErrorStopTest(GetOnErrorStopTest());
+            nmThread.SetOnErrorStopTestNow(GetOnErrorStopTestNow());
+            nmThread.SetOnErrorStopThread(GetOnErrorStopThread());
+            nmThread.SetOnErrorStartNextLoop(GetOnErrorStartNextLoop());
             return nmThread;
         }
     }

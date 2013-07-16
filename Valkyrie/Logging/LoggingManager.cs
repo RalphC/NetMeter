@@ -12,7 +12,7 @@ namespace Valkyrie.Logging
          *
          * @return Logger
          */
-        public static ILog getLoggerForClass()
+        public static ILog GetLoggerForClass()
         {
             StackTrace stack = new StackTrace();
             String callerName = stack.GetFrame(1).GetMethod().Name;

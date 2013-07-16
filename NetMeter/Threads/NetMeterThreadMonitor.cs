@@ -3,6 +3,6 @@ namespace NetMeter.Threads
 {
     public interface NetMeterThreadMonitor
     {
-        void threadFinished(NetMeterThread thread);
+        void ThreadFinished(NetMeterThread nThread);
     }
 }

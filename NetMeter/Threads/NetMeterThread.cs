@@ -12,11 +12,15 @@ using NetMeter.Samplers;
 using Valkyrie.Collections;
 using NetMeter.Assertions;
 using NetMeter.Processor;
+using Valkyrie.Logging;
+using log4net;
 
 namespace NetMeter.Threads
 {
     public class NetMeterThread
     {
+        private static sealed ILog log = LoggingManager.GetLoggerForClass();
+
         public static sealed String PACKAGE_OBJECT = "NetMeterThread.pack"; // $NON-NLS-1$
 
         public static sealed String LAST_SAMPLE_OK = "NetMeterThread.last_sample_ok"; // $NON-NLS-1$
@@ -36,7 +40,7 @@ namespace NetMeter.Threads
         // Note: this is only used to implement TestIterationListener#testIterationStart
         // Since this is a frequent event, it makes sense to create the list once rather than scanning each time
         // The memory used will be released when the thread finishes
-        private sealed List<TestIterationListener> testIterationStartListeners;
+        protected sealed List<TestIterationListener> testIterationStartListeners;
 
         private sealed ListenerNotifier notifier;
 
@@ -87,17 +91,17 @@ namespace NetMeter.Threads
             threadVars = new NetMeterVariables();
             testTree = test;
             compiler = new TestCompiler(testTree);
-            controller = (Controller) testTree.getArray()[0];
+            controller = (Controller) testTree.GetArray()[0];
             SearchByType<TestIterationListener> threadListenerSearcher = new SearchByType<TestIterationListener>();
-            test.traverse(threadListenerSearcher);
-            testIterationStartListeners = threadListenerSearcher.getSearchResults();
+            test.Traverse(threadListenerSearcher);
+            testIterationStartListeners = threadListenerSearcher.GetSearchResults();
             notifier = note;
             running = true;
         }
 
-        public void setInitialContext(NetMeterContext context) 
+        public void SetInitialContext(NetMeterContext context) 
         {
-            threadVars.putAll(context.getVariables());
+            threadVars.PutAll(context.GetVariables());
         }
 
         /**
@@ -173,7 +177,7 @@ namespace NetMeter.Threads
             // delayBy(delay, "startScheduler");
         }
 
-        public void setThreadName(String threadName) 
+        public void SetThreadName(String threadName) 
         {
             this.threadName = threadName;
         }
@@ -200,29 +204,29 @@ namespace NetMeter.Threads
                     Sampler sam = (Sampler)controller.next();
                     while (running && sam != null) 
                     {
-                	    process_sampler(sam, null, threadContext);
-                	    threadContext.cleanAfterSample();
-                	    if(onErrorStartNextLoop || threadContext.isRestartNextLoop()) 
+                	    Process_sampler(sam, null, threadContext);
+                	    threadContext.CleanAfterSample();
+                        if (onErrorStartNextLoop || threadContext.restartNextLoop) 
                         {
-                	        if(threadContext.isRestartNextLoop())
+                            if (threadContext.restartNextLoop)
                             {
-                                triggerEndOfLoopOnParentControllers(sam, threadContext);
+                                TriggerEndOfLoopOnParentControllers(sam, threadContext);
                                 sam = null;
-                                threadContext.getVariables().Add(LAST_SAMPLE_OK, TRUE);
-                                threadContext.setRestartNextLoop(false);
+                                threadContext.GetVariables().Add(LAST_SAMPLE_OK, TRUE);
+                                threadContext.restartNextLoop = false;
                 	        } 
                             else 
                             {
-                    		    Boolean lastSampleFailed = !TRUE.Equals(threadContext.getVariables().get(LAST_SAMPLE_OK));
+                    		    Boolean lastSampleFailed = !TRUE.Equals(threadContext.GetVariables().Get(LAST_SAMPLE_OK));
                     		    if(lastSampleFailed) 
                                 {
 //    	                		    if(log.isDebugEnabled()) 
 //                                    {
 //    	                    		    log.debug("StartNextLoop option is on, Last sample failed, starting next loop");
 //    	                    	    }
-    	                    	    triggerEndOfLoopOnParentControllers(sam, threadContext);
+    	                    	    TriggerEndOfLoopOnParentControllers(sam, threadContext);
     	                            sam = null;
-    	                            threadContext.getVariables().Add(LAST_SAMPLE_OK, TRUE);
+    	                            threadContext.GetVariables().Add(LAST_SAMPLE_OK, TRUE);
                     		    } 
                                 else
                                 {
@@ -258,7 +262,7 @@ namespace NetMeter.Threads
             //} 
             catch (Exception ex)
             {
-            //    log.error("Test failed!", e);
+                log.Error("Test failed!", ex);
             } 
             //catch (ThreadDeath e) 
             //{
@@ -273,7 +277,7 @@ namespace NetMeter.Threads
                     threadContext.clear();
 //                    log.info("Thread finished: " + threadName);
                     threadFinished(iterationListener);
-                    monitor.threadFinished(this); // Tell the monitor we are done
+                    monitor.ThreadFinished(this); // Tell the monitor we are done
                     NetMeterContextManager.removeContext(); // Remove the ThreadLocal entry
                 }
                 finally 
@@ -288,41 +292,41 @@ namespace NetMeter.Threads
          * @param sam Sampler Base sampler
          * @param threadContext 
          */
-        private void triggerEndOfLoopOnParentControllers(Sampler sam, NetMeterContext threadContext) 
+        private void TriggerEndOfLoopOnParentControllers(Sampler sam, NetMeterContext threadContext) 
         {
             // Find parent controllers of current sampler
-            FindTestElementsUpToRootTraverser pathToRootTraverser=null;
-            TransactionSampler transactionSampler = null;
-            if(sam is TransactionSampler) 
-            {
-                transactionSampler = (TransactionSampler) sam;
-                pathToRootTraverser = new FindTestElementsUpToRootTraverser((transactionSampler).getTransactionController());
-            } 
-            else 
-            {
-                pathToRootTraverser = new FindTestElementsUpToRootTraverser(sam);
-            }
-            testTree.traverse(pathToRootTraverser);
-            List<Controller> controllersToReinit = pathToRootTraverser.getControllersToRoot();
+            //FindTestElementsUpToRootTraverser pathToRootTraverser=null;
+            //TransactionSampler transactionSampler = null;
+            //if(sam is TransactionSampler) 
+            //{
+            //    transactionSampler = (TransactionSampler) sam;
+            //    pathToRootTraverser = new FindTestElementsUpToRootTraverser((transactionSampler).getTransactionController());
+            //} 
+            //else 
+            //{
+            //    pathToRootTraverser = new FindTestElementsUpToRootTraverser(sam);
+            //}
+            //testTree.Traverse(pathToRootTraverser);
+            //List<Controller> controllersToReinit = pathToRootTraverser.getControllersToRoot();
   	
-            // Trigger end of loop condition on all parent controllers of current sampler
-            foreach (Controller cont in controllersToReinit)
-            {
-                Controller parentController = cont;
-                if (parentController is AbstractThreadGroup)
-                {
-                    AbstractThreadGroup tg = (AbstractThreadGroup)parentController;
-                    tg.startNextLoop();
-                }
-                else
-                {
-                    parentController.triggerEndOfLoop();
-                }
-            }
-            if(transactionSampler!=null) 
-            {
-                process_sampler(transactionSampler, null, threadContext);
-            }
+            //// Trigger end of loop condition on all parent controllers of current sampler
+            //foreach (Controller cont in controllersToReinit)
+            //{
+            //    Controller parentController = cont;
+            //    if (parentController is AbstractThreadGroup)
+            //    {
+            //        AbstractThreadGroup tg = (AbstractThreadGroup)parentController;
+            //        tg.StartNextLoop();
+            //    }
+            //    else
+            //    {
+            //        parentController.triggerEndOfLoop();
+            //    }
+            //}
+            //if(transactionSampler!=null) 
+            //{
+            //    Process_sampler(transactionSampler, null, threadContext);
+            //}
         }
 
         /**
@@ -333,7 +337,7 @@ namespace NetMeter.Threads
          * @param threadContext
          * @return SampleResult if a transaction was processed
          */
-        private SampleResult process_sampler(Sampler current, Sampler parent, NetMeterContext threadContext) 
+        private SampleResult Process_sampler(Sampler current, Sampler parent, NetMeterContext threadContext) 
         {
             SampleResult transactionResult = null;
             try 
@@ -341,63 +345,63 @@ namespace NetMeter.Threads
                 // Check if we have a sampler to sample
                 if(current != null)
                 {
-                    threadContext.setCurrentSampler(current);
+                    threadContext.SetCurrentSampler(current);
                     // Get the sampler ready to sample
-                    SamplePackage pack = compiler.configureSampler(current);
+                    SamplePackage pack = compiler.ConfigureSampler(current);
                     // runPreProcessors(pack.getPreProcessors());
 
                     // Hack: save the package for any transaction controllers
-                    threadVars.putObject(PACKAGE_OBJECT, pack);
+                    threadVars.PutObject(PACKAGE_OBJECT, pack);
 
                     //delay(pack.getTimers());
-                    Sampler sampler = pack.getSampler();
-                    sampler.setThreadContext(threadContext);
+                    Sampler sampler = pack.GetSampler();
+                    sampler.SetThreadContext(threadContext);
                     // TODO should this set the thread names for all the subsamples?
                     // might be more efficient than fetching the name elsewehere
-                    sampler.setThreadName(threadName);
+                    sampler.SetThreadName(threadName);
                     // TestBeanHelper.prepare(sampler);
 
                     // Perform the actual sample
                     currentSampler = sampler;
-                    SampleResult result = sampler.sample(null);
+                    SampleResult result = sampler.Sample(null);
                     currentSampler = null;
                     // TODO: remove this useless Entry parameter
 
                     // If we got any results, then perform processing on the result
                     if (result != null) 
                     {
-                        result.setGroupThreads(threadGroup.getNumberOfThreads());
-                        result.setAllThreads(NetMeterContextManager.getNumberOfThreads());
-                        result.setThreadName(threadName);
-                        threadContext.setPreviousResult(result);
-                        runPostProcessors(pack.getPostProcessors());
-                        checkAssertions(pack.getAssertions(), result, threadContext);
+                        result.SetGroupThreads(threadGroup.GetNumberOfThreads());
+                        result.SetAllThreads(NetMeterContextManager.getNumberOfThreads());
+                        result.SetThreadName(threadName);
+                        threadContext.SetPreviousResult(result);
+                        RunPostProcessors(pack.GetPostProcessors());
+                        CheckAssertions(pack.GetAssertions(), result, threadContext);
                         // Do not send subsamples to listeners which receive the transaction sample
-                        List<SampleListener> sampleListeners = getSampleListeners(pack, transactionPack, transactionSampler);
-                        notifyListeners(sampleListeners, result);
-                        compiler.done(pack);
+                        List<SampleListener> sampleListeners = GetSampleListeners(pack, transactionPack, transactionSampler);
+                        NotifyListeners(sampleListeners, result);
+                        compiler.Done(pack);
 
                         // Check if thread or test should be stopped
-                        if (result.isStopThread() || (!result.isSuccessful() && onErrorStopThread)) 
+                        if (result.isStopThread() || (!result.Success && onErrorStopThread)) 
                         {
-                            stopThread();
+                            StopThread();
                         }
-                        if (result.isStopTest() || (!result.isSuccessful() && onErrorStopTest)) 
+                        if (result.isStopTest() || (!result.Success && onErrorStopTest)) 
                         {
                             stopTest();
                         }
-                        if (result.isStopTestNow() || (!result.isSuccessful() && onErrorStopTestNow)) 
+                        if (result.isStopTestNow() || (!result.Success && onErrorStopTestNow)) 
                         {
                             stopTestNow();
                         }
                         if(result.isStartNextThreadLoop()) 
                         {
-                            threadContext.setRestartNextLoop(true);
+                            threadContext.restartNextLoop = true;
                         }
                     } 
                     else 
                     {
-                        compiler.done(pack); // Finish up
+                        compiler.Done(pack); // Finish up
                     }
                 }
                 if (scheduler) 
@@ -406,26 +410,17 @@ namespace NetMeter.Threads
                     stopScheduler();
                 }
             } 
-            catch (JMeterStopTestException e) 
-            {
-                // log.info("Stopping Test: " + e.toString());
-                stopTest();
-            }
-            catch (JMeterStopThreadException e)
-            {
-                // log.info("Stopping Thread: " + e.toString());
-                stopThread();
-            }
             catch (Exception e) 
             {
                 if (current != null) 
                 {
-                    // log.error("Error while processing sampler '"+current.getName()+"' :", e);
+                     log.Error("Error while processing sampler '"+current.GetName()+"' :", e);
                 } 
                 else 
                 {
-                    // log.error("", e);
+                     log.Error("", e);
                 }
+                StopThread();
             }
             return transactionResult;
         }
@@ -439,14 +434,14 @@ namespace NetMeter.Threads
          * @param transactionSampler
          * @return the listeners who should receive the sample result
          */
-        private List<SampleListener> getSampleListeners(SamplePackage samplePack, SamplePackage transactionPack, TransactionSampler transactionSampler) 
+        private List<SampleListener> GetSampleListeners(SamplePackage samplePack, SamplePackage transactionPack, TransactionSampler transactionSampler) 
         {
-            List<SampleListener> sampleListeners = samplePack.getSampleListeners();
+            List<SampleListener> sampleListeners = samplePack.GetSampleListeners();
             // Do not send subsamples to listeners which receive the transaction sample
             if(transactionSampler != null) 
             {
                 List<SampleListener> onlySubSamplerListeners = new List<SampleListener>();
-                List<SampleListener> transListeners = transactionPack.getSampleListeners();
+                List<SampleListener> transListeners = transactionPack.GetSampleListeners();
                 foreach(SampleListener listener in sampleListeners) {
                     // Check if this instance is present in transaction listener list
                     Boolean found = false;
@@ -475,13 +470,13 @@ namespace NetMeter.Threads
          */
         private IterationListener initRun(NetMeterContext threadContext) 
         {
-            threadContext.setVariables(threadVars);
-            threadContext.setThreadNum(getThreadNum());
-            threadContext.getVariables().Add(LAST_SAMPLE_OK, TRUE);
-            threadContext.setThread(this);
-            threadContext.setThreadGroup(threadGroup);
-            threadContext.setEngine(engine);
-            testTree.traverse(compiler);
+            threadContext.SetVariables(threadVars);
+            threadContext.SetThreadNum(getThreadNum());
+            threadContext.GetVariables().Add(LAST_SAMPLE_OK, TRUE);
+            threadContext.SetThread(this);
+            threadContext.SetThreadGroup(threadGroup);
+            threadContext.SetEngine(engine);
+            testTree.Traverse(compiler);
             // log.info("Thread started: " + Thread.currentThread().getName());
             /*
              * Setting SamplingStarted before the contollers are initialised allows
@@ -505,21 +500,21 @@ namespace NetMeter.Threads
 
         private void threadStarted() 
         {
-            NetMeterContextManager.incrNumberOfThreads();
-            threadGroup.incrNumberOfThreads();
+            NetMeterContextManager.IncrNumberOfThreads();
+            threadGroup.IncrNumberOfThreads();
             ThreadListenerTraverser startup = new ThreadListenerTraverser(true);
-            testTree.traverse(startup); // call ThreadListener.threadStarted()
+            testTree.Traverse(startup); // call ThreadListener.threadStarted()
         }
 
         private void threadFinished(LoopIterationListener iterationListener) 
         {
             ThreadListenerTraverser shut = new ThreadListenerTraverser(false);
-            testTree.traverse(shut); // call ThreadListener.threadFinished()
-            NetMeterContextManager.decrNumberOfThreads();
-            threadGroup.decrNumberOfThreads();
+            testTree.Traverse(shut); // call ThreadListener.threadFinished()
+            NetMeterContextManager.DecrNumberOfThreads();
+            threadGroup.DecrNumberOfThreads();
             if (iterationListener != null)
             { // probably not possible, but check anyway
-                controller.removeIterationListener(iterationListener);
+                controller.RemoveIterationListener(iterationListener);
             }
         }
 
@@ -534,7 +529,7 @@ namespace NetMeter.Threads
                 isStart = start;
             }
 
-            public void addNode(Object node, HashTree subTree)
+            public void AddNode(Object node, HashTree subTree)
             {
                 if (node is ThreadListener) 
                 {
@@ -612,7 +607,7 @@ namespace NetMeter.Threads
 //            log.info("Stop Test detected by thread: " + threadName);
             if (engine != null) 
             {
-                engine.askThreadsToStop();
+                engine.AskThreadsToStop();
             }
         }
 
@@ -622,17 +617,17 @@ namespace NetMeter.Threads
             // log.info("Stop Test Now detected by thread: " + threadName);
             if (engine != null) 
             {
-                engine.stopTest();
+                engine.StopTest();
             }
         }
 
-        private void stopThread() 
+        private void StopThread() 
         {
             running = false;
             // log.info("Stop Thread detected by thread: " + threadName);
         }
 
-        private void checkAssertions(List<Assertion> assertions, SampleResult parent, NetMeterContext threadContext) 
+        private void CheckAssertions(List<Assertion> assertions, SampleResult parent, NetMeterContext threadContext) 
         {
             foreach (Assertion assertion in assertions) 
             {
@@ -643,7 +638,7 @@ namespace NetMeter.Threads
                     String scope = scopedAssertion.fetchScope();
                     if (scopedAssertion.isScopeParent(scope) || scopedAssertion.isScopeAll(scope) || scopedAssertion.isScopeVariable(scope))
                     {
-                        processAssertion(parent, assertion);
+                        ProcessAssertion(parent, assertion);
                     }
                     if (scopedAssertion.isScopeChildren(scope) || scopedAssertion.isScopeAll(scope))
                     {
@@ -651,31 +646,31 @@ namespace NetMeter.Threads
                         Boolean childError = false;
                         foreach (SampleResult child in children)
                         {
-                            processAssertion(child, assertion);
-                            if (!child.isSuccessful())
+                            ProcessAssertion(child, assertion);
+                            if (!child.Success)
                             {
                                 childError = true;
                             }
                         }
                         // If parent is OK, but child failed, add a message and flag the parent as failed
-                        if (childError && parent.isSuccessful()) 
+                        if (childError && parent.Success) 
                         {
-                            AssertionResult assertionResult = new AssertionResult(((AbstractTestElement)assertion).getName());
+                            AssertionResult assertionResult = new AssertionResult(((AbstractTestElement)assertion).GetName());
                             assertionResult.setResultForFailure("One or more sub-samples failed");
                             parent.addAssertionResult(assertionResult);
-                            parent.setSuccessful(false);
+                            parent.Success = false;
                         }
                     }
                 } 
                 else 
                 {
-                    processAssertion(parent, assertion);
+                    ProcessAssertion(parent, assertion);
                 }
             }
-            threadContext.getVariables().Add(LAST_SAMPLE_OK, Boolean.toString(parent.isSuccessful()));
+            threadContext.GetVariables().Add(LAST_SAMPLE_OK, parent.Success.ToString());
         }
 
-        private void processAssertion(SampleResult result, Assertion assertion) 
+        private void ProcessAssertion(SampleResult result, Assertion assertion) 
         {
             AssertionResult assertionResult;
             try
@@ -700,86 +695,39 @@ namespace NetMeter.Threads
                 assertionResult.setError(true);
                 assertionResult.setFailureMessage(ex.Message);
             }
-            result.setSuccessful(result.isSuccessful() && !(assertionResult.isError() || assertionResult.isFailure()));
+            result.Success = result.Success && !(assertionResult.isError() || assertionResult.isFailure());
             result.addAssertionResult(assertionResult);
         }
 
-        private void runPostProcessors(List<PostProcessor> extractors) 
+        private void RunPostProcessors(List<PostProcessor> extractors) 
         {
-            ListIterator<PostProcessor> iter;
-            if (reversePostProcessors) 
-            {// Original (rather odd) behaviour
-                iter = extractors.listIterator(extractors.size());// start at the end
-                while (iter.hasPrevious()) {
-                    PostProcessor ex = iter.previous();
-                    TestBeanHelper.prepare((TestElement) ex);
-                    ex.process();
-                }
-            } 
-            else 
+            foreach (PostProcessor ex in extractors) 
             {
-                foreach (PostProcessor ex in extractors) 
-                {
-                    TestBeanHelper.prepare((TestElement) ex);
-                    ex.process();
-                }
+                //TestBeanHelper.prepare((TestElement) ex);
+                ex.process();
             }
         }
 
-        //private void runPreProcessors(List<PreProcessor> preProcessors)
-        //{
-        //    foreach (PreProcessor ex in preProcessors)
-        //    {
-        //        if (log.isDebugEnabled())
-        //        {
-        //            // log.debug("Running preprocessor: " + ((AbstractTestElement) ex).getName());
-        //        }
-        //        TestBeanHelper.prepare((TestElement)ex);
-        //        ex.process();
-        //    }
-        //}
-
-        //private void delay(List<Timer> timers) 
-        //{
-        //    long sum = 0;
-        //    foreach (Timer timer in timers) 
-        //    {
-        //        TestBeanHelper.prepare((TestElement) timer);
-        //        sum += timer.delay();
-        //    }
-        //    if (sum > 0) 
-        //    {
-        //        try 
-        //        {
-        //            Thread.sleep(sum);
-        //        } 
-        //        catch (InterruptedException e) 
-        //        {
-        //            log.warn("The delay timer was interrupted - probably did not wait as long as intended.");
-        //        }
-        //    }
-        //}
-
-        public void notifyTestListeners() 
+        public void NotifyTestListeners() 
         {
-            threadVars.incIteration();
+            threadVars.IncIteration();
             foreach (TestIterationListener listener in testIterationStartListeners) 
             {
                 if (listener is TestElement) 
                 {
-                    listener.testIterationStart(new LoopIterationEvent(controller, threadVars.getIteration()));
-                    ((TestElement) listener).recoverRunningVersion();
+                    listener.testIterationStart(new LoopIterationEvent((TestElement)controller, threadVars.GetIteration()));
+                    ((TestElement) listener).RecoverRunningVersion();
                 }
                 else 
                 {
-                    listener.testIterationStart(new LoopIterationEvent(controller, threadVars.getIteration()));
+                    listener.testIterationStart(new LoopIterationEvent((TestElement)controller, threadVars.GetIteration()));
                 }
             }
         }
 
-        private void notifyListeners(List<SampleListener> listeners, SampleResult result) 
+        private void NotifyListeners(List<SampleListener> listeners, SampleResult result) 
         {
-            SampleEvent sampleEvent = new SampleEvent(result, threadGroup.getName(), threadVars);
+            SampleEvent sampleEvent = new SampleEvent(result, threadGroup.GetName(), threadVars);
             notifier.notifyListeners(sampleEvent, listeners);
         }
 
@@ -787,7 +735,7 @@ namespace NetMeter.Threads
          * Set rampup delay for JMeterThread Thread
          * @param delay Rampup delay for JMeterThread
          */
-        public void setInitialDelay(int delay)
+        public void SetInitialDelay(int delay)
         {
             initialDelay = delay;
         }
@@ -797,7 +745,7 @@ namespace NetMeter.Threads
          */
         private void rampUpDelay() 
         {
-            delayBy(initialDelay, "RampUp");
+            //delayBy(initialDelay, "RampUp");
         }
 
         /**
@@ -849,7 +797,7 @@ namespace NetMeter.Threads
          * @param threadNum
          *            the threadNum to set
          */
-        public void setThreadNum(int threadNum) 
+        public void SetThreadNum(int threadNum) 
         {
             this.threadNum = threadNum;
         }
@@ -859,9 +807,9 @@ namespace NetMeter.Threads
             /**
              * {@inheritDoc}
              */
-            public void iterationStart(LoopIterationEvent iterEvent)
+            public void IterationStart(LoopIterationEvent iterEvent)
             {
-                notifyTestListeners();
+                NotifyTestListeners();
             }
         }
 
@@ -870,7 +818,7 @@ namespace NetMeter.Threads
          *
          * @param engine
          */
-        public void setEngine(StandardNetMeterEngine engine)
+        public void SetEngine(StandardNetMeterEngine engine)
         {
             this.engine = engine;
         }
@@ -881,7 +829,7 @@ namespace NetMeter.Threads
          * @param b -
          *            true or false
          */
-        public void setOnErrorStopTest(Boolean b) 
+        public void SetOnErrorStopTest(Boolean b) 
         {
             onErrorStopTest = b;
         }
@@ -892,7 +840,7 @@ namespace NetMeter.Threads
          * @param b -
          *            true or false
          */
-        public void setOnErrorStopTestNow(Boolean b)
+        public void SetOnErrorStopTestNow(Boolean b)
         {
             onErrorStopTestNow = b;
         }
@@ -903,7 +851,7 @@ namespace NetMeter.Threads
          * @param b -
          *            true or false
          */
-        public void setOnErrorStopThread(Boolean b)
+        public void SetOnErrorStopThread(Boolean b)
         {
             onErrorStopThread = b;
         }
@@ -914,12 +862,12 @@ namespace NetMeter.Threads
          * @param b -
          *            true or false
          */
-        public void setOnErrorStartNextLoop(Boolean b)
+        public void SetOnErrorStartNextLoop(Boolean b)
         {
             onErrorStartNextLoop = b;
         }
 
-        public void setThreadGroup(AbstractThreadGroup group)
+        public void SetThreadGroup(AbstractThreadGroup group)
         {
             this.threadGroup = group;
         }

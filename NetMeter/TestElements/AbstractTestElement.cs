@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NetMeter.TestElements.Property;
 using NetMeter.Threads;
+using Valkyrie.Logging;
+using log4net;
 
 namespace NetMeter.TestElements
 {
 	public abstract class AbstractTestElement : TestElement, ISerializable
 	{
+        private static sealed ILog log = LoggingManager.GetLoggerForClass();
+
 		private sealed Dictionary<String, NetMeterProperty> propDic = new Dictionary<String, NetMeterProperty>();
 
 		/**
@@ -39,7 +43,7 @@ namespace NetMeter.TestElements
 		/**
 		 * Clear properties
 		 */
-		public void clear() 
+		public void Clear() 
 		{
 			propDic.Clear();
 		}
@@ -47,7 +51,7 @@ namespace NetMeter.TestElements
 		/**
 		 * Default implementation - does nothing
 		 */
-		public void clearTestElementChildren()
+		public void ClearTestElementChildren()
 		{
 			// NOOP
 		}
@@ -55,7 +59,7 @@ namespace NetMeter.TestElements
 		/**
 		 * Remove key
 		 */
-		public void removeProperty(String key) 
+		public void RemoveProperty(String key) 
 		{
 			propDic.Remove(key);
 		}
@@ -63,7 +67,7 @@ namespace NetMeter.TestElements
 		/**
 		 * {@inheritDoc}
 		 */
-		public bool equals(Object o) 
+		public bool Equals(Object o) 
 		{
 			if (o is AbstractTestElement) {
 				return ((AbstractTestElement) o).propDic.Equals(propDic);
@@ -87,23 +91,28 @@ namespace NetMeter.TestElements
 		/**
 		 * {@inheritDoc}
 		 */
-		public void addTestElement(TestElement el) {
+		public void addTestElement(TestElement el)
+		{
 			mergeIn(el);
 		}
 
-		public void setName(String name) {
+		public void SetName(String name) 
+		{
 			setProperty(TestElement.NAME, name);
 		}
 
-		public String getName() {
-			return getPropertyAsString(TestElement.NAME);
+		public String GetName() 
+		{
+			return TestElement.NAME;
 		}
 
-		public void setComment(String comment){
+		public void setComment(String comment)
+		{
 			setProperty(new StringProperty(TestElement.COMMENTS, comment));
 		}
 
-		public String getComment(){
+		public String getComment()
+		{
 			return getProperty(TestElement.COMMENTS).getStringValue();
 		}
 
@@ -121,34 +130,40 @@ namespace NetMeter.TestElements
 			return prop;
 		}
 
-		public void traverse(TestElementTraverser traverser) 
+		public void Traverse(TestElementTraverser traverser) 
 		{
 			PropertyIterator iter = propertyIterator();
 			traverser.startTestElement(this);
 			while (iter.hasNext()) {
-				traverseProperty(traverser, iter.next());
+				TraverseProperty(traverser, iter.next());
 			}
 			traverser.endTestElement(this);
 		}
 
-		protected void traverseProperty(TestElementTraverser traverser, NetMeterProperty value) 
+		protected void TraverseProperty(TestElementTraverser traverser, NetMeterProperty value) 
 		{
 			traverser.startProperty(value);
-			if (value is TestElementProperty) {
-				((TestElement) value.getObjectValue()).traverse(traverser);
-			} else if (value is CollectionProperty) {
+			if (value is TestElementProperty) 
+            {
+				((TestElement) value.getObjectValue()).Traverse(traverser);
+			} 
+            else if (value is CollectionProperty) 
+            {
 				traverseCollection((CollectionProperty) value, traverser);
-			} else if (value is MapProperty) {
-				traverseMap((MapProperty) value, traverser);
+			} 
+            else if (value is MapProperty) 
+            {
+				TraverseMap((MapProperty) value, traverser);
 			}
 			traverser.endProperty(value);
 		}
 
-		protected void traverseMap(MapProperty map, TestElementTraverser traverser)
+		protected void TraverseMap(MapProperty map, TestElementTraverser traverser)
 		{
 			PropertyIterator iter = map.valueIterator();
-			while (iter.hasNext()) {
-				traverseProperty(traverser, iter.next());
+			while (iter.hasNext()) 
+            {
+				TraverseProperty(traverser, iter.next());
 			}
 		}
 
@@ -156,7 +171,7 @@ namespace NetMeter.TestElements
 		{
 			PropertyIterator iter = col.iterator();
 			while (iter.hasNext()) {
-				traverseProperty(traverser, iter.next());
+				TraverseProperty(traverser, iter.next());
 			}
 		}
 
@@ -165,7 +180,8 @@ namespace NetMeter.TestElements
 			return getProperty(key).getIntValue();
 		}
 
-		public int getPropertyAsInt(String key, int defaultValue) {
+		public int getPropertyAsInt(String key, int defaultValue) 
+        {
 			NetMeterProperty jmp = getProperty(key);
 			return jmp is NullProperty ? defaultValue : jmp.getIntValue();
 		}
@@ -175,33 +191,40 @@ namespace NetMeter.TestElements
 			return getProperty(key).getBooleanValue();
 		}
 
-		public bool getPropertyAsBoolean(String key, bool defaultVal) {
+		public bool getPropertyAsBoolean(String key, bool defaultVal) 
+        {
 			NetMeterProperty jmp = getProperty(key);
 			return jmp is NullProperty ? defaultVal : jmp.getBooleanValue();
 		}
 
-		public float getPropertyAsFloat(String key) {
+		public float getPropertyAsFloat(String key) 
+        {
 			return getProperty(key).getFloatValue();
 		}
 
-		public Int64 getPropertyAsLong(String key) {
+		public Int64 getPropertyAsLong(String key) 
+        {
 			return getProperty(key).getLongValue();
 		}
 
-		public Int64 getPropertyAsLong(String key, Int64 defaultValue) {
+		public Int64 getPropertyAsLong(String key, Int64 defaultValue) 
+        {
 			NetMeterProperty jmp = getProperty(key);
 			return jmp is NullProperty ? defaultValue : jmp.getLongValue();
 		}
 
-		public double getPropertyAsDouble(String key) {
+		public double getPropertyAsDouble(String key) 
+        {
 			return getProperty(key).getDoubleValue();
 		}
 
-		public String getPropertyAsString(String key) {
+		public String getPropertyAsString(String key) 
+        {
 			return getProperty(key).getStringValue();
 		}
 
-		public String getPropertyAsString(String key, String defaultValue) {
+		public String getPropertyAsString(String key, String defaultValue) 
+        {
 			NetMeterProperty jmp = getProperty(key);
 			return jmp is NullProperty ? defaultValue : jmp.getStringValue();
 		}
@@ -234,7 +257,8 @@ namespace NetMeter.TestElements
 		 * Add property to test element without cloning it
 		 * @param property {@link JMeterProperty}
 		 */
-		protected void addProperty(NetMeterProperty property) {
+		protected void addProperty(NetMeterProperty property) 
+        {
 			addProperty(property, false);
 		}
 
@@ -242,8 +266,10 @@ namespace NetMeter.TestElements
 		 * Remove property from temporaryProperties
 		 * @param property {@link JMeterProperty}
 		 */
-		protected void clearTemporary(NetMeterProperty property) {
-			if (temporaryProperties != null) {
+		protected void clearTemporary(NetMeterProperty property) 
+        {
+			if (temporaryProperties != null) 
+            {
 				temporaryProperties.Remove(property);
 			}
 		}
@@ -253,29 +279,39 @@ namespace NetMeter.TestElements
 		 *
 		 * @see TestElement#setProperty(JMeterProperty)
 		 */
-		protected void logProperties() {
-			if (log.isDebugEnabled()) {
+		protected void logProperties()
+ {
+			if (log.IsDebugEnabled)
+            {
 				PropertyIterator iter = propertyIterator();
-				while (iter.hasNext()) {
+				while (iter.hasNext()) 
+                {
 					NetMeterProperty prop = iter.next();
 					//log.debug("Property " + prop.getName() + " is temp? " + isTemporary(prop) + " and is a " + prop.getObjectValue());
 				}
 			}
 		}
 
-		public void setProperty(NetMeterProperty property) {
+		public void setProperty(NetMeterProperty property) 
+        {
 			if (isRunningVersion()) {
-				if (getProperty(property.getName()) is NullProperty) {
+				if (getProperty(property.getName()) is NullProperty)
+                {
 					addProperty(property);
-				} else {
+				} 
+                else 
+                {
 					getProperty(property.getName()).setObjectValue(property.getObjectValue());
 				}
-			} else {
+			} 
+            else
+            {
 				propDic.Add(property.getName(), property);
 			}
 		}
 
-		public void setProperty(String name, String value) {
+		public void setProperty(String name, String value)
+        {
 			setProperty(new StringProperty(name, value));
 		}
 
@@ -292,7 +328,7 @@ namespace NetMeter.TestElements
 		 */
 		public void setProperty(String name, String value, String dflt) {
 			if (dflt.Equals(value)) {
-				removeProperty(name);
+				RemoveProperty(name);
 			} else {
 				setProperty(new StringProperty(name, value));
 			}
@@ -315,7 +351,7 @@ namespace NetMeter.TestElements
 		 */
 		public void setProperty(String name, bool value, bool dflt) {
 			if (value == dflt) {
-				removeProperty(name);
+				RemoveProperty(name);
 			} else {
 				setProperty(new BooleanProperty(name, value));
 			}
@@ -338,13 +374,14 @@ namespace NetMeter.TestElements
 		 */
 		public void setProperty(String name, int value, int dflt) {
 			if (value == dflt) {
-				removeProperty(name);
+				RemoveProperty(name);
 			} else {
 				setProperty(new IntegerProperty(name, value));
 			}
 		}
 
-		public PropertyIterator propertyIterator() {
+		public PropertyIterator propertyIterator() 
+        {
 			return new PropertyIteratorImpl(propMap.values());
 		}
 
@@ -373,7 +410,7 @@ namespace NetMeter.TestElements
 		 * @param runningVersion
 		 *            the runningVersion to set
 		 */
-		public void setRunningVersion(bool runningVersion) {
+		public void SetRunningVersion(bool runningVersion) {
 			this.runningVersion = runningVersion;
 			PropertyIterator iter = propertyIterator();
 			while (iter.hasNext()) {
@@ -384,18 +421,24 @@ namespace NetMeter.TestElements
 		/**
 		 * {@inheritDoc}
 		 */
-		public void recoverRunningVersion() {
-			Iterator<Map.Entry<String, NetMeterProperty>>  iter = propDic.entrySet().iterator();
-			while (iter.hasNext()) {
-				Map.Entry<String, NetMeterProperty> entry = iter.next();
-				NetMeterProperty prop = entry.getValue();
-				if (isTemporary(prop)) {
-					iter.remove();
-					clearTemporary(prop);
-				} else {
-					prop.recoverRunningVersion(this);
-				}
-			}
+		public void RecoverRunningVersion() 
+        {
+            foreach (String propPair in propDic.Keys)
+            {
+                NetMeterProperty prop;
+                if (propDic.TryGetValue(propPair, out prop))
+                {
+                    if (isTemporary(prop))
+                    {
+                        propDic.Remove(propPair);
+                        clearTemporary(prop);
+                    }
+                    else
+                    {
+                        prop.recoverRunningVersion(this);
+                    }
+                }
+            }
 			emptyTemporary();
 		}
 
@@ -427,7 +470,8 @@ namespace NetMeter.TestElements
 				temporaryProperties = new HashSet<NetMeterProperty>();
 			}
 			temporaryProperties.Add(property);
-			if (property is MultiProperty) {
+			if (property is MultiProperty) 
+            {
 				PropertyIterator iter = ((MultiProperty) property).iterator();
 				while (iter.hasNext()) {
 					setTemporary(iter.next());
@@ -456,10 +500,13 @@ namespace NetMeter.TestElements
 		 * @param inthreadContext
 		 *            The threadContext to set.
 		 */
-		public void setThreadContext(NetMeterContext inthreadContext) {
-			if (threadContext != null) {
-				if (inthreadContext != threadContext) {
-					throw new RuntimeException("Attempting to reset the thread context");
+		public void SetThreadContext(NetMeterContext inthreadContext)
+        {
+			if (threadContext != null)
+            {
+				if (inthreadContext != threadContext) 
+                {
+					throw new Exception("Attempting to reset the thread context");
 				}
 			}
 			this.threadContext = inthreadContext;
@@ -468,7 +515,8 @@ namespace NetMeter.TestElements
 		/**
 		 * @return Returns the threadName.
 		 */
-		public String getThreadName() {
+		public String getThreadName() 
+        {
 			return threadName;
 		}
 
@@ -476,9 +524,12 @@ namespace NetMeter.TestElements
 		 * @param inthreadName
 		 *            The threadName to set.
 		 */
-		public void setThreadName(String inthreadName) {
-			if (threadName != null) {
-				if (!threadName.Equals(inthreadName)) {
+		public void SetThreadName(String inthreadName) 
+        {
+			if (threadName != null)
+            {
+				if (!threadName.Equals(inthreadName)) 
+                {
 					throw new Exception("Attempting to reset the thread name");
 				}
 			}
@@ -514,6 +565,11 @@ namespace NetMeter.TestElements
 		public List<String> getSearchableTokens() 
 		{
 			List<String> result = new List<String>(25);
+            foreach (String res in result)
+            {
+
+            }
+
 			PropertyIterator iterator = propertyIterator();
 			while(iterator.hasNext()) {
 				NetMeterProperty jMeterProperty = iterator.next();    
@@ -528,11 +584,13 @@ namespace NetMeter.TestElements
 		 * @param result List<String> values of propertyNames
 		 * @param propertyNames Set<String> properties to extract
 		 */
-		protected sealed void addPropertiesValues(List<String> result, HashSet<String> propertyNames) {
+		protected sealed void addPropertiesValues(List<String> result, HashSet<String> propertyNames) 
+        {
 			PropertyIterator iterator = propertyIterator();
 			while(iterator.hasNext()) {
 				NetMeterProperty jMeterProperty = iterator.next();	
-				if(propertyNames.Contains(jMeterProperty.getName())) {
+				if(propertyNames.Contains(jMeterProperty.getName()))
+                {
 					result.Add(jMeterProperty.getStringValue());
 				}
 			}

@@ -6,11 +6,11 @@ namespace NetMeter.TestElements
 {
     public interface TestElement : ICloneable
     {
-        public String NAME = "TestElement.name"; //$NON-NLS-1$
+        public static String NAME = "TestElement.name"; //$NON-NLS-1$
 
         public String GUI_CLASS = "TestElement.gui_class"; //$NON-NLS-1$
 
-        public String ENABLED = "TestElement.enabled"; //$NON-NLS-1$
+        public static String ENABLED = "TestElement.enabled"; //$NON-NLS-1$
 
         public String TEST_CLASS = "TestElement.test_class"; //$NON-NLS-1$
 
@@ -22,7 +22,7 @@ namespace NetMeter.TestElements
         void addTestElement(TestElement child);
 
         // This method should clear any test element properties that are merged
-        void clearTestElementChildren();
+        void ClearTestElementChildren();
 
         void setProperty(String key, String value);
 
@@ -65,18 +65,18 @@ namespace NetMeter.TestElements
          * and the element can be modified, but the state of the element at the time
          * of the call to setRunningVersion() must be recoverable.
          */
-        void setRunningVersion(bool run);
+        void SetRunningVersion(bool run);
 
         /**
          * Tells the test element to return to the state it was in when
          * setRunningVersion(true) was called.
          */
-        void recoverRunningVersion();
+        void RecoverRunningVersion();
 
         /**
          * Clear the TestElement of all data.
          */
-        void clear();
+        void Clear();
         // TODO - yet another ambiguous name - does it need changing?
         // See also: Clearable, JMeterGUIComponent
 
@@ -103,7 +103,7 @@ namespace NetMeter.TestElements
          */
         PropertyIterator propertyIterator();
 
-        void removeProperty(String key);
+        void RemoveProperty(String key);
 
         // lifecycle methods
 
@@ -112,7 +112,7 @@ namespace NetMeter.TestElements
         /**
          * Convenient way to traverse a test element.
          */
-        void traverse(TestElementTraverser traverser);
+        void Traverse(TestElementTraverser traverser);
 
         /**
          * @return Returns the threadContext.
@@ -123,7 +123,7 @@ namespace NetMeter.TestElements
          * @param threadContext
          *            The threadContext to set.
          */
-        void setThreadContext(NetMeterContext threadContext);
+        void SetThreadContext(NetMeterContext threadContext);
 
         /**
          * @return Returns the threadName.
@@ -134,7 +134,7 @@ namespace NetMeter.TestElements
          * @param threadName
          *            The threadName to set.
          */
-        void setThreadName(String threadName);
+        void SetThreadName(String threadName);
 
         /**
          * Called by Remove to determine if it is safe to remove the element. The
@@ -145,9 +145,9 @@ namespace NetMeter.TestElements
          */
         bool canRemove();
 
-        String getName();
+        String GetName();
 
-        void setName(String name);
+        void SetName(String name);
 
         String getComment();
 

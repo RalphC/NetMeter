@@ -13,6 +13,6 @@ namespace NetMeter.Samplers
          * Obtains statistics about the given Entry, and packages the information
          * into a SampleResult.
          */
-        SampleResult sample(Entry e);
+        SampleResult Sample(Entry e);
     }
 }
