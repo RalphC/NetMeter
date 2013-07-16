@@ -12,7 +12,6 @@ namespace NetMeter.Engine
             {
                 ((TestElement) node).SetRunningVersion(true);
             }
-
         }
 
         public void subtractNode() 

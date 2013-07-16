@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using NetMeter.Threads;
 using Valkyrie.Logging;
 using log4net;
@@ -116,8 +115,8 @@ namespace NetMeter.Engine
             // Is testplan serialised?
             SearchByType<TestPlan> testPlan = new SearchByType<TestPlan>();
             testTree.Traverse(testPlan);
-            Object[] plan = testPlan.GetSearchResults().ToArray();
-            if (plan.Length == 0) 
+            List<TestPlan> plan = testPlan.GetSearchResults();
+            if (0 == plan.Count)
             {
                 throw new Exception("Could not find the TestPlan class!");
             }
@@ -281,17 +280,16 @@ namespace NetMeter.Engine
             running = true;
 
             NetMeterContextManager.StartTest();
-            try 
-            {
-                PreCompiler compiler = new PreCompiler();
-                test.Traverse(compiler);
-            } 
-            catch (Exception ex) 
-            {
-                log.Error(String.Format("Error occurred compiling the tree: {0}", ex.Message));
-                //JMeterUtils.reportErrorToUser("Error occurred compiling the tree: - see log file");
-                return; // no point continuing
-            }
+            //try 
+            //{
+            //    PreCompiler compiler = new PreCompiler();
+            //    test.Traverse(compiler);
+            //} 
+            //catch (Exception ex) 
+            //{
+            //    log.Error(String.Format("Error occurred compiling the tree: {0}", ex.Message));
+            //    return; // no point continuing
+            //}
             /**
              * Notification of test listeners needs to happen after function
              * replacement, but before setting RunningVersion to true.
@@ -304,15 +302,15 @@ namespace NetMeter.Engine
             testListeners.GetSearchResults().AddRange(testList);
             testList.Clear(); // no longer needed
 
-            if (!startListenersLater ) 
-            { 
-                NotifyTestListenersOfStart(testListeners); 
-            }
+            //if (!startListenersLater ) 
+            //{ 
+            //    NotifyTestListenersOfStart(testListeners); 
+            //}
             test.Traverse(new TurnElementsOn());
-            if (startListenersLater) 
-            { 
-                NotifyTestListenersOfStart(testListeners); 
-            }
+            //if (startListenersLater) 
+            //{ 
+            //    NotifyTestListenersOfStart(testListeners); 
+            //}
 
             LinkedList<Object> testLevelElements = new LinkedList<Object>(test.list(test.GetArray()[0]));
             RemoveThreadGroups(testLevelElements);
@@ -512,11 +510,11 @@ namespace NetMeter.Engine
             }
         }
 
-        public void SetProperties(Properties p) 
-        {
-            log.Info("Applying properties "+p);
-            NetMeterUtils.getJMeterProperties().putAll(p);
-        }
+        //public void SetProperties(Properties p) 
+        //{
+        //    log.Info("Applying properties "+p);
+        //    NetMeterUtils.getJMeterProperties().putAll(p);
+        //}
     
         public Boolean isActive() 
         {

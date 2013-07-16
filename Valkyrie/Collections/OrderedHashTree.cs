@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
 namespace Valkyrie.Collections
@@ -156,7 +154,7 @@ namespace Valkyrie.Collections
 
         public override Boolean Equals(Object obj) 
         {
-            if (!(obj is OrderedHashTree)) 
+            if (!(typeof(OrderedHashTree).IsAssignableFrom(obj.GetType())))
             {
                 return false;
             }

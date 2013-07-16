@@ -51,8 +51,6 @@
     <Compile Include="Engine\Event\LoopIterationListener.cs" />
     <Compile Include="Engine\NetMeterEngine.cs" />
     <Compile Include="Engine\NetMeterEngineException.cs" />
-    <Compile Include="Engine\PreCompiler.cs" />
-    <Compile Include="Engine\Util\ValueReplacer.cs" />
     <Compile Include="NetMeterServer.cs" />
     <Compile Include="Processor\PostProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +83,7 @@
     <Compile Include="Util\NetMeterUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Engine\Util\" />
     <Folder Include="Lib\" />
   </ItemGroup>
   <ItemGroup>

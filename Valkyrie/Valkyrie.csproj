@@ -47,8 +47,14 @@
     <Compile Include="Collections\OrderedHashTree.cs" />
     <Compile Include="Collections\SearchByType.cs" />
     <Compile Include="Logging\LoggingManager.cs" />
+    <Compile Include="OptionParser\CLArgsParser.cs" />
+    <Compile Include="OptionParser\CLOption.cs" />
+    <Compile Include="OptionParser\CLOptionDescriptor.cs" />
+    <Compile Include="OptionParser\ParserControl.cs" />
+    <Compile Include="OptionParser\Token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

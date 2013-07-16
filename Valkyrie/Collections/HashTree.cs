@@ -30,7 +30,7 @@ namespace Valkyrie.Collections
         // N.B. The keys can be either JMeterTreeNode or TestElement
         protected Dictionary<Object, HashTree> Data;
 
-        public new Int32 Count { Get { return Data.Count; } }
+        public new Int32 Count { get { return Data.Count; } }
 
 #region "Constructor"
 
@@ -630,7 +630,7 @@ namespace Valkyrie.Collections
          */
         public void AddAll(Dictionary<Object, HashTree> map)
         {
-            if (map is HashTree)
+            if (typeof(HashTree).IsAssignableFrom(map.GetType()))
             {
                 this.Put((HashTree)map);
             }

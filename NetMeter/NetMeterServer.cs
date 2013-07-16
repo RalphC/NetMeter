@@ -9,12 +9,124 @@ using log4net;
 using NetMeter.Util;
 using System.Threading;
 using System.IO;
+using Valkyrie.OptionParser;
 
 namespace NetMeter
 {
     public class NetMeterServer
     {
         private static sealed ILog log = LoggingManager.GetLoggerForClass();
+
+        public static int UDP_PORT_DEFAULT = 4445; // needed for ShutdownClient
+
+        public static String HTTP_PROXY_PASS = "http.proxyPass"; // $NON-NLS-1$
+
+        public static String HTTP_PROXY_USER = "http.proxyUser"; // $NON-NLS-1$
+
+        public static String JMETER_NON_GUI = "JMeter.NonGui"; // $NON-NLS-1$
+
+        // If the -t flag is to "LAST", then the last loaded file (if any) is used
+        private static String USE_LAST_JMX = "LAST";
+        // If the -j  or -l flag is set to LAST or LAST.log|LAST.jtl, then the last loaded file name is used to
+        // generate the log file name by removing .JMX and replacing it with .log|.jtl
+
+        private static int PROXY_PASSWORD     = 'a';// $NON-NLS-1$
+        private static int JMETER_HOME_OPT    = 'd';// $NON-NLS-1$
+        private static int HELP_OPT           = 'h';// $NON-NLS-1$
+        // jmeter.log
+        private static int JMLOGFILE_OPT      = 'j';// $NON-NLS-1$
+        // sample result log file
+        private static int LOGFILE_OPT        = 'l';// $NON-NLS-1$
+        private static int NONGUI_OPT         = 'n';// $NON-NLS-1$
+        private static int PROPFILE_OPT       = 'p';// $NON-NLS-1$
+        private static int PROPFILE2_OPT      = 'q';// $NON-NLS-1$
+        private static int REMOTE_OPT         = 'r';// $NON-NLS-1$
+        private static int SERVER_OPT         = 's';// $NON-NLS-1$
+        private static int TESTFILE_OPT       = 't';// $NON-NLS-1$
+        private static int PROXY_USERNAME     = 'u';// $NON-NLS-1$
+        private static int VERSION_OPT        = 'v';// $NON-NLS-1$
+
+        private static int SYSTEM_PROPERTY    = 'D';// $NON-NLS-1$
+        private static int JMETER_GLOBAL_PROP = 'G';// $NON-NLS-1$
+        private static int PROXY_HOST         = 'H';// $NON-NLS-1$
+        private static int JMETER_PROPERTY    = 'J';// $NON-NLS-1$
+        private static int LOGLEVEL           = 'L';// $NON-NLS-1$
+        private static int NONPROXY_HOSTS     = 'N';// $NON-NLS-1$
+        private static int PROXY_PORT         = 'P';// $NON-NLS-1$
+        private static int REMOTE_OPT_PARAM   = 'R';// $NON-NLS-1$
+        private static int SYSTEM_PROPFILE    = 'S';// $NON-NLS-1$
+        private static int REMOTE_STOP        = 'X';// $NON-NLS-1$
+
+
+
+        /**
+         * Define the understood options. Each CLOptionDescriptor contains:
+         * <ul>
+         * <li>The "long" version of the option. Eg, "help" means that "--help"
+         * will be recognised.</li>
+         * <li>The option flags, governing the option's argument(s).</li>
+         * <li>The "short" version of the option. Eg, 'h' means that "-h" will be
+         * recognised.</li>
+         * <li>A description of the option.</li>
+         * </ul>
+         */
+        private static CLOptionDescriptor[] options = new CLOptionDescriptor[] 
+        {
+                new CLOptionDescriptor("help", CLOptionDescriptor.ARGUMENT_DISALLOWED, HELP_OPT,
+                        "print usage information and exit"),
+                new CLOptionDescriptor("version", CLOptionDescriptor.ARGUMENT_DISALLOWED, VERSION_OPT,
+                        "print the version information and exit"),
+                new CLOptionDescriptor("propfile", CLOptionDescriptor.ARGUMENT_REQUIRED, PROPFILE_OPT,
+                        "the jmeter property file to use"),
+                new CLOptionDescriptor("addprop", CLOptionDescriptor.ARGUMENT_REQUIRED
+                        | CLOptionDescriptor.DUPLICATES_ALLOWED, PROPFILE2_OPT,
+                        "additional JMeter property file(s)"),
+                new CLOptionDescriptor("testfile", CLOptionDescriptor.ARGUMENT_REQUIRED, TESTFILE_OPT,
+                        "the jmeter test(.jmx) file to run"),
+                new CLOptionDescriptor("logfile", CLOptionDescriptor.ARGUMENT_REQUIRED, LOGFILE_OPT,
+                        "the file to log samples to"),
+                new CLOptionDescriptor("jmeterlogfile", CLOptionDescriptor.ARGUMENT_REQUIRED, JMLOGFILE_OPT,
+                        "jmeter run log file (jmeter.log)"),
+                new CLOptionDescriptor("nongui", CLOptionDescriptor.ARGUMENT_DISALLOWED, NONGUI_OPT,
+                        "run JMeter in nongui mode"),
+                new CLOptionDescriptor("server", CLOptionDescriptor.ARGUMENT_DISALLOWED, SERVER_OPT,
+                        "run the JMeter server"),
+                new CLOptionDescriptor("proxyHost", CLOptionDescriptor.ARGUMENT_REQUIRED, PROXY_HOST,
+                        "Set a proxy server for JMeter to use"),
+                new CLOptionDescriptor("proxyPort", CLOptionDescriptor.ARGUMENT_REQUIRED, PROXY_PORT,
+                        "Set proxy server port for JMeter to use"),
+                new CLOptionDescriptor("nonProxyHosts", CLOptionDescriptor.ARGUMENT_REQUIRED, NONPROXY_HOSTS,
+                        "Set nonproxy host list (e.g. *.apache.org|localhost)"),
+                new CLOptionDescriptor("username", CLOptionDescriptor.ARGUMENT_REQUIRED, PROXY_USERNAME,
+                        "Set username for proxy server that JMeter is to use"),
+                new CLOptionDescriptor("password", CLOptionDescriptor.ARGUMENT_REQUIRED, PROXY_PASSWORD,
+                        "Set password for proxy server that JMeter is to use"),
+                new CLOptionDescriptor("jmeterproperty", CLOptionDescriptor.DUPLICATES_ALLOWED
+                        | CLOptionDescriptor.ARGUMENTS_REQUIRED_2, JMETER_PROPERTY,
+                        "Define additional JMeter properties"),
+                new CLOptionDescriptor("globalproperty", CLOptionDescriptor.DUPLICATES_ALLOWED
+                        | CLOptionDescriptor.ARGUMENTS_REQUIRED_2, JMETER_GLOBAL_PROP,
+                        "Define Global properties (sent to servers)\n\t\te.g. -Gport=123 or -Gglobal.properties"),
+                new CLOptionDescriptor("systemproperty", CLOptionDescriptor.DUPLICATES_ALLOWED
+                        | CLOptionDescriptor.ARGUMENTS_REQUIRED_2, SYSTEM_PROPERTY,
+                        "Define additional system properties"),
+                new CLOptionDescriptor("systemPropertyFile", CLOptionDescriptor.DUPLICATES_ALLOWED
+                        | CLOptionDescriptor.ARGUMENT_REQUIRED, SYSTEM_PROPFILE,
+                        "additional system property file(s)"),
+                new CLOptionDescriptor("loglevel", CLOptionDescriptor.DUPLICATES_ALLOWED
+                        | CLOptionDescriptor.ARGUMENTS_REQUIRED_2, LOGLEVEL,
+                        "[category=]level e.g. jorphan=INFO or jmeter.util=DEBUG"),
+                new CLOptionDescriptor("runremote", CLOptionDescriptor.ARGUMENT_DISALLOWED, REMOTE_OPT,
+                        "Start remote servers (as defined in remote_hosts)"),
+                new CLOptionDescriptor("remotestart", CLOptionDescriptor.ARGUMENT_REQUIRED, REMOTE_OPT_PARAM,
+                        "Start these remote servers (overrides remote_hosts)"),
+                new CLOptionDescriptor("homedir", CLOptionDescriptor.ARGUMENT_REQUIRED, JMETER_HOME_OPT,
+                        "the jmeter home directory to use"),
+                new CLOptionDescriptor("remoteexit", CLOptionDescriptor.ARGUMENT_DISALLOWED, REMOTE_STOP,
+                "Exit the remote servers at end of test (non-GUI)"),
+                        
+        };
+
 
         private NetMeterServer parent;
 
@@ -34,13 +146,13 @@ namespace NetMeter
         {
 
             CLArgsParser parser = new CLArgsParser(args, options);
-            String error = parser.getErrorString();
+            String error = parser.GetErrorString();
 
             if (null != error)
             {
                 System.Console.WriteLine("Error: " + error);
                 System.Console.WriteLine("Usage");
-                System.Console.WriteLine(CLUtil.describeOptions(options).toString());
+                System.Console.WriteLine(CLUtil.describeOptions(options).ToString());
                 return;
             }
             try 
@@ -87,8 +199,8 @@ namespace NetMeter
                 }
 
                 // Set some (hopefully!) useful properties
-                Int64 now = DateTime.Now.TimeOfDay.Ticks;
-                NetMeterUtils.setProperty("START.MS",Long.toString(now));// $NON-NLS-1$
+                Int64 now = DateTime.Now.Ticks;
+                NetMeterUtils.setProperty("START.MS", now.ToString());// $NON-NLS-1$
                 DateTime today = DateTime.Now; // so it agrees with above
                 // TODO perhaps should share code with __time() function for this...
                 NetMeterUtils.setProperty("START.YMD",new SimpleDateFormat("yyyyMMdd").format(today));// $NON-NLS-1$ $NON-NLS-2$
@@ -99,7 +211,7 @@ namespace NetMeter
                     // Start the server
                     try
                     {
-                        RemoteJMeterEngineImpl.startServer(NetMeterUtils.getPropDefault("server_port", 0)); // $NON-NLS-1$
+                        RemoteNetMeterEngineImpl.startServer(NetMeterUtils.getPropDefault("server_port", 0)); // $NON-NLS-1$
                     } 
                     catch (Exception ex)
                     {
@@ -116,7 +228,7 @@ namespace NetMeter
                     if (testFileOpt != null)
                     {
                         testFile = testFileOpt.getArgument();
-                        if (USE_LAST_JMX.equals(testFile))
+                        if (USE_LAST_JMX.Equals(testFile))
                         {
                             testFile = LoadRecentProject.getRecentFile(0);// most recent
                         }
@@ -269,16 +381,17 @@ namespace NetMeter
             // Process command line property definitions
             // These can potentially occur multiple times
 
-            List<CLOption> clOptions = parser.getArguments();
-            int size = clOptions.size();
+            List<CLOption> clOptions = parser.GetArguments();
+            int size = clOptions.Count;
 
-            for (int i = 0; i < size; i++) {
-                CLOption option = clOptions.get(i);
+            for (int i = 0; i < size; i++) 
+            {
+                CLOption option = clOptions[i];
                 String name = option.getArgument(0);
                 String value = option.getArgument(1);
                 FileInputStream fis = null;
 
-                switch (option.getDescriptor().getId()) 
+                switch (option.GetDescriptor().GetId()) 
                 {
 
                 // Should not have any text arguments
@@ -337,40 +450,48 @@ namespace NetMeter
                     break;
                 case JMETER_PROPERTY:
                     if (value.length() > 0) { // Set it
-                        log.info("Setting JMeter property: " + name + "=" + value);
+                        log.Info("Setting JMeter property: " + name + "=" + value);
                         jmeterProps.setProperty(name, value);
                     } else { // Reset it
-                        log.warn("Removing JMeter property: " + name);
+                        log.Warn("Removing JMeter property: " + name);
                         jmeterProps.remove(name);
                     }
                     break;
                 case JMETER_GLOBAL_PROP:
                     if (value.length() > 0) { // Set it
-                        log.info("Setting Global property: " + name + "=" + value);
+                        log.Info("Setting Global property: " + name + "=" + value);
                         remoteProps.setProperty(name, value);
                     } else {
                         File propFile = new File(name);
                         if (propFile.canRead()) {
-                            log.info("Setting Global properties from the file "+name);
-                            try {
+                            log.Info("Setting Global properties from the file " + name);
+                            try 
+                            {
                                 fis = new FileInputStream(propFile);
                                 remoteProps.load(fis);
-                            } catch (FileNotFoundException e) {
-                                log.warn("Could not find properties file: "+e.getLocalizedMessage());
-                            } catch (IOException e) {
-                                log.warn("Could not load properties file: "+e.getLocalizedMessage());
-                            } finally {
+                            } 
+                            catch (FileNotFoundException e)
+                            {
+                                log.Warn("Could not find properties file: "+e.Message);
+                            } 
+                            catch (IOException e)
+                            {
+                                log.Warn("Could not load properties file: " + e.Message);
+                            } 
+                            finally 
+                            {
                                 JOrphanUtils.closeQuietly(fis);
                             }
                         }
                     }
                     break;
                 case LOGLEVEL:
-                    if (value.length() > 0) { // Set category
-                        log.info("LogLevel: " + name + "=" + value);
+                    if (value.Length > 0) 
+                    { // Set category
+                        log.Info("LogLevel: " + name + "=" + value);
                         LoggingManager.setPriority(value, name);
                     } else { // Set root level
-                        log.warn("LogLevel: " + name);
+                        log.Warn("LogLevel: " + name);
                         LoggingManager.setPriority(name);
                     }
                     break;
@@ -387,7 +508,7 @@ namespace NetMeter
             if (sample_variables != null){
                 remoteProps.put(SampleEvent.SAMPLE_VARIABLES, sample_variables);
             }
-            jmeterProps.put("jmeter.version", JMeterUtils.getJMeterVersion());
+            jmeterProps.put("jmeter.version", NetMeterUtils.getJMeterVersion());
         }
 
         /*
@@ -398,9 +519,10 @@ namespace NetMeter
         {
             if (USE_LAST_JMX.equals(jmlogfile) || USE_LAST_JMX.concat(suffix).equals(jmlogfile)){
                 String last = LoadRecentProject.getRecentFile(0);// most recent
-                final String JMX_SUFFIX = ".JMX"; // $NON-NLS-1$
-                if (last.toUpperCase(Locale.ENGLISH).endsWith(JMX_SUFFIX)){
-                    jmlogfile=last.substring(0, last.length() - JMX_SUFFIX.length()).concat(suffix);
+                String JMX_SUFFIX = ".JMX"; // $NON-NLS-1$
+                if (last.ToUpper().EndsWith(JMX_SUFFIX))
+                {
+                    jmlogfile = last.Substring(0, last.Length - JMX_SUFFIX.Length).concat(suffix);
                 }
             }
             return jmlogfile;
@@ -411,11 +533,10 @@ namespace NetMeter
             // add a system property so samplers can check to see if JMeter
             // is running in NonGui mode
             System.setProperty(JMETER_NON_GUI, "true");// $NON-NLS-1$
-            JMeter driver = new JMeter();// TODO - why does it create a new instance?
+            NetMeterServer driver = new NetMeterServer();// TODO - why does it create a new instance?
             driver.remoteProps = this.remoteProps;
             driver.remoteStop = this.remoteStop;
             driver.parent = this;
-            PluginManager.install(this, false);
 
             String remote_hosts_string = null;
             if (remoteStart != null) 
@@ -535,21 +656,22 @@ namespace NetMeter
                         throw new IllegalArgumentException("The following remote engines could not be configured:"+failingEngines);
                     }
                     println("Starting remote engines");
-                    log.info("Starting remote engines");
-                    long now=System.currentTimeMillis();
+                    log.Info("Starting remote engines");
+                    long now = System.currentTimeMillis();
                     println("Starting the test @ "+new Date(now)+" ("+now+")");
-                    for (JMeterEngine engine : engines) {
+                    foreach (NetMeterEngine engine in engines) 
+                    {
                         engine.runTest();
                     }
                     println("Remote engines have been started");
-                    log.info("Remote engines have been started");
+                    log.Info("Remote engines have been started");
                 }
                 startUdpDdaemon(engines);
             } 
             catch (Exception e) 
             {
-                System.out.println("Error in NonGUIDriver " + e.toString());
-                log.error("Error in NonGUIDriver", e);
+                System.Console.WriteLine("Error in NonGUIDriver " + e.Message);
+                log.Error("Error in NonGUIDriver", e);
             } 
             finally 
             {
@@ -690,15 +812,15 @@ namespace NetMeter
              * @param unused JMeter unused for now
              * @param engines List<JMeterEngine>
              */
-            public ListenToTest(JMeter unused, List<JMeterEngine> engines) 
+            public ListenToTest(NetMeter unused, List<NetMeterEngine> engines) 
             {
                 //_parent = unused;
-                this.engines=engines;
+                this.engines = engines;
             }
 
-            public new void testEnded(String host)
+            public new void TestEnded(String host)
             {
-                long now=System.currentTimeMillis();
+                Int64 now = DateTime.Now.Ticks;
                 log.info("Finished remote host: " + host + " ("+now+")");
                 if (Interlocked.Decrement(started) <= 0)
                 {
@@ -707,9 +829,9 @@ namespace NetMeter
                 }
             }
 
-            public new void testEnded() 
+            public new void TestEnded() 
             {
-                long now = System.currentTimeMillis();
+                Int64 now = DateTime.Now.Ticks;
                 println("Tidying up ...    @ "+new Date(now)+" ("+now+")");
                 println("... end of run");
                 checkForRemainingThreads();
@@ -724,7 +846,7 @@ namespace NetMeter
 
             public new void testStarted() 
             {
-                long now=System.currentTimeMillis();
+                Int64 now = DateTime.Now.Ticks;
                 log.Info(NetMeterUtils.getResString("running_test")+" ("+now+")");//$NON-NLS-1$
             }
 
@@ -737,13 +859,13 @@ namespace NetMeter
              */
             public new void run() 
             {
-                long now = System.currentTimeMillis();
+                Int64 now = DateTime.Now.Ticks;
                 println("Tidying up remote @ "+new Date(now)+" ("+now+")");
                 if (engines!=null){ // it will be null unless remoteStop = true
                     println("Exitting remote servers");
                     foreach (NetMeterEngine engine in engines)
                     {
-                        engine.exit();
+                        engine.Exit();
                     }
                 }
                 try 
@@ -766,32 +888,29 @@ namespace NetMeter
             {
                 // This cannot be a JMeter class variable, because properties
                 // are not initialised until later.
-                int REMAIN_THREAD_PAUSE = NetMeterUtils.getPropDefault("jmeter.exit.check.pause", 2000); // $NON-NLS-1$ 
+                int REMAIN_THREAD_PAUSE = 2000; // $NON-NLS-1$ 
             
                 if (REMAIN_THREAD_PAUSE > 0) 
                 {
-                    Thread daemon = new Thread(run);
-                    daemon.IsBackground = true;
-
-                    {
-                        public void run()
-                        {
-                            try 
+                    Thread daemon = new Thread(
+                        () =>
                             {
-                                Thread.sleep(REMAIN_THREAD_PAUSE); // Allow enough time for JVM to exit
-                            } 
-                            catch (InterruptedException ignored) 
-                            {
+                                try 
+                                {
+                                    Thread.Sleep(REMAIN_THREAD_PAUSE); // Allow enough time for JVM to exit
+                                } 
+                                catch (Exception ignored) 
+                                {
+                                }
+                                // This is a daemon thread, which should only reach here if there are other
+                                // non-daemon threads still active
+                                System.Console.WriteLine("The JVM should have exitted but did not.");
+                                System.Console.WriteLine("The following non-daemon threads are still running (DestroyJavaVM is OK):");
+                                //JOrphanUtils.displayThreads(false);
                             }
-                            // This is a daemon thread, which should only reach here if there are other
-                            // non-daemon threads still active
-                            System.Console.WriteLine("The JVM should have exitted but did not.");
-                            System.Console.WriteLine("The following non-daemon threads are still running (DestroyJavaVM is OK):");
-                            JOrphanUtils.displayThreads(false);
-                        }
-    
-                    };
-                    daemon.setDaemon(true);
+                        );
+                    daemon.IsBackground = true;
+                    //daemon.setDaemon(true);
                     daemon.start();
                 }
             }
@@ -800,7 +919,7 @@ namespace NetMeter
 
         private static void println(String str) 
         {
-            System.out.println(str);
+            System.Console.WriteLine(str);
         }
 
         private static sealed String[][] DEFAULT_ICONS = 
@@ -818,121 +937,148 @@ namespace NetMeter
             { "org.apache.jmeter.assertions.gui.AbstractAssertionGui",   "org/apache/jmeter/images/question.gif"}     //$NON-NLS-1$ $NON-NLS-2$
         };
 
-        @Override
-        public String[][] getIconMappings() {
-            final String defaultIconProp = "org/apache/jmeter/images/icon.properties"; //$NON-NLS-1$
-            String iconProp = JMeterUtils.getPropDefault("jmeter.icons", defaultIconProp);//$NON-NLS-1$
-            Properties p = JMeterUtils.loadProperties(iconProp);
-            if (p == null && !iconProp.equals(defaultIconProp)) {
-                log.info(iconProp + " not found - using " + defaultIconProp);
-                iconProp = defaultIconProp;
-                p = JMeterUtils.loadProperties(iconProp);
-            }
-            if (p == null) {
-                log.info(iconProp + " not found - using inbuilt icon set");
-                return DEFAULT_ICONS;
-            }
-            log.info("Loaded icon properties from " + iconProp);
-            String[][] iconlist = new String[p.size()][3];
-            Enumeration<?> pe = p.keys();
-            int i = 0;
-            while (pe.hasMoreElements()) {
-                String key = (String) pe.nextElement();
-                String icons[] = JOrphanUtils.split(p.getProperty(key), " ");//$NON-NLS-1$
-                iconlist[i][0] = key;
-                iconlist[i][1] = icons[0];
-                if (icons.length > 1) {
-                    iconlist[i][2] = icons[1];
-                }
-                i++;
-            }
-            return iconlist;
-        }
+        //public String[][] GetIconMappings() 
+        //{
+        //    String defaultIconProp = "org/apache/jmeter/images/icon.properties"; //$NON-NLS-1$
+        //    String iconProp = JMeterUtils.getPropDefault("jmeter.icons", defaultIconProp);//$NON-NLS-1$
+        //    Properties p = JMeterUtils.loadProperties(iconProp);
+        //    if (p == null && !iconProp.equals(defaultIconProp)) 
+        //    {
+        //        log.info(iconProp + " not found - using " + defaultIconProp);
+        //        iconProp = defaultIconProp;
+        //        p = JMeterUtils.loadProperties(iconProp);
+        //    }
+        //    if (p == null) {
+        //        log.info(iconProp + " not found - using inbuilt icon set");
+        //        return DEFAULT_ICONS;
+        //    }
+        //    log.info("Loaded icon properties from " + iconProp);
+        //    String[,] iconlist = new String[p.size(), 3];
+        //    Enumeration<?> pe = p.keys();
+        //    int i = 0;
+        //    while (pe.hasMoreElements()) {
+        //        String key = (String) pe.nextElement();
+        //        String icons[] = JOrphanUtils.split(p.getProperty(key), " ");//$NON-NLS-1$
+        //        iconlist[i][0] = key;
+        //        iconlist[i][1] = icons[0];
+        //        if (icons.length > 1) {
+        //            iconlist[i][2] = icons[1];
+        //        }
+        //        i++;
+        //    }
+        //    return iconlist;
+        //}
 
-        @Override
-        public String[][] getResourceBundles() {
-            return new String[0][];
-        }
+        //@Override
+        //public String[][] getResourceBundles() {
+        //    return new String[0][];
+        //}
 
         /**
          * Check if JMeter is running in non-GUI mode.
          *
          * @return true if JMeter is running in non-GUI mode.
          */
-        public static Boolean isNonGUI(){
-            return "true".equals(System.getProperty(JMeter.JMETER_NON_GUI)); //$NON-NLS-1$
+        public static Boolean isNonGUI()
+        {
+            return true; //$NON-NLS-1$
         }
 
-        private void logProperty(String prop){
-            log.info(prop+"="+System.getProperty(prop));//$NON-NLS-1$
+        private void logProperty(String prop)
+        {
+            log.Info(prop+"="+System.getProperty(prop));//$NON-NLS-1$
         }
-        private void logProperty(String prop,String separator){
-            log.info(prop+separator+System.getProperty(prop));//$NON-NLS-1$
+        private void logProperty(String prop,String separator)
+        {
+            log.Info(prop+separator+System.getProperty(prop));//$NON-NLS-1$
         }
 
-        private static void startUdpDdaemon(final List<JMeterEngine> engines) {
-            int port = JMeterUtils.getPropDefault("jmeterengine.nongui.port", UDP_PORT_DEFAULT); // $NON-NLS-1$
-            int maxPort = JMeterUtils.getPropDefault("jmeterengine.nongui.maxport", 4455); // $NON-NLS-1$
-            if (port > 1000){
-                final DatagramSocket socket = getSocket(port, maxPort);
-                if (socket != null) {
-                    Thread waiter = new Thread("UDP Listener"){
-                        @Override
-                        public void run() {
-                            waitForSignals(engines, socket);
-                        }
-                    };
-                    waiter.setDaemon(true);
+        private static void startUdpDdaemon(List<NetMeterEngine> engines) 
+        {
+            int port = NetMeterUtils.getPropDefault("jmeterengine.nongui.port", UDP_PORT_DEFAULT); // $NON-NLS-1$
+            int maxPort = NetMeterUtils.getPropDefault("jmeterengine.nongui.maxport", 4455); // $NON-NLS-1$
+            if (port > 1000)
+            {
+                DatagramSocket socket = getSocket(port, maxPort);
+                if (socket != null)
+                {
+                    Thread waiter = new Thread(
+                        () =>
+                            {
+                                WaitForSignals(engines, socket);
+                            }
+                        );
+                    //waiter.setDaemon(true);
                     waiter.start();
-                } else {
-                    System.out.println("Failed to create UDP port");
+                }
+                else
+                {
+                    System.Console.WriteLine("Failed to create UDP port");
                 }
             }
         }
 
-        private static void waitForSignals(final List<JMeterEngine> engines, DatagramSocket socket) {
+        private static void WaitForSignals(List<NetMeterEngine> engines, DatagramSocket socket) 
+        {
             byte[] buf = new byte[80];
-            System.out.println("Waiting for possible shutdown message on port "+socket.getLocalPort());
+            System.Console.WriteLine("Waiting for possible shutdown message on port {0}", socket.getLocalPort());
             DatagramPacket request = new DatagramPacket(buf, buf.length);
-            try {
-                while(true) {
+            try
+            {
+                while(true)
+                {
                     socket.receive(request);
                     InetAddress address = request.getAddress();
                     // Only accept commands from the local host
-                    if (address.isLoopbackAddress()){
+                    if (address.isLoopbackAddress())
+                    {
                         String command = new String(request.getData(), request.getOffset(), request.getLength(),"ASCII");
-                        System.out.println("Command: "+command+" received from "+address);
-                        log.info("Command: "+command+" received from "+address);
-                        if (command.equals("StopTestNow")){
-                            for(JMeterEngine engine : engines) {
+                        System.Console.WriteLine("Command: "+command+" received from "+address);
+                        log.Info("Command: "+command+" received from "+address);
+                        if (command.Equals("StopTestNow"))
+                        {
+                            foreach(NetMeterEngine engine in engines)
+                            {
                                 engine.stopTest(true);
                             }
-                        } else if (command.equals("Shutdown")) {
-                            for(JMeterEngine engine : engines) {
+                        } 
+                        else if (command.equals("Shutdown")) 
+                        {
+                            foreach(NetMeterEngine engine in engines)
+                            {
                                 engine.stopTest(false);
                             }
-                        } else if (command.equals("HeapDump")) {
-                            HeapDumper.dumpHeap();
-                        } else {
-                            System.out.println("Command: "+command+" not recognised ");
+                        } 
+                        else 
+                        {
+                            System.Console.WriteLine("Command: {0} not recognised ", command);
                         }
                     }
                 }
-            } catch (Exception e) {
-                System.out.println(e);
-            } finally {
+            } 
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e.Message);
+            } 
+            finally 
+            {
                 socket.close();
             }
         }
 
-        private static DatagramSocket getSocket(int udpPort, int udpPortMax) {
+        private static DatagramSocket getSocket(int udpPort, int udpPortMax) 
+        {
             DatagramSocket socket = null;
             int i = udpPort;
-            while (i<= udpPortMax) {
-                try {
+            while (i<= udpPortMax)
+            {
+                try 
+                {
                     socket = new DatagramSocket(i);
                     break;
-                } catch (SocketException e) {
+                } 
+                catch (SocketException e) 
+                {
                     i++;
                 }            
             }
