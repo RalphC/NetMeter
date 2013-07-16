@@ -8,15 +8,15 @@ namespace NetMeter.TestElements
     {
         public static String NAME = "TestElement.name"; //$NON-NLS-1$
 
-        public String GUI_CLASS = "TestElement.gui_class"; //$NON-NLS-1$
+        public static String GUI_CLASS = "TestElement.gui_class"; //$NON-NLS-1$
 
         public static String ENABLED = "TestElement.enabled"; //$NON-NLS-1$
 
-        public String TEST_CLASS = "TestElement.test_class"; //$NON-NLS-1$
+        public static String TEST_CLASS = "TestElement.test_class"; //$NON-NLS-1$
 
         // Needed by AbstractTestElement.
         // Also TestElementConverter and TestElementPropertyConverter for handling empty comments
-        public String COMMENTS = "TestPlan.comments"; //$NON-NLS-1$
+        public static String COMMENTS = "TestPlan.comments"; //$NON-NLS-1$
         // N.B. Comments originally only applied to Test Plans, hence the name - which can now not be easily changed
 
         void addTestElement(TestElement child);
@@ -24,17 +24,17 @@ namespace NetMeter.TestElements
         // This method should clear any test element properties that are merged
         void ClearTestElementChildren();
 
-        void setProperty(String key, String value);
+        void SetProperty(String key, String value);
 
-        void setProperty(String key, String value, String dflt);
+        void SetProperty(String key, String value, String dflt);
 
-        void setProperty(String key, bool value);
+        void SetProperty(String key, bool value);
 
-        void setProperty(String key, bool value, bool dflt);
+        void SetProperty(String key, bool value, bool dflt);
 
-        void setProperty(String key, Int32 value);
+        void SetProperty(String key, Int32 value);
 
-        void setProperty(String key, Int32 value, Int32 dflt);
+        void SetProperty(String key, Int32 value, Int32 dflt);
 
         // Check if ENABLED property is present and true ; defaults to true ; return true if element is enabled
         bool isEnabled();
@@ -88,7 +88,7 @@ namespace NetMeter.TestElements
          * Sets and overwrites a property in the TestElement. This call will be
          * ignored if the TestElement is currently a "running version".
          */
-        void setProperty(NetMeterProperty property);
+        void SetProperty(NetMeterProperty property);
 
         /**
          * Given the name of the property, returns the appropriate property from

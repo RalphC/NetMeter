@@ -22,7 +22,7 @@ namespace NetMeter.Threads
         {
         }
 
-        public static NetMeterContext getContext()
+        public static NetMeterContext GetContext()
         {
             return threadContext.Value;
         }

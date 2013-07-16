@@ -193,7 +193,7 @@ namespace NetMeter.Threads
         public void run() 
         {
             // threadContext is not thread-safe, so keep within thread
-            NetMeterContext threadContext = NetMeterContextManager.getContext();
+            NetMeterContext threadContext = NetMeterContextManager.GetContext();
             LoopIterationListener iterationListener = null;
 
             try 

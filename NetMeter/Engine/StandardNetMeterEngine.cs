@@ -335,7 +335,7 @@ namespace NetMeter.Engine
              */
             NetMeterUtils.helpGC();
         
-            NetMeterContextManager.getContext().setSamplingStarted(true);
+            NetMeterContextManager.GetContext().setSamplingStarted(true);
             Boolean mainGroups = running; // still running at this point, i.e. setUp was not cancelled
 
             while (running)

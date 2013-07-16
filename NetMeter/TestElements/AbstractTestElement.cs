@@ -98,7 +98,7 @@ namespace NetMeter.TestElements
 
 		public void SetName(String name) 
 		{
-			setProperty(TestElement.NAME, name);
+			SetProperty(TestElement.NAME, name);
 		}
 
 		public String GetName() 
@@ -108,7 +108,7 @@ namespace NetMeter.TestElements
 
 		public void setComment(String comment)
 		{
-			setProperty(new StringProperty(TestElement.COMMENTS, comment));
+			SetProperty(new StringProperty(TestElement.COMMENTS, comment));
 		}
 
 		public String getComment()
@@ -292,7 +292,7 @@ namespace NetMeter.TestElements
 			}
 		}
 
-		public void setProperty(NetMeterProperty property) 
+		public void SetProperty(NetMeterProperty property) 
         {
 			if (isRunningVersion()) {
 				if (getProperty(property.getName()) is NullProperty)
@@ -310,9 +310,9 @@ namespace NetMeter.TestElements
 			}
 		}
 
-		public void setProperty(String name, String value)
+		public void SetProperty(String name, String value)
         {
-			setProperty(new StringProperty(name, value));
+			SetProperty(new StringProperty(name, value));
 		}
 
 		/**
@@ -326,16 +326,16 @@ namespace NetMeter.TestElements
 		 * @param value current value
 		 * @param dflt default
 		 */
-		public void setProperty(String name, String value, String dflt) {
+		public void SetProperty(String name, String value, String dflt) {
 			if (dflt.Equals(value)) {
 				RemoveProperty(name);
 			} else {
-				setProperty(new StringProperty(name, value));
+				SetProperty(new StringProperty(name, value));
 			}
 		}
 
-		public void setProperty(String name, bool value) {
-			setProperty(new BooleanProperty(name, value));
+		public void SetProperty(String name, bool value) {
+			SetProperty(new BooleanProperty(name, value));
 		}
 
 		/**
@@ -349,16 +349,16 @@ namespace NetMeter.TestElements
 		 * @param value current value
 		 * @param dflt default
 		 */
-		public void setProperty(String name, bool value, bool dflt) {
+		public void SetProperty(String name, bool value, bool dflt) {
 			if (value == dflt) {
 				RemoveProperty(name);
 			} else {
-				setProperty(new BooleanProperty(name, value));
+				SetProperty(new BooleanProperty(name, value));
 			}
 		}
 
-		public void setProperty(String name, int value) {
-			setProperty(new IntegerProperty(name, value));
+		public void SetProperty(String name, int value) {
+			SetProperty(new IntegerProperty(name, value));
 		}
 
 		/**
@@ -372,11 +372,11 @@ namespace NetMeter.TestElements
 		 * @param value current value
 		 * @param dflt default
 		 */
-		public void setProperty(String name, int value, int dflt) {
+		public void SetProperty(String name, int value, int dflt) {
 			if (value == dflt) {
 				RemoveProperty(name);
 			} else {
-				setProperty(new IntegerProperty(name, value));
+				SetProperty(new IntegerProperty(name, value));
 			}
 		}
 
@@ -491,7 +491,7 @@ namespace NetMeter.TestElements
 				// log.warn("ThreadContext was not set up - should only happen in
 				// JUnit testing..."
 				// ,new Throwable("Debug"));
-				threadContext = NetMeterContextManager.getContext();
+				threadContext = NetMeterContextManager.GetContext();
 			}
 			return threadContext;
 		}

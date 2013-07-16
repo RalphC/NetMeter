@@ -53,7 +53,7 @@ namespace NetMeter.Threads
          */
         public void SetScheduler(bool Scheduler) 
         {
-            setProperty(new BooleanProperty(SCHEDULER, Scheduler));
+            SetProperty(new BooleanProperty(SCHEDULER, Scheduler));
         }
 
         // List of active threads
@@ -65,7 +65,7 @@ namespace NetMeter.Threads
             // TODO : log
 
             Int32 now = System.DateTime.Now.Millisecond;
-            NetMeterContext context = NetMeterContextManager.getContext();
+            NetMeterContext context = NetMeterContextManager.GetContext();
             for (int i = 0; running && i < threadNumber; i++)
             {
                 NetMeterThread nmThread = CreateThread(groupCount, notifier, threadGroupTree, engine, i, context);

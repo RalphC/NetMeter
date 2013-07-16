@@ -76,7 +76,7 @@ namespace NetMeter.TestElements
 
         public void setUserDefinedVariables(Arguments vars) 
         {
-            setProperty(new TestElementProperty(USER_DEFINED_VARIABLES, vars));
+            SetProperty(new TestElementProperty(USER_DEFINED_VARIABLES, vars));
         }
 
         public NetMeterProperty getUserDefinedVariablesAsProperty() 
@@ -92,7 +92,7 @@ namespace NetMeter.TestElements
         // Does not appear to be used yet
         public void SetBasedir(String b) 
         {
-            setProperty(BASEDIR, b);
+            SetProperty(BASEDIR, b);
         }
 
         public Arguments GetArguments() 
@@ -118,7 +118,7 @@ namespace NetMeter.TestElements
 
         public void SetFunctionalMode(Boolean funcMode) 
         {
-            setProperty(new BooleanProperty(FUNCTIONAL_MODE, funcMode));
+            SetProperty(new BooleanProperty(FUNCTIONAL_MODE, funcMode));
             functionalMode = funcMode;
         }
 
@@ -134,12 +134,12 @@ namespace NetMeter.TestElements
 
         public void setSerialized(Boolean serializeTGs) 
         {
-            setProperty(new BooleanProperty(SERIALIZE_THREADGROUPS, serializeTGs));
+            SetProperty(new BooleanProperty(SERIALIZE_THREADGROUPS, serializeTGs));
         }
 
         public void setTearDownOnShutdown(Boolean tearDown) 
         {
-            setProperty(TEARDOWN_ON_SHUTDOWN, tearDown, false);
+            SetProperty(TEARDOWN_ON_SHUTDOWN, tearDown, false);
         }
 
         public Boolean isTearDownOnShutdown() 
@@ -153,7 +153,7 @@ namespace NetMeter.TestElements
          */
         public void setTestPlanClasspath(String text) 
         {
-            setProperty(CLASSPATHS,text);
+            SetProperty(CLASSPATHS,text);
         }
 
         public void setTestPlanClasspathArray(String[] text)

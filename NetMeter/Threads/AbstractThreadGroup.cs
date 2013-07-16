@@ -70,7 +70,7 @@ namespace NetMeter.Threads
         public void SetSamplerController(LoopController c) 
         {
             c.SetContinueForever(false);
-            setProperty(new TestElementProperty(MAIN_CONTROLLER, c));
+            SetProperty(new TestElementProperty(MAIN_CONTROLLER, c));
         }
 
         /**
