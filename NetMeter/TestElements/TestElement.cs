@@ -8,7 +8,7 @@ namespace NetMeter.TestElements
     {
         public static String NAME = "TestElement.name"; //$NON-NLS-1$
 
-        public static String GUI_CLASS = "TestElement.gui_class"; //$NON-NLS-1$
+        //public static String GUI_CLASS = "TestElement.gui_class"; //$NON-NLS-1$
 
         public static String ENABLED = "TestElement.enabled"; //$NON-NLS-1$
 

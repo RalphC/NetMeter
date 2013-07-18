@@ -98,27 +98,27 @@ namespace Valkyrie.Collections
             order[entry] = newKey;
         }
 
-        public new HashTree CreateNewTree() 
+        public new OrderedHashTree CreateNewTree() 
         {
             return new OrderedHashTree();
         }
 
-        public new HashTree CreateNewTree(Object key)
+        public new OrderedHashTree CreateNewTree(Object key)
         {
             return new OrderedHashTree(key);
         }
 
-        public new HashTree CreateNewTree(List<Object> values)
+        public new OrderedHashTree CreateNewTree(List<Object> values)
         {
             return new OrderedHashTree(values);
         }
 
 
-        public new HashTree Put(Object key) 
+        public new OrderedHashTree Put(Object key) 
         {
             if (!Data.ContainsKey(key)) 
             {
-                HashTree newTree = CreateNewTree();
+                OrderedHashTree newTree = CreateNewTree();
                 Data.Add(key, newTree);
                 order.Add(key);
                 return newTree;

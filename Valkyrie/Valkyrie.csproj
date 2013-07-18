@@ -50,6 +50,7 @@
     <Compile Include="OptionParser\CLArgsParser.cs" />
     <Compile Include="OptionParser\CLOption.cs" />
     <Compile Include="OptionParser\CLOptionDescriptor.cs" />
+    <Compile Include="OptionParser\CLUtil.cs" />
     <Compile Include="OptionParser\ParserControl.cs" />
     <Compile Include="OptionParser\Token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

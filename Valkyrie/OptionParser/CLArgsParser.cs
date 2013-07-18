@@ -96,7 +96,7 @@ namespace Valkyrie.OptionParser
          *         if no CLOption is found.
          * @see CLOption
          */
-        public CLOption getArgumentById(int id) 
+        public CLOption GetArgumentById(int id) 
         {
             CLOption option = null;
             m_optionIndex.TryGetValue(id, out option);

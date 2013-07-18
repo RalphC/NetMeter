@@ -51,6 +51,12 @@
     <Compile Include="Engine\Event\LoopIterationListener.cs" />
     <Compile Include="Engine\NetMeterEngine.cs" />
     <Compile Include="Engine\NetMeterEngineException.cs" />
+    <Compile Include="IOService\IOService.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IOService\XMLWrapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NetMeterServer.cs" />
     <Compile Include="Processor\PostProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

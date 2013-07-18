@@ -28,9 +28,9 @@ namespace Valkyrie.OptionParser
          *
          * @return the (first) argument
          */
-        public String getArgument() 
+        public String GetArgument() 
         {
-            return getArgument(0);
+            return GetArgument(0);
         }
 
         /**
@@ -40,7 +40,7 @@ namespace Valkyrie.OptionParser
          *            The argument index, from 0 to {@link #getArgumentCount()}-1.
          * @return the argument
          */
-        public String getArgument(int index) 
+        public String GetArgument(int index) 
         {
             if (null == m_arguments || index < 0 || index >= m_arguments.Length) 
             {

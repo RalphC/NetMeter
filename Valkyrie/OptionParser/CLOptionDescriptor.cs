@@ -132,7 +132,7 @@ namespace Valkyrie.OptionParser
          *
          * @return the description
          */
-        public String getDescription() 
+        public String GetDescription() 
         {
             return m_description;
         }
