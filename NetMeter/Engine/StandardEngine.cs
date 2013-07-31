@@ -12,7 +12,7 @@ using NetMeter.Util;
 
 namespace NetMeter.Engine
 {
-    public class StandardNetMeterEngine : NetMeterEngine
+    public class StandardEngine : NetMeterEngine
     {
         private static sealed ILog log = LoggingManager.GetLoggerForClass();
 
@@ -49,7 +49,7 @@ namespace NetMeter.Engine
         /** tearDown Thread Groups run after shutdown of main threads */
         private volatile Boolean tearDownOnShutdown = false;
 
-        private volatile static StandardNetMeterEngine engine;
+        private volatile static StandardEngine engine;
 
         private String host;
 
@@ -98,11 +98,11 @@ namespace NetMeter.Engine
             return wasStopped;
         }
 
-        public StandardNetMeterEngine() : this(null)
+        public StandardEngine() : this(null)
         {
         }
 
-        public StandardNetMeterEngine(String host) 
+        public StandardEngine(String host) 
         {
             this.host = host;
             // Hack to allow external control
@@ -247,7 +247,7 @@ namespace NetMeter.Engine
                 running = false;
                 if (now) 
                 {
-                    StandardNetMeterEngine engine = (StandardNetMeterEngine)obj;
+                    StandardEngine engine = (StandardEngine)obj;
                     engine.TellThreadGroupsToStop();
                     Thread.Sleep(10 * engine.CountStillActiveThreads());
                     Boolean stopped = engine.VerifyThreadsStopped();

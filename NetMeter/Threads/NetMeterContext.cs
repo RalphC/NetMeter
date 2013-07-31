@@ -17,7 +17,7 @@ namespace NetMeter.Threads
 
         private bool samplingStarted;
 
-        private StandardNetMeterEngine engine;
+        private StandardEngine engine;
 
         private NetMeterThread nThread;
 
@@ -142,12 +142,12 @@ namespace NetMeter.Threads
             this.threadGroup = threadgrp;
         }
 
-        public StandardNetMeterEngine GetEngine()
+        public StandardEngine GetEngine()
         {
             return engine;
         }
 
-        public void SetEngine(StandardNetMeterEngine engine)
+        public void SetEngine(StandardEngine engine)
         {
             this.engine = engine;
         }

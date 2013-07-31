@@ -12,7 +12,7 @@ using Valkyrie.Collections;
 namespace NetMeter.Engine
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "IRemoteEngine" in both code and config file together.
-    public class RemoteNetMeterEngine : IRemoteEngine
+    public class ClientEngine : IRemoteEngine
     {
         private static ILog log = LoggingManager.GetLoggerForClass();
 
@@ -24,12 +24,12 @@ namespace NetMeter.Engine
 
         private static Int32 DEFAULT_LOCAL_PORT = 0;
 
-        public RemoteNetMeterEngine()
+        public ClientEngine()
         {
             NetTcpBinding portSharingBinding = new NetTcpBinding;
             portSharingBinding.PortSharingEnabled = true;
 
-            ServiceHost server = new ServiceHost(typeof(RemoteNetMeterEngine));
+            ServiceHost server = new ServiceHost(typeof(ClientEngine));
             server.AddServiceEndpoint(typeof(IRemoteEngine), portSharingBinding, "net.tcp://localhost:1099/RemoteNetMeterEngine");
         }
 
@@ -57,7 +57,7 @@ namespace NetMeter.Engine
                     throw new Exception("Engine is busy");
                 }
                 ownerThread = Thread.CurrentThread;
-                StandardEngine = new StandardNetMeterEngine(host);
+                StandardEngine = new StandardEngine(host);
                 StandardEngine.Configure(testtree);
             }
             finally

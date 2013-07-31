@@ -66,7 +66,7 @@ namespace NetMeter.Threads
         // Gives access to parent thread threadGroup
         private AbstractThreadGroup threadGroup;
 
-        private StandardNetMeterEngine engine = null; // For access to stop methods.
+        private StandardEngine engine = null; // For access to stop methods.
 
         /*
          * The following variables may be set/read from multiple threads.
@@ -818,7 +818,7 @@ namespace NetMeter.Threads
          *
          * @param engine
          */
-        public void SetEngine(StandardNetMeterEngine engine)
+        public void SetEngine(StandardEngine engine)
         {
             this.engine = engine;
         }

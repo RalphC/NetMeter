@@ -59,7 +59,7 @@ namespace NetMeter.Threads
         // List of active threads
         private ConcurrentDictionary<NetMeterThread, Thread> allThreads = new ConcurrentDictionary<NetMeterThread, Thread>();
 
-        public void start(int groupCount, ListenerNotifier notifier, OrderedHashTree threadGroupTree, StandardNetMeterEngine engine)
+        public void start(int groupCount, ListenerNotifier notifier, OrderedHashTree threadGroupTree, StandardEngine engine)
         {
             int threadNumber = GetThreadsNumber();
             // TODO : log
@@ -89,7 +89,7 @@ namespace NetMeter.Threads
         }
 
         private NetMeterThread CreateThread(int groupCount, ListenerNotifier notifier, OrderedHashTree threadGroupTree,
-                StandardNetMeterEngine engine, int i, NetMeterContext context) 
+                StandardEngine engine, int i, NetMeterContext context) 
         {
             String groupName = GetName();
             NetMeterThread nmThread = new NetMeterThread(CloneTree(threadGroupTree), this, notifier);

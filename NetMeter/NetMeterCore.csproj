@@ -35,6 +35,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,8 +50,11 @@
     <Compile Include="Control\TransactionSampler.cs" />
     <Compile Include="Engine\Event\LoopIterationEvent.cs" />
     <Compile Include="Engine\Event\LoopIterationListener.cs" />
+    <Compile Include="Engine\IRemoteEngine.cs" />
     <Compile Include="Engine\NetMeterEngine.cs" />
     <Compile Include="Engine\NetMeterEngineException.cs" />
+    <Compile Include="Engine\ClientEngine.cs" />
+    <Compile Include="Engine\ServerEngine.cs" />
     <Compile Include="IOService\IOService.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -60,7 +64,7 @@
     <Compile Include="NetMeterServer.cs" />
     <Compile Include="Processor\PostProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Engine\StandardNetMeterEngine.cs" />
+    <Compile Include="Engine\StandardEngine.cs" />
     <Compile Include="Samplers\Entry.cs" />
     <Compile Include="Samplers\SampleEvent.cs" />
     <Compile Include="Samplers\SampleListener.cs" />
@@ -97,6 +101,10 @@
       <Project>{fbd8d0cb-3d05-4ff4-a133-fff023dd3478}</Project>
       <Name>Valkyrie</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

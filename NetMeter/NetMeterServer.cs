@@ -625,7 +625,7 @@ namespace NetMeter
                 println("Created the tree successfully using "+testFile);
                 if (!remoteStart) 
                 {
-                    NetMeterEngine engine = new StandardNetMeterEngine();
+                    NetMeterEngine engine = new StandardEngine();
                     engine.Configure(tree);
                     Int64 now = DateTime.Now.Ticks;
                     println("Starting the test @ " + DateTime.Now.ToString() + " (" + now + ")");

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="NetMeter.Engine.ClientEngine" BaseTypeListCollapsed="true">
+    <Position X="3" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQIAIAAAAAAABAAAAABSSAAAEAEAABAAIAACAAAAAAA=</HashCode>
+      <FileName>Engine\ClientEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NetMeter.Engine.ServerEngine" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQAAAIAAAAAARAAAAgBACBAAAAAAAAAIIAgEAAAAAAA=</HashCode>
+      <FileName>Engine\ServerEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NetMeter.Engine.StandardEngine" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="3.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NetMeter.Engine.StandardEngine.StopTestClass" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Engine\StandardEngine.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>SQAgQIAQDRAABAEBARBACBAAAAxgYBAIIAgAIAQIAIM=</HashCode>
+      <FileName>Engine\StandardEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="NetMeter.Engine.IRemoteEngine">
+    <Position X="0.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAABAAAAABAAAAAAAEAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Engine\IRemoteEngine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NetMeter.Engine.NetMeterEngine">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAIAAAAAABAAAAABAABAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Engine\NetMeterEngine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

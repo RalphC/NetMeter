@@ -217,7 +217,7 @@ namespace NetMeter.Threads
 
         public abstract int NumberOfActiveThreads();
 
-        public abstract void Start(int groupCount, ListenerNotifier notifier, OrderedHashTree threadGroupTree, StandardNetMeterEngine engine);
+        public abstract void Start(int groupCount, ListenerNotifier notifier, OrderedHashTree threadGroupTree, StandardEngine engine);
 
         public abstract Boolean VerifyThreadsStopped();
 
