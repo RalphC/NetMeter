@@ -27,16 +27,24 @@
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
+    <TypeIdentifier>
+      <HashCode>SQAgQIAQDRAABAEBARBACBAAAAxgYBAIIAgAIAQIAIM=</HashCode>
+      <FileName>Engine\StandardEngine.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NetMeter.Samplers.SampleResult" Collapsed="true">
+    <Position X="10.25" Y="3.5" Width="1.5" />
     <NestedTypes>
-      <Class Name="NetMeter.Engine.StandardEngine.StopTestClass" Collapsed="true">
+      <Class Name="NetMeter.Samplers.SampleResult.NanoOffset" Collapsed="true">
         <TypeIdentifier>
-          <NewMemberFileName>Engine\StandardEngine.cs</NewMemberFileName>
+          <NewMemberFileName>Samplers\SampleResult.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>SQAgQIAQDRAABAEBARBACBAAAAxgYBAIIAgAIAQIAIM=</HashCode>
-      <FileName>Engine\StandardEngine.cs</FileName>
+      <HashCode>vcjNnog8ucPY6FB3DhRiTfMWGoSjSDpFfaqHlRD3w5Y=</HashCode>
+      <FileName>Samplers\SampleResult.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>

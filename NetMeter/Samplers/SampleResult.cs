@@ -27,7 +27,7 @@ namespace NetMeter.Samplers
          * The value is defined by the property "sampleresult.default.encoding"
          * with a default of DEFAULT_HTTP_ENCODING if that is not defined.
          */
-        static sealed String DEFAULT_ENCODING = NetMeterUtils.getPropDefault("sampleresult.default.encoding", DEFAULT_HTTP_ENCODING);
+        static sealed String DEFAULT_ENCODING = DEFAULT_HTTP_ENCODING;
 
         /* The default used by {@link #setResponseData(String, String)} */
         private static sealed String DEFAULT_CHARSET = "UTF-8";
@@ -55,9 +55,9 @@ namespace NetMeter.Samplers
 
         private static sealed AssertionResult[] EMPTY_AR = new AssertionResult[0];
     
-        private static sealed Boolean GETBYTES_BODY_REALSIZE = NetMeterUtils.getPropDefault("sampleresult.getbytes.body_real_size", true); // $NON-NLS-1$
+        private static sealed Boolean GETBYTES_BODY_REALSIZE = true;
 
-        private static sealed Boolean GETBYTES_HEADERS_SIZE = NetMeterUtils.getPropDefault("sampleresult.getbytes.headers_size", true); // $NON-NLS-1$
+        private static sealed Boolean GETBYTES_HEADERS_SIZE = true;
     
         private static sealed Boolean GETBYTES_NETWORK_SIZE = GETBYTES_HEADERS_SIZE && GETBYTES_BODY_REALSIZE ? true : false;
 
@@ -284,7 +284,7 @@ namespace NetMeter.Samplers
             // Don't copy this; it is per instance resultFileName = res.resultFileName;
             sampleCount = res.sampleCount;
             samplerData = res.samplerData;
-            saveConfig = res.saveConfig;
+            //saveConfig = res.saveConfig;
             startTime = res.startTime;//OK
             stopTest = res.stopTest;
             stopTestNow = res.stopTestNow;
@@ -746,7 +746,7 @@ namespace NetMeter.Samplers
          * @return elapsed time in milliseonds
          *
          */
-        public long GetTime()
+        public Int64 GetTime()
         {
             return time;
         }
