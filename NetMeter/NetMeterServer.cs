@@ -598,12 +598,9 @@ namespace NetMeter
 
                 Summariser summer = null;
                 String summariserName = "Summariser";//$NON-NLS-1$
-                if (summariserName.Length > 0) 
-                {
-                    log.Info("Creating summariser <" + summariserName + ">");
-                    println("Creating summariser <" + summariserName + ">");
-                    summer = new Summariser(summariserName);
-                }
+                log.Info("Creating summariser <" + summariserName + ">");
+                println("Creating summariser <" + summariserName + ">");
+                summer = new Summariser(summariserName);
 
                 if (logFile != null)
                 {

@@ -377,7 +377,7 @@ namespace NetMeter.Threads
                         RunPostProcessors(pack.GetPostProcessors());
                         CheckAssertions(pack.GetAssertions(), result, threadContext);
                         // Do not send subsamples to listeners which receive the transaction sample
-                        List<SampleListener> sampleListeners = GetSampleListeners(pack, transactionPack, transactionSampler);
+                        List<SampleListener> sampleListeners = GetSampleListeners(pack);
                         NotifyListeners(sampleListeners, result);
                         compiler.Done(pack);
 
@@ -434,33 +434,34 @@ namespace NetMeter.Threads
          * @param transactionSampler
          * @return the listeners who should receive the sample result
          */
-        private List<SampleListener> GetSampleListeners(SamplePackage samplePack, SamplePackage transactionPack, TransactionSampler transactionSampler) 
+        private List<SampleListener> GetSampleListeners(SamplePackage samplePack) 
         {
-            List<SampleListener> sampleListeners = samplePack.GetSampleListeners();
-            // Do not send subsamples to listeners which receive the transaction sample
-            if(transactionSampler != null) 
-            {
-                List<SampleListener> onlySubSamplerListeners = new List<SampleListener>();
-                List<SampleListener> transListeners = transactionPack.GetSampleListeners();
-                foreach(SampleListener listener in sampleListeners) {
-                    // Check if this instance is present in transaction listener list
-                    Boolean found = false;
-                    foreach(SampleListener trans in transListeners) 
-                    {
-                        // Check for the same instance
-                        if(trans == listener) 
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if(!found) {
-                        onlySubSamplerListeners.Add(listener);
-                    }
-                }
-                sampleListeners = onlySubSamplerListeners;
-            }
-            return sampleListeners;
+            return samplePack.GetSampleListeners();
+            //List<SampleListener> sampleListeners = samplePack.GetSampleListeners();
+            //// Do not send subsamples to listeners which receive the transaction sample
+            //if(transactionSampler != null) 
+            //{
+            //    List<SampleListener> onlySubSamplerListeners = new List<SampleListener>();
+            //    List<SampleListener> transListeners = transactionPack.GetSampleListeners();
+            //    foreach(SampleListener listener in sampleListeners) {
+            //        // Check if this instance is present in transaction listener list
+            //        Boolean found = false;
+            //        foreach(SampleListener trans in transListeners) 
+            //        {
+            //            // Check for the same instance
+            //            if(trans == listener) 
+            //            {
+            //                found = true;
+            //                break;
+            //            }
+            //        }
+            //        if(!found) {
+            //            onlySubSamplerListeners.Add(listener);
+            //        }
+            //    }
+            //    sampleListeners = onlySubSamplerListeners;
+            //}
+            //return sampleListeners;
         }
 
         /**
