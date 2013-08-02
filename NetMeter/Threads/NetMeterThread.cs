@@ -81,7 +81,7 @@ namespace NetMeter.Threads
 
         private volatile Boolean onErrorStartNextLoop;
 
-        private volatile Sampler currentSampler;
+        private volatile TestAgent currentSampler;
 
         private sealed object interruptLock = new object(); // ensure that interrupt cannot overlap with shutdown
 
@@ -117,7 +117,7 @@ namespace NetMeter.Threads
          *
          * @param stime the StartTime value.
          */
-        public void setStartTime(long stime) 
+        public void SetStartTime(long stime) 
         {
             startTime = stime;
         }
@@ -127,7 +127,7 @@ namespace NetMeter.Threads
          *
          * @return the start time value.
          */
-        public Int64 getStartTime() 
+        public Int64 GetStartTime() 
         {
             return startTime;
         }
@@ -138,7 +138,7 @@ namespace NetMeter.Threads
          * @param etime
          *            the EndTime value.
          */
-        public void setEndTime(long etime) 
+        public void SetEndTime(long etime) 
         {
             endTime = etime;
         }
@@ -148,7 +148,7 @@ namespace NetMeter.Threads
          *
          * @return the end time value.
          */
-        public Int64 getEndTime() 
+        public Int64 GetEndTime() 
         {
             return endTime;
         }
@@ -157,7 +157,7 @@ namespace NetMeter.Threads
          * Check the scheduled time is completed.
          *
          */
-        private void stopScheduler() 
+        private void StopScheduler() 
         {
             Int64 now = (Int64)DateTime.Now.TimeOfDay.TotalMilliseconds;
             Int64 delay = now - endTime;
@@ -171,7 +171,7 @@ namespace NetMeter.Threads
          * Wait until the scheduled start time if necessary
          *
          */
-        private void startScheduler() 
+        private void StartScheduler() 
         {
             Int64 delay = (startTime - (Int64)DateTime.Now.TimeOfDay.TotalMilliseconds);
             // delayBy(delay, "startScheduler");
@@ -190,7 +190,7 @@ namespace NetMeter.Threads
 
         private static sealed Boolean reversePostProcessors = false; // $NON-NLS-1$
 
-        public void run() 
+        public void Run() 
         {
             // threadContext is not thread-safe, so keep within thread
             NetMeterContext threadContext = NetMeterContextManager.GetContext();
@@ -198,14 +198,14 @@ namespace NetMeter.Threads
 
             try 
             {
-                iterationListener = initRun(threadContext);
+                iterationListener = InitRun(threadContext);
                 while (running)
                 {
-                    Sampler sam = (Sampler)controller.next();
+                    TestAgent sam = (TestAgent)controller.next();
                     while (running && sam != null) 
                     {
-                	    Process_sampler(sam, null, threadContext);
-                	    threadContext.CleanAfterSample();
+                	    ProcessTestAgent(sam, null, threadContext);
+                	    threadContext.CleanAfterExecute();
                         if (onErrorStartNextLoop || threadContext.restartNextLoop) 
                         {
                             if (threadContext.restartNextLoop)
@@ -230,13 +230,13 @@ namespace NetMeter.Threads
                     		    } 
                                 else
                                 {
-                                    sam = (Sampler)controller.next();
+                                    sam = (TestAgent)controller.next();
                     		    }
                 	        }
                 	    } 
                 	    else 
                         {
-                		    sam = (Sampler)controller.next();
+                		    sam = (TestAgent)controller.next();
                 	    }
                     }
                     if (controller.isDone())
@@ -274,11 +274,11 @@ namespace NetMeter.Threads
                 try 
                 {
                     Monitor.Enter(interruptLock);  // make sure current interrupt is finished, prevent another starting yet
-                    threadContext.clear();
+                    threadContext.Clear();
 //                    log.info("Thread finished: " + threadName);
-                    threadFinished(iterationListener);
+                    ThreadFinished(iterationListener);
                     monitor.ThreadFinished(this); // Tell the monitor we are done
-                    NetMeterContextManager.removeContext(); // Remove the ThreadLocal entry
+                    NetMeterContextManager.RemoveContext(); // Remove the ThreadLocal entry
                 }
                 finally 
                 {
@@ -292,7 +292,7 @@ namespace NetMeter.Threads
          * @param sam Sampler Base sampler
          * @param threadContext 
          */
-        private void TriggerEndOfLoopOnParentControllers(Sampler sam, NetMeterContext threadContext) 
+        private void TriggerEndOfLoopOnParentControllers(TestAgent sam, NetMeterContext threadContext) 
         {
             // Find parent controllers of current sampler
             //FindTestElementsUpToRootTraverser pathToRootTraverser=null;
@@ -337,9 +337,9 @@ namespace NetMeter.Threads
          * @param threadContext
          * @return SampleResult if a transaction was processed
          */
-        private SampleResult Process_sampler(Sampler current, Sampler parent, NetMeterContext threadContext) 
+        private ExecuteResult ProcessTestAgent(TestAgent current, TestAgent parent, NetMeterContext threadContext) 
         {
-            SampleResult transactionResult = null;
+            ExecuteResult transactionResult = null;
             try 
             {
                 // Check if we have a sampler to sample
@@ -354,7 +354,7 @@ namespace NetMeter.Threads
                     threadVars.PutObject(PACKAGE_OBJECT, pack);
 
                     //delay(pack.getTimers());
-                    Sampler sampler = pack.GetSampler();
+                    TestAgent sampler = pack.GetSampler();
                     sampler.SetThreadContext(threadContext);
                     // TODO should this set the thread names for all the subsamples?
                     // might be more efficient than fetching the name elsewehere
@@ -363,7 +363,7 @@ namespace NetMeter.Threads
 
                     // Perform the actual sample
                     currentSampler = sampler;
-                    SampleResult result = sampler.Sample(null);
+                    ExecuteResult result = sampler.Execute(null);
                     currentSampler = null;
                     // TODO: remove this useless Entry parameter
 
@@ -371,11 +371,11 @@ namespace NetMeter.Threads
                     if (result != null) 
                     {
                         result.SetGroupThreads(threadGroup.GetNumberOfThreads());
-                        result.SetAllThreads(NetMeterContextManager.getNumberOfThreads());
+                        result.SetAllThreads(NetMeterContextManager.GetNumberOfThreads());
                         result.SetThreadName(threadName);
                         threadContext.SetPreviousResult(result);
                         RunPostProcessors(pack.GetPostProcessors());
-                        CheckAssertions(pack.GetAssertions(), result, threadContext);
+                        CheckTestAssertions(pack.GetAssertions(), result, threadContext);
                         // Do not send subsamples to listeners which receive the transaction sample
                         List<SampleListener> sampleListeners = GetSampleListeners(pack);
                         NotifyListeners(sampleListeners, result);
@@ -388,11 +388,11 @@ namespace NetMeter.Threads
                         }
                         if (result.isStopTest() || (!result.Success && onErrorStopTest)) 
                         {
-                            stopTest();
+                            StopTest();
                         }
                         if (result.isStopTestNow() || (!result.Success && onErrorStopTestNow)) 
                         {
-                            stopTestNow();
+                            StopTestNow();
                         }
                         if(result.isStartNextThreadLoop()) 
                         {
@@ -407,7 +407,7 @@ namespace NetMeter.Threads
                 if (scheduler) 
                 {
                     // checks the scheduler to stop the iteration
-                    stopScheduler();
+                    StopScheduler();
                 }
             } 
             catch (Exception e) 
@@ -469,7 +469,7 @@ namespace NetMeter.Threads
          * @return 
          *
          */
-        private IterationListener initRun(NetMeterContext threadContext) 
+        private IterationListener InitRun(NetMeterContext threadContext) 
         {
             threadContext.SetVariables(threadVars);
             threadContext.SetThreadNum(getThreadNum());
@@ -486,20 +486,20 @@ namespace NetMeter.Threads
              */
             if (startEarlier) 
             {
-                threadContext.setSamplingStarted(true);
+                threadContext.SetSamplingStarted(true);
             }
-            controller.initialize();
+            controller.Initialize();
             IterationListener iterationListener = new IterationListener();
             controller.addIterationListener(iterationListener);
             if (!startEarlier) 
             {
-                threadContext.setSamplingStarted(true);
+                threadContext.SetSamplingStarted(true);
             }
-            threadStarted();
+            ThreadStarted();
             return iterationListener;
         }
 
-        private void threadStarted() 
+        private void ThreadStarted() 
         {
             NetMeterContextManager.IncrNumberOfThreads();
             threadGroup.IncrNumberOfThreads();
@@ -507,7 +507,7 @@ namespace NetMeter.Threads
             testTree.Traverse(startup); // call ThreadListener.threadStarted()
         }
 
-        private void threadFinished(LoopIterationListener iterationListener) 
+        private void ThreadFinished(LoopIterationListener iterationListener) 
         {
             ThreadListenerTraverser shut = new ThreadListenerTraverser(false);
             testTree.Traverse(shut); // call ThreadListener.threadFinished()
@@ -555,12 +555,12 @@ namespace NetMeter.Threads
             }
         }
 
-        public String getThreadName()
+        public String GetThreadName()
         {
             return threadName;
         }
 
-        public void stop() 
+        public void Stop() 
         { // Called by StandardJMeterEngine, TestAction and AccessLogSampler
             running = false;
             // log.info("Stopping: " + threadName);
@@ -572,7 +572,7 @@ namespace NetMeter.Threads
             try 
             {
                 Monitor.Enter(interruptLock);
-                Sampler samp = currentSampler; // fetch once; must be done under lock
+                TestAgent samp = currentSampler; // fetch once; must be done under lock
                 if (samp is Interruptible)
                 { // (also protects against null)
 //                   log.warn("Interrupting: " + threadName + " sampler: " +samp.getName());
@@ -602,7 +602,7 @@ namespace NetMeter.Threads
             return false;
         }
 
-        private void stopTest()
+        private void StopTest()
         {
             running = false;
 //            log.info("Stop Test detected by thread: " + threadName);
@@ -612,7 +612,7 @@ namespace NetMeter.Threads
             }
         }
 
-        private void stopTestNow()
+        private void StopTestNow()
         {
             running = false;
             // log.info("Stop Test Now detected by thread: " + threadName);
@@ -628,7 +628,7 @@ namespace NetMeter.Threads
             // log.info("Stop Thread detected by thread: " + threadName);
         }
 
-        private void CheckAssertions(List<Assertion> assertions, SampleResult parent, NetMeterContext threadContext) 
+        private void CheckTestAssertions(List<Assertion> assertions, ExecuteResult parent, NetMeterContext threadContext) 
         {
             foreach (Assertion assertion in assertions) 
             {
@@ -639,15 +639,15 @@ namespace NetMeter.Threads
                     String scope = scopedAssertion.fetchScope();
                     if (scopedAssertion.isScopeParent(scope) || scopedAssertion.isScopeAll(scope) || scopedAssertion.isScopeVariable(scope))
                     {
-                        ProcessAssertion(parent, assertion);
+                        ProcessTestAssertion(parent, assertion);
                     }
                     if (scopedAssertion.isScopeChildren(scope) || scopedAssertion.isScopeAll(scope))
                     {
-                        SampleResult[] children = parent.getSubResults();
+                        ExecuteResult[] children = parent.getSubResults();
                         Boolean childError = false;
-                        foreach (SampleResult child in children)
+                        foreach (ExecuteResult child in children)
                         {
-                            ProcessAssertion(child, assertion);
+                            ProcessTestAssertion(child, assertion);
                             if (!child.Success)
                             {
                                 childError = true;
@@ -665,18 +665,18 @@ namespace NetMeter.Threads
                 } 
                 else 
                 {
-                    ProcessAssertion(parent, assertion);
+                    ProcessTestAssertion(parent, assertion);
                 }
             }
             threadContext.GetVariables().Add(LAST_SAMPLE_OK, parent.Success.ToString());
         }
 
-        private void ProcessAssertion(SampleResult result, Assertion assertion) 
+        private void ProcessTestAssertion(ExecuteResult result, Assertion assertion) 
         {
             AssertionResult assertionResult;
             try
             {
-                assertionResult = assertion.getResult(result);
+                assertionResult = assertion.GetResult(result);
             } 
             //catch (ThreadDeath e) 
             //{
@@ -726,7 +726,7 @@ namespace NetMeter.Threads
             }
         }
 
-        private void NotifyListeners(List<SampleListener> listeners, SampleResult result) 
+        private void NotifyListeners(List<SampleListener> listeners, ExecuteResult result) 
         {
             SampleEvent sampleEvent = new SampleEvent(result, threadGroup.GetName(), threadVars);
             notifier.notifyListeners(sampleEvent, listeners);

@@ -249,7 +249,7 @@ namespace NetMeter.Engine
                 {
                     StandardEngine engine = (StandardEngine)obj;
                     engine.TellThreadGroupsToStop();
-                    Thread.Sleep(10 * engine.CountStillActiveThreads());
+                    Thread.Sleep(10 * engine.CountActiveThreads());
                     Boolean stopped = engine.VerifyThreadsStopped();
                     if (!stopped) 
                     {  // we totally failed to stop the test
@@ -324,7 +324,7 @@ namespace NetMeter.Engine
             ListenerNotifier notifier = new ListenerNotifier();
 
             int groupCount = 0;
-            NetMeterContextManager.clearTotalThreads();        
+            NetMeterContextManager.ClearTotalThreads();        
 
             /*
              * Here's where the test really starts. Run a Full GC now: it's no harm
@@ -333,7 +333,7 @@ namespace NetMeter.Engine
              */
             NetMeterUtils.helpGC();
         
-            NetMeterContextManager.GetContext().setSamplingStarted(true);
+            NetMeterContextManager.GetContext().SetSamplingStarted(true);
             Boolean mainGroups = running; // still running at this point, i.e. setUp was not cancelled
 
             while (running)
@@ -376,7 +376,7 @@ namespace NetMeter.Engine
         /**
          * @return total of active threads in all Thread Groups
          */
-        private int CountStillActiveThreads()
+        private int CountActiveThreads()
         {
             int reminingThreads= 0;
             foreach (AbstractThreadGroup threadGroup in groups) 
@@ -389,7 +389,7 @@ namespace NetMeter.Engine
         private void StartThreadGroup(AbstractThreadGroup group, int groupCount, SearchByType<AbstractThreadGroup> searcher, LinkedList<Object> testLevelElements, ListenerNotifier notifier)
         {
             int numThreads = group.GetNumThreads();
-            NetMeterContextManager.addTotalThreads(numThreads);
+            NetMeterContextManager.AddTotalThreads(numThreads);
             Boolean onErrorStopTest = group.GetOnErrorStopTest();
             Boolean onErrorStopTestNow = group.GetOnErrorStopTestNow();
             Boolean onErrorStopThread = group.GetOnErrorStopThread();

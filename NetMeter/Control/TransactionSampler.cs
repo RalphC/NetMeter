@@ -7,7 +7,7 @@ using Valkyrie.Logging;
 
 namespace NetMeter.Control
 {
-    class TransactionSampler : Sampler, AbstractTestElement
+    class TransactionSampler : TestAgent, AbstractTestElement
     {
         private static sealed ILog log = LoggingManager.GetLoggerForClass();
 
@@ -17,9 +17,9 @@ namespace NetMeter.Control
 
         private TransactionController transactionController;
 
-        private Sampler subSampler;
+        private TestAgent subSampler;
 
-        private SampleResult transactionSampleResult;
+        private ExecuteResult transactionSampleResult;
 
         private int calls = 0;
 
@@ -39,7 +39,7 @@ namespace NetMeter.Control
         {
             transactionController = controller;
             SetName(name); // ensure name is available for debugging
-            transactionSampleResult = new SampleResult();
+            transactionSampleResult = new ExecuteResult();
             transactionSampleResult.setSampleLabel(name);
             // Assume success
             transactionSampleResult.Success = true;
@@ -49,18 +49,18 @@ namespace NetMeter.Control
         /**
          * One cannot sample the TransactionSampler directly.
          */
-        public SampleResult Sample(Entry e) 
+        public ExecuteResult Execute(Entry e) 
         {
             throw new Exception("Cannot sample TransactionSampler directly");
             // It is the JMeterThread which knows how to sample a real sampler
         }
 
-        public Sampler GetSubSampler() 
+        public TestAgent GetSubSampler() 
         {
             return subSampler;
         }
 
-        public SampleResult GetTransactionResult() 
+        public ExecuteResult GetTransactionResult() 
         {
             return transactionSampleResult;
         }
@@ -70,7 +70,7 @@ namespace NetMeter.Control
             return transactionController;
         }
 
-        public void addSubSamplerResult(SampleResult res) 
+        public void addSubSamplerResult(ExecuteResult res) 
         {
             // Another subsample for the transaction
             calls++;
@@ -108,7 +108,7 @@ namespace NetMeter.Control
             }
         }
 
-        protected void setSubSampler(Sampler subSampler)
+        protected void setSubSampler(TestAgent subSampler)
         {
             this.subSampler = subSampler;
         }

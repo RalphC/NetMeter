@@ -179,7 +179,7 @@ namespace NetMeter.Visualizers
          * Records a sample.
          *
          */
-        public void AddSample(SampleResult res)
+        public void AddSample(ExecuteResult res)
         {
             Int64 aTimeInMillis = res.GetTime();
         

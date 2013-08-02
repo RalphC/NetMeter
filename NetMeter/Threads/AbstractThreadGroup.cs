@@ -46,7 +46,7 @@ namespace NetMeter.Threads
             return GetSamplerController().isDone();
         }
 
-        public override Sampler Next()
+        public override TestAgent Next()
         {
             return GetSamplerController().next();
         }
@@ -110,7 +110,7 @@ namespace NetMeter.Threads
             NetMeterProperty property = c.getProperty(TestElement.NAME);
             property.setObjectValue(GetName()); // Copy our name into that of the controller
             property.setRunningVersion(property.isRunningVersion());// otherwise name reverts
-            c.initialize();
+            c.Initialize();
         }
 
         /**

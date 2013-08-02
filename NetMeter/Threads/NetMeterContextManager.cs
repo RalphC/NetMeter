@@ -27,12 +27,12 @@ namespace NetMeter.Threads
             return threadContext.Value;
         }
 
-        public static void removeContext()
+        public static void RemoveContext()
         {
             threadContext.Dispose();
         }
 
-        public static void replaceContext(NetMeterContext context)
+        public static void ReplaceContext(NetMeterContext context)
         {
             threadContext.Dispose();
             threadContext.Value = context;
@@ -79,14 +79,14 @@ namespace NetMeter.Threads
          * @return active thread count
          */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static Int32 getNumberOfThreads() 
+        public static Int32 GetNumberOfThreads() 
         {
             return numberOfActiveThreads;
         }
 
         // return all the associated counts together
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static ThreadCounts getThreadCounts() {
+        public static ThreadCounts GetThreadCounts() {
             return new ThreadCounts(numberOfActiveThreads, numberOfThreadsStarted, numberOfThreadsFinished);
         }
 
@@ -95,13 +95,13 @@ namespace NetMeter.Threads
          * Clears start time field.
          */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void endTest() 
+        public static void EndTest() 
         {
             testStart = 0;
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static Int64 getTestStartTime() 
+        public static Int64 GetTestStartTime() 
         {// NOT USED
             return testStart;
         }
@@ -111,7 +111,7 @@ namespace NetMeter.Threads
          * @return total thread count
          */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static Int32 getTotalThreads() 
+        public static Int32 GetTotalThreads() 
         {
             return totalThreads;
         }
@@ -121,7 +121,7 @@ namespace NetMeter.Threads
          * @param thisGroup number of threads in this thread group
          */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void addTotalThreads(Int32 thisGroup) {
+        public static void AddTotalThreads(Int32 thisGroup) {
             totalThreads += thisGroup;
         }
 
@@ -129,7 +129,7 @@ namespace NetMeter.Threads
          * Set total threads to zero; also clears started and finished counts
          */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void clearTotalThreads() {
+        public static void ClearTotalThreads() {
             totalThreads = 0;
             numberOfThreadsStarted = 0;
             numberOfThreadsFinished = 0;

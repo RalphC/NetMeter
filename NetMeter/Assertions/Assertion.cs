@@ -29,6 +29,6 @@ namespace NetMeter.Assertions
          * @return the AssertionResult containing the information about whether the
          *         assertion passed or failed.
          */
-        AssertionResult getResult(SampleResult response);
+        AssertionResult GetResult(ExecuteResult response);
     }
 }

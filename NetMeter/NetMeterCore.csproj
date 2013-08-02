@@ -69,8 +69,8 @@
     <Compile Include="Samplers\Entry.cs" />
     <Compile Include="Samplers\SampleEvent.cs" />
     <Compile Include="Samplers\SampleListener.cs" />
-    <Compile Include="Samplers\Sampler.cs" />
-    <Compile Include="Samplers\SampleResult.cs" />
+    <Compile Include="Samplers\TestAgent.cs" />
+    <Compile Include="Samplers\ExecuteResult.cs" />
     <Compile Include="TestElements\AbstractTestElement.cs" />
     <Compile Include="TestElements\Property\NetMeterProperty.cs" />
     <Compile Include="TestElements\Property\PropertyIterator.cs" />

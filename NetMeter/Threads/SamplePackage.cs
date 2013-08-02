@@ -39,7 +39,7 @@ namespace NetMeter.Threads
 
         private sealed List<Controller> controllers;
 
-        private Sampler sampler;
+        private TestAgent sampler;
 
         public SamplePackage(
                 List<ConfigTestElement> configs,
@@ -162,7 +162,7 @@ namespace NetMeter.Threads
         /**
             * @return {@link Sampler}
             */
-        public Sampler GetSampler() 
+        public TestAgent GetSampler() 
         {
             return sampler;
         }
@@ -170,7 +170,7 @@ namespace NetMeter.Threads
         /**
             * @param s {@link Sampler}
             */
-        public void SetSampler(Sampler s) 
+        public void SetSampler(TestAgent s) 
         {
             sampler = s;
         }

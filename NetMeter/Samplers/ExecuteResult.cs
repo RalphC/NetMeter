@@ -13,7 +13,7 @@ using System.Net;
 
 namespace NetMeter.Samplers
 {
-    public class SampleResult : ISerializable
+    public class ExecuteResult : ISerializable
     {
         static sealed ILog log = LoggingManager.GetLoggerForClass();
         /**
@@ -51,7 +51,7 @@ namespace NetMeter.Samplers
         /* empty arrays which can be returned instead of null */
         public static sealed byte[] EMPTY_BA = new byte[0];
 
-        private static sealed SampleResult[] EMPTY_SR = new SampleResult[0];
+        private static sealed ExecuteResult[] EMPTY_SR = new ExecuteResult[0];
 
         private static sealed AssertionResult[] EMPTY_AR = new AssertionResult[0];
     
@@ -63,7 +63,7 @@ namespace NetMeter.Samplers
 
         //private SampleSaveConfiguration saveConfig;
 
-        private SampleResult parent = null;
+        private ExecuteResult parent = null;
 
         ///**
         // * @param propertiesToSave
@@ -116,7 +116,7 @@ namespace NetMeter.Samplers
 
         private List<AssertionResult> assertionResults;
 
-        private List<SampleResult> subResults;
+        private List<ExecuteResult> subResults;
 
         private String dataType=""; // Don't return null if not set
 
@@ -197,7 +197,7 @@ namespace NetMeter.Samplers
             {
                 // Make sure we start with a reasonable value
                 Offset = new NanoOffset();
-                Offset.nanoOffset = DateTime.Now.TimeOfDay.Ticks - SampleResult.sampleNsClockInMs();
+                Offset.nanoOffset = DateTime.Now.TimeOfDay.Ticks - ExecuteResult.sampleNsClockInMs();
 
                 Thread newThread = new Thread(Offset.run);
                 newThread.Start();
@@ -229,19 +229,19 @@ namespace NetMeter.Samplers
             }
         }
 
-        public SampleResult() 
+        public ExecuteResult() 
             : this(USENANOTIME, NANOTHREAD_SLEEP)
         {
         }
 
         // Allow test code to change the default useNanoTime setting
-        SampleResult(Boolean nanoTime) 
+        ExecuteResult(Boolean nanoTime) 
             : this(nanoTime, NANOTHREAD_SLEEP)
         {
         }
 
         // Allow test code to change the default useNanoTime and nanoThreadSleep settings
-        SampleResult(Boolean nanoTime, Int64 nanoThreadSleep) 
+        ExecuteResult(Boolean nanoTime, Int64 nanoThreadSleep) 
         {
             init();
             this.time = 0;
@@ -255,7 +255,7 @@ namespace NetMeter.Samplers
          * 
          * @param res existing sample result
          */
-        public SampleResult(SampleResult res) : this()
+        public ExecuteResult(ExecuteResult res) : this()
         {
             allThreads = res.allThreads;//OK
             assertionResults = res.assertionResults;// TODO ??
@@ -313,7 +313,7 @@ namespace NetMeter.Samplers
          * @param atend
          *            create the sample finishing now, else starting now
          */
-        protected SampleResult(Int64 elapsed, Boolean atend) 
+        protected ExecuteResult(Int64 elapsed, Boolean atend) 
             : this()
         {
             Int64 now = currentTimeInMillis();
@@ -338,9 +338,9 @@ namespace NetMeter.Samplers
          * @param end
          *            end time
          */
-        public static SampleResult createTestSample(Int64 start, Int64 end)
+        public static ExecuteResult createTestSample(Int64 start, Int64 end)
         {
-            SampleResult res = new SampleResult();
+            ExecuteResult res = new ExecuteResult();
             res.setStartTime(start);
             res.setEndTime(end);
             return res;
@@ -353,7 +353,7 @@ namespace NetMeter.Samplers
          * @param elapsed -
          *            desired elapsed time
          */
-        public static SampleResult createTestSample(Int64 elapsed) 
+        public static ExecuteResult createTestSample(Int64 elapsed) 
         {
             Int64 now = DateTime.Now.TimeOfDay.Ticks;
             return createTestSample(now, now + elapsed);
@@ -369,7 +369,7 @@ namespace NetMeter.Samplers
          *            this may be a start time or an end time
          * @param elapsed
          */
-        public SampleResult(Int64 stamp, Int64 elapsed) 
+        public ExecuteResult(Int64 stamp, Int64 elapsed) 
             : this()
         {
             stampAndTime(stamp, elapsed);
@@ -572,7 +572,7 @@ namespace NetMeter.Samplers
          * 
          * @param subResult
          */
-        public void addSubResult(SampleResult subResult)
+        public void addSubResult(ExecuteResult subResult)
         {
             String tn = getThreadName();
             if (0 == tn.Length) 
@@ -596,7 +596,7 @@ namespace NetMeter.Samplers
          * 
          * @param subResult
          */
-        public void addRawSubResult(SampleResult subResult)
+        public void addRawSubResult(ExecuteResult subResult)
         {
             storeSubResult(subResult);
         }
@@ -608,11 +608,11 @@ namespace NetMeter.Samplers
          *
          * @param subResult
          */
-        public void storeSubResult(SampleResult subResult) 
+        public void storeSubResult(ExecuteResult subResult) 
         {
             if (subResults == null) 
             {
-                subResults = new List<SampleResult>();
+                subResults = new List<ExecuteResult>();
             }
             subResults.Add(subResult);
             subResult.setParent(this);
@@ -624,7 +624,7 @@ namespace NetMeter.Samplers
          * @return an array containing the subresults for this sample. Returns an
          *         empty array if there are no subresults.
          */
-        public SampleResult[] getSubResults()
+        public ExecuteResult[] getSubResults()
         {
             if (subResults == null) {
                 return EMPTY_SR;
@@ -1307,7 +1307,7 @@ namespace NetMeter.Samplers
         /**
          * @return Returns the parent.
          */
-        public SampleResult getParent() 
+        public ExecuteResult getParent() 
         {
             return parent;
         }
@@ -1316,7 +1316,7 @@ namespace NetMeter.Samplers
          * @param parent
          *            The parent to set.
          */
-        public void setParent(SampleResult parent)
+        public void setParent(ExecuteResult parent)
         {
             this.parent = parent;
         }
@@ -1429,7 +1429,7 @@ namespace NetMeter.Samplers
                 {
                     Thread.Sleep(wait);
                     Int64 clock = DateTime.Now.TimeOfDay.Ticks;
-                    Int64 nano = SampleResult.sampleNsClockInMs();
+                    Int64 nano = ExecuteResult.sampleNsClockInMs();
                     nanoOffset = clock - nano;
                 }
                 catch (Exception ignore) 
@@ -1459,7 +1459,7 @@ namespace NetMeter.Samplers
         /**
          * Clean up cached data
          */
-        public void CleanAfterSample() 
+        public void CleanAfterExecute() 
         {
             this.responseDataAsString = null;
         }

@@ -31,7 +31,7 @@ namespace NetMeter.Samplers
         // The values. Entries be null, but there will be the correct number.
         private sealed String[] values;
 
-        private sealed SampleResult result;
+        private sealed ExecuteResult result;
 
         private sealed String threadGroup; // TODO appears to duplicate the threadName field in SampleResult
 
@@ -55,7 +55,7 @@ namespace NetMeter.Samplers
          * @param result SampleResult
          * @param threadGroup name
          */
-        public SampleEvent(SampleResult result, String threadGroup)
+        public SampleEvent(ExecuteResult result, String threadGroup)
             : this(result, threadGroup, HOSTNAME, false)
         {
         }
@@ -67,7 +67,7 @@ namespace NetMeter.Samplers
          * @param threadGroup name
          * @param jmvars Jmeter variables
          */
-        public SampleEvent(SampleResult result, String threadGroup, NetMeterVariables jmvars) 
+        public SampleEvent(ExecuteResult result, String threadGroup, NetMeterVariables jmvars) 
             : this(result, threadGroup, jmvars, false)
         {
         }
@@ -79,12 +79,12 @@ namespace NetMeter.Samplers
          * @param threadGroup
          * @param hostname
          */
-        public SampleEvent(SampleResult result, String threadGroup, String hostname) 
+        public SampleEvent(ExecuteResult result, String threadGroup, String hostname) 
             : this(result, threadGroup, hostname, false)
         {
         }
     
-        private SampleEvent(SampleResult result, String threadGroup, String hostname, Boolean isTransactionSampleEvent) 
+        private SampleEvent(ExecuteResult result, String threadGroup, String hostname, Boolean isTransactionSampleEvent) 
         {
             String hn="";
             try 
@@ -118,7 +118,7 @@ namespace NetMeter.Samplers
          * @param jmvars
          * @param isTransactionSampleEvent
          */
-        public SampleEvent(SampleResult result, String threadGroup, NetMeterVariables jmvars, Boolean isTransactionSampleEvent)
+        public SampleEvent(ExecuteResult result, String threadGroup, NetMeterVariables jmvars, Boolean isTransactionSampleEvent)
             : this(result, threadGroup, HOSTNAME, isTransactionSampleEvent)
         {
             saveVars(jmvars);
@@ -157,7 +157,7 @@ namespace NetMeter.Samplers
             }
         }
 
-        public SampleResult getResult() 
+        public ExecuteResult getResult() 
         {
             return result;
         }

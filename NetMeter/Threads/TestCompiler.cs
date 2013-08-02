@@ -39,7 +39,7 @@ namespace NetMeter.Threads
 
         private sealed LinkedList<TestElement> stack = new LinkedList<TestElement>();
 
-        private sealed Dictionary<Sampler, SamplePackage> samplerConfigMap = new Dictionary<Sampler, SamplePackage>();
+        private sealed Dictionary<TestAgent, SamplePackage> samplerConfigMap = new Dictionary<TestAgent, SamplePackage>();
 
         private sealed Dictionary<TransactionController, SamplePackage> transactionControllerConfigMap =
             new Dictionary<TransactionController, SamplePackage>();
@@ -68,7 +68,7 @@ namespace NetMeter.Threads
          * @param sampler {@link Sampler}
          * @return {@link SamplePackage}
          */
-        public SamplePackage configureSampler(Sampler sampler) 
+        public SamplePackage configureSampler(TestAgent sampler) 
         {
             SamplePackage pack;
             if (samplerConfigMap.TryGetValue(sampler, out pack))
@@ -117,9 +117,9 @@ namespace NetMeter.Threads
             LOG.Debug("Subtracting node, stack size = " + stack.Count);
             TestElement child = stack.Last.Value;
             trackIterationListeners(stack);
-            if (child is Sampler) 
+            if (child is TestAgent) 
             {
-                saveSamplerConfigs((Sampler) child);
+                saveSamplerConfigs((TestAgent) child);
             }
             else if(child is TransactionController) 
             {
@@ -131,7 +131,7 @@ namespace NetMeter.Threads
                 TestElement parent = stack.Last.Value;
                 Boolean duplicate = false;
                 // Bug 53750: this condition used to be in ObjectPair#addTestElements()
-                if (parent is Controller && (child is Sampler || child is Controller)) 
+                if (parent is Controller && (child is TestAgent || child is Controller)) 
                 {
                     if (!IS_USE_STATIC_SET && parent instanceof TestCompilerHelper) 
                     {
@@ -184,7 +184,7 @@ namespace NetMeter.Threads
         public void processPath() {
         }
 
-        private void saveSamplerConfigs(Sampler sam) {
+        private void saveSamplerConfigs(TestAgent sam) {
             List<ConfigTestElement> configs = new LinkedList<ConfigTestElement>();
             List<Controller> controllers = new LinkedList<Controller>();
             List<SampleListener> listeners = new LinkedList<SampleListener>();
@@ -291,7 +291,7 @@ namespace NetMeter.Threads
             }
         }
 
-        private void configureWithConfigElements(Sampler sam, List<ConfigTestElement> configs) {
+        private void configureWithConfigElements(TestAgent sam, List<ConfigTestElement> configs) {
             sam.clearTestElementChildren();
             for (ConfigTestElement config  : configs) {
                 if (!(config instanceof NoConfigMerge)) 

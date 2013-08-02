@@ -14,7 +14,9 @@ namespace NetMeter.Engine
     {
         private static ILog log = LoggingManager.GetLoggerForClass();
 
-        private IRemoteEngine clientEngine;
+        private static List<IRemoteEngine> activeClientEngines = new List<IRemoteEngine>();
+
+        private static List<IRemoteEngine> failedClientEngines = new List<IRemoteEngine>();
 
         private HashTree test;
 
@@ -22,17 +24,36 @@ namespace NetMeter.Engine
 
         private static ChannelFactory<IRemoteEngine> EngineChannelFactory;
 
-        private static IRemoteEngine GetEngine(String host)
+        private static void GetEngine(String host, HashTree testTree)
         {
-            NetTcpBinding clientBinding = new NetTcpBinding();
-            EndpointAddress clientEndpoint = new EndpointAddress(host);
-            EngineChannelFactory = new ChannelFactory<IRemoteEngine>(clientBinding, clientEndpoint);
-            return EngineChannelFactory.CreateChannel();
+            List<IRemoteEngine> engineList = new List<IRemoteEngine>();
+            IRemoteEngine engine = null;
+            foreach (String client in host.Split(','))
+            {
+                NetTcpBinding clientBinding = new NetTcpBinding();
+                EndpointAddress clientEndpoint = new EndpointAddress(host);
+                EngineChannelFactory = new ChannelFactory<IRemoteEngine>(clientBinding, clientEndpoint);
+                try
+                {
+                    engine = EngineChannelFactory.CreateChannel();
+                    activeClientEngines.Add(engine);
+                }
+                catch (Exception ex)
+                {
+                    log.Warn(ex.Message);
+                    System.Console.WriteLine(ex.Message);
+                    if (engine != null)
+                    {
+                        failedClientEngines.Add(engine);
+                    }
+                }
+            }
         }
 
-        public ServerEngine(String host)
+        public ServerEngine(String host, HashTree testTree)
         {
-            this.clientEngine = GetEngine(host);
+            this.test = testTree;
+            GetEngine(host, test);
             this.host = host;
         }
 
@@ -61,7 +82,11 @@ namespace NetMeter.Engine
             log.Info("about to exit remote server on " + host);
             try
             {
-                clientEngine.Exit();
+                foreach (IRemoteEngine engine in activeClientEngines)
+                {
+                    engine.Exit();
+                }
+                
             }
             catch (Exception ex)
             {

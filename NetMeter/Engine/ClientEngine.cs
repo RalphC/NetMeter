@@ -24,9 +24,15 @@ namespace NetMeter.Engine
 
         private static Int32 DEFAULT_LOCAL_PORT = 0;
 
-        public ClientEngine()
+        public static void StartClient()
         {
-            NetTcpBinding portSharingBinding = new NetTcpBinding;
+            ClientEngine engine = new ClientEngine();
+            engine.Init();
+        }
+
+        private ClientEngine()
+        {
+            NetTcpBinding portSharingBinding = new NetTcpBinding();
             portSharingBinding.PortSharingEnabled = true;
 
             ServiceHost server = new ServiceHost(typeof(ClientEngine));

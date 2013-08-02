@@ -9,11 +9,11 @@ namespace NetMeter.Threads
     {
         private NetMeterVariables variables;
 
-        private SampleResult previousResult;
+        private ExecuteResult previousResult;
 
-        private Sampler currentSampler;
+        private TestAgent currentSampler;
 
-        private Sampler previousSampler;
+        private TestAgent previousSampler;
 
         private bool samplingStarted;
 
@@ -33,15 +33,15 @@ namespace NetMeter.Threads
 
         public NetMeterContext()
         {
-            init();
+            Init();
         }
 
-        public void clear() 
+        public void Clear() 
         {
-            init();
+            Init();
         }
 
-        private void init()
+        private void Init()
         {
             variables = null;
             previousResult = null;
@@ -70,22 +70,22 @@ namespace NetMeter.Threads
             this.variables = vars;
         }
 
-        public SampleResult getPreviousResult() 
+        public ExecuteResult GetPreviousResult() 
         {
             return previousResult;
         }
 
-        public void SetPreviousResult(SampleResult result) 
+        public void SetPreviousResult(ExecuteResult result) 
         {
             this.previousResult = result;
         }
 
-        public Sampler GetCurrentSampler() 
+        public TestAgent GetCurrentSampler() 
         {
             return currentSampler;
         }
 
-        public void SetCurrentSampler(Sampler sampler)
+        public void SetCurrentSampler(TestAgent sampler)
         {
             this.previousSampler = currentSampler;
             this.currentSampler = sampler;
@@ -96,7 +96,7 @@ namespace NetMeter.Threads
          *
          * @return Sampler
          */
-        public Sampler getPreviousSampler() 
+        public TestAgent GetPreviousSampler() 
         {
             return previousSampler;
         }
@@ -106,7 +106,7 @@ namespace NetMeter.Threads
          *
          * @return int
          */
-        public int getThreadNum() 
+        public int GetThreadNum() 
         {
             return threadNum;
         }
@@ -132,7 +132,7 @@ namespace NetMeter.Threads
             this.nThread = nThread;
         }
 
-        public AbstractThreadGroup getThreadGroup()
+        public AbstractThreadGroup GetThreadGroup()
         {
             return this.threadGroup;
         }
@@ -157,7 +157,7 @@ namespace NetMeter.Threads
             return samplingStarted;
         }
 
-        public void setSamplingStarted(bool b)
+        public void SetSamplingStarted(bool b)
         {
             samplingStarted = b;
         }
@@ -200,11 +200,11 @@ namespace NetMeter.Threads
         /**
          * Clean cached data after sample
          */
-        public void CleanAfterSample() 
+        public void CleanAfterExecute() 
         {
             if(previousResult != null) 
             {
-                previousResult.CleanAfterSample();
+                previousResult.CleanAfterExecute();
             }
             samplerContext.Clear();
         }

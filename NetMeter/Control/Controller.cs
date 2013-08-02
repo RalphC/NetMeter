@@ -12,7 +12,7 @@ namespace NetMeter.Control
          *
          * @return org.apache.jmeter.samplers.Sampler or null
          */
-        Sampler next();
+        TestAgent next();
 
         /**
          * Indicates whether the Controller is done delivering Samplers for the rest
@@ -34,7 +34,7 @@ namespace NetMeter.Control
         /**
          * Called to initialize a controller at the beginning of a test iteration.
          */
-        void initialize();
+        void Initialize();
 
         /**
          * Unregister IterationListener

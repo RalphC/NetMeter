@@ -120,7 +120,7 @@ namespace NetMeter.Reporters
          */
         public void sampleOccurred(SampleEvent e) 
         {
-            SampleResult s = e.getResult();
+            ExecuteResult s = e.getResult();
 
             Int64 now = DateTime.Now.Ticks;// in seconds
 
@@ -237,7 +237,7 @@ namespace NetMeter.Reporters
             sb.Append(")");
             if ("+".Equals(type)) 
             {
-                ThreadCounts tc = NetMeterContextManager.getThreadCounts();
+                ThreadCounts tc = NetMeterContextManager.GetThreadCounts();
                 sb.Append(" Active: ");
                 sb.Append(tc.activeThreads);
                 sb.Append(" Started: ");

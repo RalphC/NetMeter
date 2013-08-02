@@ -15,6 +15,7 @@ using System.Net.Sockets;
 using System.Net.Sockets.UdpClient;
 using Valkyrie.Collections;
 using System.Net;
+using NetMeter.Reporters;
 
 namespace NetMeter
 {
@@ -216,7 +217,7 @@ namespace NetMeter
                     // Start the server
                     try
                     {
-                        RemoteEngineImpl.StartServer(0); // $NON-NLS-1$
+                        ClientEngine.StartClient(); // $NON-NLS-1$
                     } 
                     catch (Exception ex)
                     {
@@ -677,7 +678,7 @@ namespace NetMeter
             } 
             finally 
             {
-                JOrphanUtils.closeQuietly(reader);
+                reader.Close();
             }
         }
 
@@ -776,12 +777,12 @@ namespace NetMeter
             }
         }
 
-        private NetMeterEngine doRemoteInit(String hostName, HashTree testTree)
+        private IRemoteEngine doRemoteInit(String hostName, HashTree testTree)
         {
-            NetMeterEngine engine = null;
+            IRemoteEngine engine = null;
             try 
             {
-                engine = new ClientEngine(hostName);
+                engine = new ClientEngine();
             } 
             catch (Exception e) 
             {
@@ -789,7 +790,7 @@ namespace NetMeter
                 System.Console.WriteLine("Failure connecting to remote host: {0}, {1}", hostName, e.Message);
                 return null;
             }
-            engine.Configure(testTree);
+            engine.Configure(testTree, hostName);
             if (!remoteProps.isEmpty())
             {
                 engine.setProperties(remoteProps);
@@ -878,7 +879,7 @@ namespace NetMeter
                 catch (Exception ignored) 
                 {
                 }
-                ClientEngine.tidyRMI(log);
+                //ClientEngine.tidyRMI(log);
                 println("... end of run");
                 CheckForRemainingThreads();
             }
