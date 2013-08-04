@@ -35,14 +35,14 @@ namespace NetMeter.Threads
          * If the ObjectPair (child, parent) is present, then the child has been added.
          * Otherwise, the child is added to the parent and the pair is added to the Set.
          */
-        private static sealed HashSet<ObjectPair> PAIRING = new HashSet<ObjectPair>();
+        private static sealed HashSet<KeyValuePair<Object, Object>> PAIRING = new HashSet<KeyValuePair<Object, Object>>();
 
         private sealed LinkedList<TestElement> stack = new LinkedList<TestElement>();
 
-        private sealed Dictionary<TestAgent, SamplePackage> samplerConfigMap = new Dictionary<TestAgent, SamplePackage>();
+        private sealed Dictionary<TestAgent, ExecutionPackage> samplerConfigMap = new Dictionary<TestAgent, ExecutionPackage>();
 
-        private sealed Dictionary<TransactionController, SamplePackage> transactionControllerConfigMap =
-            new Dictionary<TransactionController, SamplePackage>();
+        private sealed Dictionary<TransactionController, ExecutionPackage> transactionControllerConfigMap =
+            new Dictionary<TransactionController, ExecutionPackage>();
 
         private sealed HashTree testTree;
 
@@ -68,9 +68,9 @@ namespace NetMeter.Threads
          * @param sampler {@link Sampler}
          * @return {@link SamplePackage}
          */
-        public SamplePackage configureSampler(TestAgent sampler) 
+        public ExecutionPackage configureSampler(TestAgent sampler) 
         {
-            SamplePackage pack;
+            ExecutionPackage pack;
             if (samplerConfigMap.TryGetValue(sampler, out pack))
             {
                 pack.SetSampler(sampler);
@@ -85,10 +85,10 @@ namespace NetMeter.Threads
          * @param transactionSampler {@link TransactionSampler}
          * @return {@link SamplePackage}
          */
-        public SamplePackage ConfigureTransactionSampler(TransactionSampler transactionSampler) 
+        public ExecutionPackage ConfigureTransactionSampler(TransactionSampler transactionSampler) 
         {
             TransactionController controller = transactionSampler.getTransactionController();
-            SamplePackage pack = null;
+            ExecutionPackage pack = null;
             if (transactionControllerConfigMap.TryGetValue(controller, out pack))
             {
                 pack.SetSampler(transactionSampler);
@@ -100,7 +100,7 @@ namespace NetMeter.Threads
          * Reset pack to its initial state
          * @param pack
          */
-        public void Done(SamplePackage pack) 
+        public void Done(ExecutionPackage pack) 
         {
             pack.RecoverRunningVersion();
         }
@@ -162,7 +162,7 @@ namespace NetMeter.Threads
         private void trackIterationListeners(LinkedList<TestElement> p_stack)
         {
             TestElement child = p_stack.Last.Value;
-            if (child instanceof LoopIterationListener) 
+            if (child is LoopIterationListener) 
             {
                 ListIterator<TestElement> iter = p_stack.listIterator(p_stack.size());
                 while (iter.hasPrevious()) {
@@ -170,7 +170,7 @@ namespace NetMeter.Threads
                     if (item == child) {
                         continue;
                     }
-                    if (item instanceof Controller) {
+                    if (item is Controller) {
                         TestBeanHelper.prepare(child);
                         ((Controller) item).addIterationListener((LoopIterationListener) child);
                         break;
@@ -179,15 +179,13 @@ namespace NetMeter.Threads
             }
         }
 
-        /** {@inheritDoc} */
-        @Override
         public void processPath() {
         }
 
         private void saveSamplerConfigs(TestAgent sam) {
             List<ConfigTestElement> configs = new LinkedList<ConfigTestElement>();
             List<Controller> controllers = new LinkedList<Controller>();
-            List<SampleListener> listeners = new LinkedList<SampleListener>();
+            List<ExecutionListener> listeners = new LinkedList<ExecutionListener>();
             List<Timer> timers = new LinkedList<Timer>();
             List<Assertion> assertions = new LinkedList<Assertion>();
             LinkedList<PostProcessor> posts = new LinkedList<PostProcessor>();
@@ -200,8 +198,8 @@ namespace NetMeter.Threads
                     if ((item instanceof ConfigTestElement)) {
                         configs.add((ConfigTestElement) item);
                     }
-                    if (item instanceof SampleListener) {
-                        listeners.add((SampleListener) item);
+                    if (item instanceof ExecutionListener) {
+                        listeners.add((ExecutionListener) item);
                     }
                     if (item instanceof Timer) {
                         timers.add((Timer) item);
@@ -220,7 +218,7 @@ namespace NetMeter.Threads
                 posts.addAll(0, tempPost);
             }
 
-            SamplePackage pack = new SamplePackage(configs, listeners, timers, assertions,
+            ExecutionPackage pack = new ExecutionPackage(configs, listeners, timers, assertions,
                     posts, pres, controllers);
             pack.setSampler(sam);
             pack.setRunningVersion(true);
@@ -230,7 +228,7 @@ namespace NetMeter.Threads
         private void saveTransactionControllerConfigs(TransactionController tc) {
             List<ConfigTestElement> configs = new LinkedList<ConfigTestElement>();
             List<Controller> controllers = new LinkedList<Controller>();
-            List<SampleListener> listeners = new LinkedList<SampleListener>();
+            List<ExecutionListener> listeners = new LinkedList<ExecutionListener>();
             List<Timer> timers = new LinkedList<Timer>();
             List<Assertion> assertions = new LinkedList<Assertion>();
             LinkedList<PostProcessor> posts = new LinkedList<PostProcessor>();
@@ -238,8 +236,8 @@ namespace NetMeter.Threads
             for (int i = stack.size(); i > 0; i--) {
                 addDirectParentControllers(controllers, stack.get(i - 1));
                 for (Object item : testTree.list(stack.subList(0, i))) {
-                    if (item instanceof SampleListener) {
-                        listeners.add((SampleListener) item);
+                    if (item instanceof ExecutionListener) {
+                        listeners.add((ExecutionListener) item);
                     }
                     if (item instanceof Assertion) {
                         assertions.add((Assertion) item);
@@ -247,7 +245,7 @@ namespace NetMeter.Threads
                 }
             }
 
-            SamplePackage pack = new SamplePackage(configs, listeners, timers, assertions,
+            ExecutionPackage pack = new ExecutionPackage(configs, listeners, timers, assertions,
                     posts, pres, controllers);
             pack.setSampler(new TransactionSampler(tc, tc.getName()));
             pack.setRunningVersion(true);
@@ -267,8 +265,8 @@ namespace NetMeter.Threads
 
         private static class ObjectPair
         {
-            private final TestElement child;
-            private final TestElement parent;
+            private TestElement child;
+            private TestElement parent;
 
             public ObjectPair(TestElement child, TestElement parent) {
                 this.child = child;
@@ -276,15 +274,15 @@ namespace NetMeter.Threads
             }
 
             /** {@inheritDoc} */
-            @Override
-            public int hashCode() {
-                return child.hashCode() + parent.hashCode();
+            public int GetHashCode() {
+                return child.GetHashCode() + parent.GetHashCode();
             }
 
             /** {@inheritDoc} */
-            @Override
-            public boolean equals(Object o) {
-                if (o instanceof ObjectPair) {
+            public Boolean Equals(Object o) 
+            {
+                if (o is ObjectPair) 
+                {
                     return child == ((ObjectPair) o).child && parent == ((ObjectPair) o).parent;
                 }
                 return false;
@@ -293,10 +291,11 @@ namespace NetMeter.Threads
 
         private void configureWithConfigElements(TestAgent sam, List<ConfigTestElement> configs) {
             sam.clearTestElementChildren();
-            for (ConfigTestElement config  : configs) {
-                if (!(config instanceof NoConfigMerge)) 
+            foreach (ConfigTestElement config  in configs) 
+            {
+                if (!(config is NoConfigMerge)) 
                 {
-                    if(sam instanceof ConfigMergabilityIndicator) {
+                    if(sam is ConfigMergabilityIndicator) {
                         if(((ConfigMergabilityIndicator)sam).applies(config)) {
                             sam.addTestElement(config);
                         }

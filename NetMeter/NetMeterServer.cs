@@ -251,7 +251,7 @@ namespace NetMeter
                     //{
                     //    jtlFile=processLAST(jtl.GetArgument(), ".jtl"); // $NON-NLS-1$
                     //}
-                    StartNonGui(testFile, jtlFile, rem);
+                    StartTest(testFile, jtlFile, rem);
 
                 }
             } 
@@ -534,7 +534,7 @@ namespace NetMeter
         //    return jmlogfile;
         //}
 
-        private void StartNonGui(String testFile, String logFile, CLOption remoteStart)
+        private void StartTest(String testFile, String logFile, CLOption remoteStart)
         {
             // add a system property so samplers can check to see if JMeter
             // is running in NonGui mode
@@ -557,11 +557,11 @@ namespace NetMeter
             {
                 throw new Exception("Non-GUI runs require a test plan");
             }
-            driver.RunNonGui(testFile, logFile, remoteStart != null, remote_hosts_string);
+            driver.RunTest(testFile, logFile, remoteStart != null, remote_hosts_string);
         }
 
         // run test in batch mode
-        private void RunNonGui(String testFile, String logFile, Boolean remoteStart, String remote_hosts_string) 
+        private void RunTest(String testFile, String logFile, Boolean remoteStart, String remote_hosts_string) 
         {
             FileStream reader = null;
             try 
@@ -595,13 +595,13 @@ namespace NetMeter
 
                 // Remove the disabled items
                 // For GUI runs this is done in Start.java
-                convertSubTree(tree);
+                ConvertSubTree(tree);
 
-                Summariser summer = null;
+                ResultCollector summer = null;
                 String summariserName = "Summariser";//$NON-NLS-1$
                 log.Info("Creating summariser <" + summariserName + ">");
                 println("Creating summariser <" + summariserName + ">");
-                summer = new Summariser(summariserName);
+                summer = new ResultCollector(summariserName);
 
                 if (logFile != null)
                 {
@@ -687,7 +687,7 @@ namespace NetMeter
          *
          * @param tree
          */
-        public static void convertSubTree(HashTree tree) 
+        public static void ConvertSubTree(HashTree tree) 
         {
             LinkedList<Object> copyList = new LinkedList<Object>(tree.list());
             foreach (Object obj  in copyList) 
@@ -719,19 +719,19 @@ namespace NetMeter
                                 HashTree replacementTree = rc.getReplacementSubTree();
                                 if (replacementTree != null) 
                                 {
-                                    convertSubTree(replacementTree);
+                                    ConvertSubTree(replacementTree);
                                     tree.Replace(item, rc);
                                     tree.Set(rc, replacementTree);
                                 }
                             } 
                             else
                             { // null subTree
-                                convertSubTree(tree.GetTree(item));
+                                ConvertSubTree(tree.GetTree(item));
                             }
                         } 
                         else
                         { // not Replaceable Controller
-                            convertSubTree(tree.GetTree(item));
+                            ConvertSubTree(tree.GetTree(item));
                         }
                     } 
                     else 
@@ -756,7 +756,7 @@ namespace NetMeter
                                 HashTree replacementTree = rc.getReplacementSubTree();
                                 if (replacementTree != null) 
                                 {
-                                    convertSubTree(replacementTree);
+                                    ConvertSubTree(replacementTree);
                                     tree.Replace(item, rc);
                                     tree.Set(rc, replacementTree);
                                 }
@@ -764,7 +764,7 @@ namespace NetMeter
                         } 
                         else 
                         { // Not a ReplaceableController
-                            convertSubTree(tree.GetTree(item));
+                            ConvertSubTree(tree.GetTree(item));
                             TestElement testElement = item.getTestElement();
                             tree.Replace(item, testElement);
                         }
@@ -775,27 +775,6 @@ namespace NetMeter
                     }
                 }
             }
-        }
-
-        private IRemoteEngine doRemoteInit(String hostName, HashTree testTree)
-        {
-            IRemoteEngine engine = null;
-            try 
-            {
-                engine = new ClientEngine();
-            } 
-            catch (Exception e) 
-            {
-                log.Fatal("Failure connecting to remote host: "+hostName, e);
-                System.Console.WriteLine("Failure connecting to remote host: {0}, {1}", hostName, e.Message);
-                return null;
-            }
-            engine.Configure(testTree, hostName);
-            if (!remoteProps.isEmpty())
-            {
-                engine.setProperties(remoteProps);
-            }
-            return engine;
         }
 
         /*
@@ -1061,6 +1040,18 @@ namespace NetMeter
             {
                 udpClient.Close();
             }
+        }
+
+
+
+        private void ClassLoader(String[] Path)
+        {
+
+        }
+
+        static void Main(string[] args)
+        {
+
         }
     }
 }

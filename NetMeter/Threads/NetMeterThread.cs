@@ -347,7 +347,7 @@ namespace NetMeter.Threads
                 {
                     threadContext.SetCurrentSampler(current);
                     // Get the sampler ready to sample
-                    SamplePackage pack = compiler.ConfigureSampler(current);
+                    ExecutionPackage pack = compiler.ConfigureSampler(current);
                     // runPreProcessors(pack.getPreProcessors());
 
                     // Hack: save the package for any transaction controllers
@@ -377,7 +377,7 @@ namespace NetMeter.Threads
                         RunPostProcessors(pack.GetPostProcessors());
                         CheckTestAssertions(pack.GetAssertions(), result, threadContext);
                         // Do not send subsamples to listeners which receive the transaction sample
-                        List<SampleListener> sampleListeners = GetSampleListeners(pack);
+                        List<ExecutionListener> sampleListeners = GetSampleListeners(pack);
                         NotifyListeners(sampleListeners, result);
                         compiler.Done(pack);
 
@@ -434,7 +434,7 @@ namespace NetMeter.Threads
          * @param transactionSampler
          * @return the listeners who should receive the sample result
          */
-        private List<SampleListener> GetSampleListeners(SamplePackage samplePack) 
+        private List<ExecutionListener> GetSampleListeners(ExecutionPackage samplePack) 
         {
             return samplePack.GetSampleListeners();
             //List<SampleListener> sampleListeners = samplePack.GetSampleListeners();
@@ -726,9 +726,9 @@ namespace NetMeter.Threads
             }
         }
 
-        private void NotifyListeners(List<SampleListener> listeners, ExecuteResult result) 
+        private void NotifyListeners(List<ExecutionListener> listeners, ExecuteResult result) 
         {
-            SampleEvent sampleEvent = new SampleEvent(result, threadGroup.GetName(), threadVars);
+            ExecutionEvent sampleEvent = new ExecutionEvent(result, threadGroup.GetName(), threadVars);
             notifier.notifyListeners(sampleEvent, listeners);
         }
 

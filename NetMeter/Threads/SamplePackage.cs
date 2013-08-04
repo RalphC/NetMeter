@@ -9,7 +9,7 @@ using NetMeter.Processor;
 
 namespace NetMeter.Threads
 {
-    class SamplePackage
+    public class ExecutionPackage
     {
         /**
          * Packages methods related to sample handling.<br/>
@@ -25,7 +25,7 @@ namespace NetMeter.Threads
          * </ul>
          */
 
-        private sealed List<SampleListener> sampleListeners;
+        private sealed List<ExecutionListener> sampleListeners;
 
         //private sealed List<Timer> timers;
 
@@ -41,9 +41,9 @@ namespace NetMeter.Threads
 
         private TestAgent sampler;
 
-        public SamplePackage(
+        public ExecutionPackage(
                 List<ConfigTestElement> configs,
-                List<SampleListener> listeners,
+                List<ExecutionListener> listeners,
                 //List<Timer> timers,
                 List<Assertion> assertions, 
                 List<PostProcessor> postProcessors, 
@@ -67,7 +67,7 @@ namespace NetMeter.Threads
         public void SetRunningVersion(Boolean running) 
         {
             SetRunningVersion<ConfigTestElement>(configs, running);
-            SetRunningVersion<SampleListener>(sampleListeners, running);
+            SetRunningVersion<ExecutionListener>(sampleListeners, running);
             SetRunningVersion<Assertion>(assertions, running);
             SetRunningVersion<PostProcessor>(postProcessors, running);
             SetRunningVersion<Controller>(controllers, running);
@@ -81,7 +81,7 @@ namespace NetMeter.Threads
         public void RecoverRunningVersion()
         {
             RecoverRunningVersion<ConfigTestElement>(configs);
-            RecoverRunningVersion<SampleListener>(sampleListeners);
+            RecoverRunningVersion<ExecutionListener>(sampleListeners);
             RecoverRunningVersion<Assertion>(assertions);
             RecoverRunningVersion<PostProcessor>(postProcessors);
             RecoverRunningVersion<Controller>(controllers);
@@ -111,7 +111,7 @@ namespace NetMeter.Threads
         /**
             * @return List<SampleListener>
             */
-        public List<SampleListener> GetSampleListeners() 
+        public List<ExecutionListener> GetSampleListeners() 
         {
             return sampleListeners;
         }
@@ -120,7 +120,7 @@ namespace NetMeter.Threads
             * Add Sample Listener
             * @param listener {@link SampleListener}
             */
-        public void AddSampleListener(SampleListener listener) 
+        public void AddSampleListener(ExecutionListener listener) 
         {
             sampleListeners.Add(listener);
         }

@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMeterCore", "NetMeter\Ne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Valkyrie", "Valkyrie\Valkyrie.csproj", "{FBD8D0CB-3D05-4FF4-A133-FFF023DD3478}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UPMP", "UPMP\UPMP.csproj", "{3829FE49-2480-4F47-A22B-54935B99EF98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMeterComponent", "NetMeterComponent\NetMeterComponent.csproj", "{1AAAE193-CAE2-4CA4-8CEA-310E417AA93A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{FBD8D0CB-3D05-4FF4-A133-FFF023DD3478}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBD8D0CB-3D05-4FF4-A133-FFF023DD3478}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBD8D0CB-3D05-4FF4-A133-FFF023DD3478}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3829FE49-2480-4F47-A22B-54935B99EF98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3829FE49-2480-4F47-A22B-54935B99EF98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3829FE49-2480-4F47-A22B-54935B99EF98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3829FE49-2480-4F47-A22B-54935B99EF98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AAAE193-CAE2-4CA4-8CEA-310E417AA93A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AAAE193-CAE2-4CA4-8CEA-310E417AA93A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AAAE193-CAE2-4CA4-8CEA-310E417AA93A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AAAE193-CAE2-4CA4-8CEA-310E417AA93A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

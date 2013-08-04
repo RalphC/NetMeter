@@ -13,7 +13,7 @@ using NetMeter.Util;
 
 namespace NetMeter.Samplers
 {
-    public class SampleEvent : ISerializable
+    public class ExecutionEvent : ISerializable
     {
         private static sealed ILog log = LoggingManager.GetLoggerForClass();
 
@@ -42,7 +42,7 @@ namespace NetMeter.Samplers
         /*
          * Only for Unit tests
          */
-        public SampleEvent() 
+        public ExecutionEvent() 
             : this(null, null)
         {
         }
@@ -55,7 +55,7 @@ namespace NetMeter.Samplers
          * @param result SampleResult
          * @param threadGroup name
          */
-        public SampleEvent(ExecuteResult result, String threadGroup)
+        public ExecutionEvent(ExecuteResult result, String threadGroup)
             : this(result, threadGroup, HOSTNAME, false)
         {
         }
@@ -67,7 +67,7 @@ namespace NetMeter.Samplers
          * @param threadGroup name
          * @param jmvars Jmeter variables
          */
-        public SampleEvent(ExecuteResult result, String threadGroup, NetMeterVariables jmvars) 
+        public ExecutionEvent(ExecuteResult result, String threadGroup, NetMeterVariables jmvars) 
             : this(result, threadGroup, jmvars, false)
         {
         }
@@ -79,12 +79,12 @@ namespace NetMeter.Samplers
          * @param threadGroup
          * @param hostname
          */
-        public SampleEvent(ExecuteResult result, String threadGroup, String hostname) 
+        public ExecutionEvent(ExecuteResult result, String threadGroup, String hostname) 
             : this(result, threadGroup, hostname, false)
         {
         }
     
-        private SampleEvent(ExecuteResult result, String threadGroup, String hostname, Boolean isTransactionSampleEvent) 
+        private ExecutionEvent(ExecuteResult result, String threadGroup, String hostname, Boolean isTransactionSampleEvent) 
         {
             String hn="";
             try 
@@ -118,7 +118,7 @@ namespace NetMeter.Samplers
          * @param jmvars
          * @param isTransactionSampleEvent
          */
-        public SampleEvent(ExecuteResult result, String threadGroup, NetMeterVariables jmvars, Boolean isTransactionSampleEvent)
+        public ExecutionEvent(ExecuteResult result, String threadGroup, NetMeterVariables jmvars, Boolean isTransactionSampleEvent)
             : this(result, threadGroup, HOSTNAME, isTransactionSampleEvent)
         {
             saveVars(jmvars);

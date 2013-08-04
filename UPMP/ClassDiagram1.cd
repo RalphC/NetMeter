@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="UPMP.NetMeterPlugin.AbstractTestAgentImpl" Collapsed="true">
+    <Position X="1.25" Y="5" Width="1.75" />
+    <Members>
+      <Field Name="log" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="UPMP.NetMeterPlugin.AbstractTestAgentImpl.HttpClientKey" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>NetMeterPlugin\AbstractTestAgentImpl.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CAAAAEAAAAAKIARAAAAACAAAAIAAABAAAAAAAAAAAUA=</HashCode>
+      <FileName>NetMeterPlugin\AbstractTestAgentImpl.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TestAgentBase" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UPMP.NetMeterPlugin.TestAgentBase">
+    <Position X="0.5" Y="0.5" Width="3" />
+    <Members>
+      <Method Name="AddEncodedArgument" Hidden="true" />
+      <Method Name="AddNonEncodedArgument" Hidden="true" />
+      <Method Name="GetSendParameterValuesAsPostBody" Hidden="true" />
+      <Method Name="GetUrl" Hidden="true" />
+      <Method Name="GetUseMultipartForPost" Hidden="true" />
+      <Method Name="GetValidMethodsAsArray" Hidden="true" />
+      <Method Name="isSecure" Hidden="true" />
+      <Method Name="ParseArguments" Hidden="true" />
+      <Method Name="TestEnded" Hidden="true" />
+      <Method Name="TestIterationStart" Hidden="true" />
+      <Method Name="TestStarted" Hidden="true" />
+      <Method Name="ThreadFinished" Hidden="true" />
+      <Method Name="ThreadStarted" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAAgAAAAACAIAASkAAAAiZABAZBAAAIAQAAIQQAAAUI=</HashCode>
+      <FileName>NetMeterPlugin\TestAgentBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UPMP.NetMeterPlugin.TestExecuteResult" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NetMeterPlugin\TestExecuteResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UPMP.NetMeterPlugin.MarkovProcessorImpl">
+    <Position X="1" Y="6.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAQAAAAAAAAAAAAIAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>NetMeterPlugin\MarkovProcessor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

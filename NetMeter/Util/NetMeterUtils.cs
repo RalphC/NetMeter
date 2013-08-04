@@ -222,9 +222,9 @@ namespace NetMeter.Util
             if (p != null) {
                 String[] paths = p.Split(';'); // $NON-NLS-1$
                 result = new String[paths.Length + 1];
-                System.arraycopy(paths, 0, result, 1, paths.Length);
+                Array.Copy(paths, 0, result, 1, paths.Length);
             }
-            result[0] = getJMeterHome() + "\lib\ext"; // $NON-NLS-1$
+            //result[0] = getJMeterHome() + "\lib\ext"; // $NON-NLS-1$
             return result;
         }
 

@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace NetMeter.Samplers
 {
-    public interface SampleListener
+    public interface ExecutionListener
     {
         /**
          * A sample has started and stopped.
          */
-        void sampleOccurred(SampleEvent e);
+        void ExecutionOccurred(ExecutionEvent e);
 
         /**
          * A sample has started.
          */
-        void sampleStarted(SampleEvent e);
+        void ExecutionStarted(ExecutionEvent e);
 
         /**
          * A sample has stopped.
          */
-        void sampleStopped(SampleEvent e);
+        void ExecutionStopped(ExecutionEvent e);
     }
 }

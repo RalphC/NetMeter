@@ -66,9 +66,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\StandardEngine.cs" />
     <Compile Include="Reporters\Summariser.cs" />
+    <Compile Include="Samplers\AbstractTestAgent.cs" />
     <Compile Include="Samplers\Entry.cs" />
-    <Compile Include="Samplers\SampleEvent.cs" />
-    <Compile Include="Samplers\SampleListener.cs" />
+    <Compile Include="Samplers\ExecutionEvent.cs" />
+    <Compile Include="Samplers\ExecutionListener.cs" />
     <Compile Include="Samplers\TestAgent.cs" />
     <Compile Include="Samplers\ExecuteResult.cs" />
     <Compile Include="TestElements\AbstractTestElement.cs" />

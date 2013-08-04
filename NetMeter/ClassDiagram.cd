@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="NetMeter.Threads.AbstractThreadGroup">
-    <Position X="2.75" Y="2.5" Width="2.5" />
+    <Position X="1.25" Y="6" Width="2.5" />
     <Members>
       <Method Name="AddIterationListener" Hidden="true" />
       <Method Name="GetNumThreads" Hidden="true" />
@@ -30,7 +30,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="NetMeter.Threads.NetMeterThreadGroup">
-    <Position X="6" Y="2.5" Width="4" />
+    <Position X="0.5" Y="10" Width="4" />
     <Members>
       <Field Name="DELAY" Hidden="true" />
       <Field Name="DELAYED_START" Hidden="true" />
@@ -48,110 +48,25 @@
       <FileName>Threads\NetMeterThreadGroup.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NetMeter.Threads.NetMeterThread">
-    <Position X="8.75" Y="5" Width="3.25" />
-    <Members>
-      <Field Name="compiler" Hidden="true" />
-      <Field Name="endTime" Hidden="true" />
-      <Method Name="GetEndTime" Hidden="true" />
-      <Method Name="GetSampleListeners" Hidden="true" />
-      <Method Name="GetStartTime" Hidden="true" />
-      <Method Name="GetThreadName" Hidden="true" />
-      <Method Name="getThreadNum" Hidden="true" />
-      <Field Name="initialDelay" Hidden="true" />
-      <Method Name="interrupt" Hidden="true" />
-      <Field Name="interruptLock" Hidden="true" />
-      <Field Name="LAST_SAMPLE_OK" Hidden="true" />
-      <Field Name="log" Hidden="true" />
-      <Field Name="monitor" Hidden="true" />
-      <Field Name="notifier" Hidden="true" />
-      <Method Name="NotifyListeners" Hidden="true" />
-      <Field Name="onErrorStartNextLoop" Hidden="true" />
-      <Field Name="onErrorStopTest" Hidden="true" />
-      <Field Name="onErrorStopTestNow" Hidden="true" />
-      <Field Name="onErrorStopThread" Hidden="true" />
-      <Field Name="PACKAGE_OBJECT" Hidden="true" />
-      <Method Name="rampUpDelay" Hidden="true" />
-      <Field Name="reversePostProcessors" Hidden="true" />
-      <Field Name="running" Hidden="true" />
-      <Method Name="RunPostProcessors" Hidden="true" />
-      <Field Name="scheduler" Hidden="true" />
-      <Method Name="SetEndTime" Hidden="true" />
-      <Method Name="SetInitialDelay" Hidden="true" />
-      <Method Name="SetOnErrorStartNextLoop" Hidden="true" />
-      <Method Name="SetOnErrorStopTest" Hidden="true" />
-      <Method Name="SetOnErrorStopTestNow" Hidden="true" />
-      <Method Name="SetOnErrorStopThread" Hidden="true" />
-      <Method Name="setScheduled" Hidden="true" />
-      <Method Name="SetStartTime" Hidden="true" />
-      <Method Name="SetThreadGroup" Hidden="true" />
-      <Method Name="SetThreadName" Hidden="true" />
-      <Method Name="SetThreadNum" Hidden="true" />
-      <Field Name="startEarlier" Hidden="true" />
-      <Method Name="StartScheduler" Hidden="true" />
-      <Field Name="startTime" Hidden="true" />
-      <Method Name="StopScheduler" Hidden="true" />
-      <Method Name="StopTestNow" Hidden="true" />
-      <Field Name="testIterationStartListeners" Hidden="true" />
-      <Field Name="testTree" Hidden="true" />
-      <Field Name="threadGroup" Hidden="true" />
-      <Field Name="threadName" Hidden="true" />
-      <Field Name="threadNum" Hidden="true" />
-      <Field Name="threadVars" Hidden="true" />
-      <Method Name="TriggerEndOfLoopOnParentControllers" Hidden="true" />
-      <Field Name="TRUE" Hidden="true" />
-    </Members>
+  <Class Name="NetMeter.Threads.NetMeterThread" Collapsed="true">
+    <Position X="9" Y="1.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
-    <NestedTypes>
-      <Class Name="NetMeter.Threads.NetMeterThread.ThreadListenerTraverser" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Threads\NetMeterThread.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-      <Class Name="NetMeter.Threads.NetMeterThread.IterationListener" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Threads\NetMeterThread.cs</NewMemberFileName>
-        </TypeIdentifier>
-        <Lollipop Position="0.2" />
-      </Class>
-    </NestedTypes>
     <TypeIdentifier>
       <HashCode>EBE4AIACCCIABAGDIQImCyMBkCgBABBIaAJsjQQQMAM=</HashCode>
       <FileName>Threads\NetMeterThread.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NetMeter.Threads.NetMeterContextManager">
-    <Position X="4.75" Y="10" Width="2.5" />
-    <Members>
-      <Field Name="numberOfActiveThreads" Hidden="true" />
-      <Field Name="numberOfThreadsFinished" Hidden="true" />
-      <Field Name="numberOfThreadsStarted" Hidden="true" />
-      <Field Name="testStart" Hidden="true" />
-      <Field Name="totalThreads" Hidden="true" />
-    </Members>
+  <Class Name="NetMeter.Threads.NetMeterContextManager" Collapsed="true">
+    <Position X="12.5" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>QJIAEAAAAAIAAAABAAAAAAEBAGAAIAACACGgAAAADAA=</HashCode>
       <FileName>Threads\NetMeterContextManager.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NetMeter.Threads.NetMeterContext">
-    <Position X="0.5" Y="10" Width="4" />
-    <Members>
-      <Method Name="getThread" Hidden="true" />
-      <Method Name="GetThreadGroup" Hidden="true" />
-      <Method Name="GetThreadNum" Hidden="true" />
-      <Method Name="GetVariables" Hidden="true" />
-      <Method Name="isReinitializingSubControllers" Hidden="true" />
-      <Method Name="setIsReinitializingSubControllers" Hidden="true" />
-      <Method Name="SetThread" Hidden="true" />
-      <Method Name="SetThreadGroup" Hidden="true" />
-      <Method Name="SetThreadNum" Hidden="true" />
-      <Method Name="SetVariables" Hidden="true" />
-      <Method Name="unsetIsReinitializingSubControllers" Hidden="true" />
-    </Members>
+  <Class Name="NetMeter.Threads.NetMeterContext" Collapsed="true">
+    <Position X="10.75" Y="0.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Properties" Collapsed="true" />
@@ -161,47 +76,16 @@
       <FileName>Threads\NetMeterContext.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NetMeter.Engine.StandardEngine">
-    <Position X="9.75" Y="10.25" Width="2.75" />
-    <Members>
-      <Field Name="active" Hidden="true" />
-      <Method Name="AskThreadsToStop" Hidden="true" />
-      <Field Name="engine" Hidden="true" />
-      <Field Name="exitAfterTest" Hidden="true" />
-      <Field Name="host" Hidden="true" />
-      <Field Name="log" Hidden="true" />
-      <Method Name="NotifyTestListenersOfEnd" Hidden="true" />
-      <Method Name="NotifyTestListenersOfStart" Hidden="true" />
-      <Field Name="REMOTE_SYSTEM_EXIT" Hidden="true" />
-      <Field Name="running" Hidden="true" />
-      <Field Name="serialized" Hidden="true" />
-      <Field Name="shutdown" Hidden="true" />
-      <Field Name="startListenersLater" Hidden="true" />
-      <Method Name="StopEngineNow" Hidden="true" />
-      <Method Name="StopThreadNow" Hidden="true" />
-      <Field Name="SYSTEM_EXIT_ON_STOP_FAIL" Hidden="true" />
-      <Field Name="tearDownOnShutdown" Hidden="true" />
-      <Method Name="TellThreadGroupsToStop" Hidden="true" />
-      <Field Name="test" Hidden="true" />
-      <Field Name="testList" Hidden="true" />
-      <Method Name="VerifyThreadsStopped" Hidden="true" />
-      <Method Name="WaitThreadsStopped" Hidden="true" />
-    </Members>
-    <NestedTypes>
-      <Class Name="NetMeter.Engine.StandardEngine.StopTestClass" Collapsed="true">
-        <TypeIdentifier>
-          <NewMemberFileName>Engine\StandardEngine.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Class>
-    </NestedTypes>
+  <Class Name="NetMeter.Engine.StandardEngine" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>SQAgQIAQDRAABAEBARBACBAAAAxgYBAIIAgAIAQIAoI=</HashCode>
       <FileName>Engine\StandardEngine.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="NetMeter.Engine.ClientEngine">
-    <Position X="3.25" Y="16" Width="1.75" />
+  <Class Name="NetMeter.Engine.ClientEngine" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9" Y="0.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -209,45 +93,88 @@
       <HashCode>AQIAIAAAAAAABAAAAABSSAAAEAEAABAAIAACQAAAAAA=</HashCode>
       <FileName>Engine\ClientEngine.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="NetMeter.Engine.ServerEngine">
-    <Position X="5.5" Y="16" Width="3" />
-    <Members>
-      <Field Name="EngineChannelFactory" Hidden="true" />
-      <Field Name="host" Hidden="true" />
-      <Field Name="log" Hidden="true" />
-      <Field Name="test" Hidden="true" />
-    </Members>
+  <Class Name="NetMeter.Engine.ServerEngine" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAAAIAAAAAABAAAAkBACBAAAAAAAAAIIAgEACAAAAA=</HashCode>
       <FileName>Engine\ServerEngine.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="NetMeter.Reporters.ResultCollector" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="7.25" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NetMeter.Reporters.ResultCollector.Totals" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Reporters\Summariser.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAABEAAAAAACAAAAATAAAEAoCgAAAQIAAAAAAAEA=</HashCode>
+      <FileName>Reporters\Summariser.cs</FileName>
+    </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Interface Name="NetMeter.Engine.IRemoteEngine">
-    <Position X="0.75" Y="0.75" Width="1.75" />
+  <Class Name="NetMeter.TestElements.AbstractTestElement" Collapsed="true">
+    <Position X="5.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQFAAJIEACEECZIIghABCBEBEAmIAFgQAABkQABABBQ=</HashCode>
+      <FileName>TestElements\AbstractTestElement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="NetMeter.NetMeterServer">
+    <Position X="10.25" Y="6.25" Width="2" />
+    <Members>
+      <Method Name="isNonGUI" Hidden="true" />
+      <Method Name="println" Hidden="true" />
+      <Method Name="WaitForSignals" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="NetMeter.NetMeterServer.ListenToTest" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>NetMeterServer.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>MeAAEAgAwygUAjBQAAEIDAABIUgCCQAgQAAADQBAUAA=</HashCode>
+      <FileName>NetMeterServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="NetMeter.Engine.IRemoteEngine" Collapsed="true">
+    <Position X="9" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAABAAAAABAAAAAAAEAAAAAIAAAAAAAAAA=</HashCode>
       <FileName>Engine\IRemoteEngine.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="NetMeter.TestElements.TestElement" Collapsed="true">
-    <Position X="5" Y="21" Width="1.5" />
+    <Position X="3.5" Y="0.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>CQEAAJIEACAEAZIAAAAAABAAkAGIAFgQAAAhQABABFA=</HashCode>
       <FileName>TestElements\TestElement.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="NetMeter.Assertions.Assertion">
-    <Position X="2" Y="22.5" Width="2.25" />
+    <Position X="0.75" Y="2.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
       <FileName>Assertions\Assertion.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="NetMeter.Control.Controller">
-    <Position X="5" Y="22.5" Width="1.75" />
+    <Position X="3.5" Y="2.25" Width="1.75" />
     <Members>
       <Method Name="addIterationListener" Hidden="true" />
       <Method Name="RemoveIterationListener" Hidden="true" />
@@ -259,7 +186,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="NetMeter.Samplers.TestAgent">
-    <Position X="7.5" Y="22.5" Width="2" />
+    <Position X="5.75" Y="2.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Samplers\TestAgent.cs</FileName>

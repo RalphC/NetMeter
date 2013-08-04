@@ -17,14 +17,14 @@ namespace NetMeter.Threads
          *            must not be null and must contain only SampleListener
          *            elements.
          */
-        public void notifyListeners(SampleEvent res, List<SampleListener> listeners)
+        public void notifyListeners(ExecutionEvent res, List<ExecutionListener> listeners)
         {
-            foreach (SampleListener sampleListener in listeners) 
+            foreach (ExecutionListener sampleListener in listeners) 
             {
                 try 
                 {
                     TestBeanHelper.prepare((TestElement) sampleListener);
-                    sampleListener.sampleOccurred(res);
+                    sampleListener.ExecutionOccurred(res);
                 } 
                 catch (Exception e) 
                 {

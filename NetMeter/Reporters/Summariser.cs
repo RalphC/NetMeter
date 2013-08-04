@@ -34,7 +34,7 @@ namespace NetMeter.Reporters
      * Data is accumulated according to the test element name.
      *
      */
-    public class Summariser : AbstractTestElement, ISerializable, SampleListener, TestStateListener
+    public class ResultCollector : AbstractTestElement, ISerializable, ExecutionListener, TestStateListener
     {
         private static ILog log = LoggingManager.GetLoggerForClass();
 
@@ -85,7 +85,7 @@ namespace NetMeter.Reporters
          * Called several times during test startup.
          * The name will not necessarily have been set at this point.
          */
-        public Summariser() 
+        public ResultCollector() 
             : base()
         {
             Monitor.Enter(LOCK);
@@ -105,7 +105,7 @@ namespace NetMeter.Reporters
          *
          * @param name of summariser
          */
-        public Summariser(String name)
+        public ResultCollector(String name)
             : this()
         {
             SetName(name);
@@ -118,7 +118,7 @@ namespace NetMeter.Reporters
          *
          * @see org.apache.jmeter.samplers.SampleListener#sampleOccurred(org.apache.jmeter.samplers.SampleEvent)
          */
-        public void sampleOccurred(SampleEvent e) 
+        public void ExecutionOccurred(ExecutionEvent e) 
         {
             ExecuteResult s = e.getResult();
 
@@ -260,15 +260,15 @@ namespace NetMeter.Reporters
 
 
         /** {@inheritDoc} */
-        public void testStarted() 
+        public void TestStarted() 
         {
-            testStarted("local");
+            TestStarted("local");
         }
 
         /** {@inheritDoc} */
-        public void testEnded() 
+        public void TestEnded() 
         {
-            testEnded("local");
+            TestEnded("local");
         }
 
         /**
@@ -282,7 +282,7 @@ namespace NetMeter.Reporters
          * <p>
          * {@inheritDoc}
          */
-        public void testStarted(String host) 
+        public void TestStarted(String host) 
         {
             Monitor.Enter(LOCK);
             try
@@ -307,7 +307,7 @@ namespace NetMeter.Reporters
          * <p>
          * {@inheritDoc}
          */
-        public void testEnded(String host) 
+        public void TestEnded(String host) 
         {
             List<KeyValuePair<String, Totals>> totals = new List<KeyValuePair<String, Totals>>();
 
